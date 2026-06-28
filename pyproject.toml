@@ -1,0 +1,18 @@
+[project]
+name = "quickindiacrm"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "boto3>=1.43.36",
+    "crispy-bootstrap5>=2026.3",
+    "django>=6.0.6",
+    "django-crispy-forms>=2.6",
+    "django-environ>=0.14.0",
+    "django-filter>=25.2",
+    "django-storages>=1.14.6",
+    "pillow>=12.2.0",
+    "twilio>=9.10.9",
+    "whitenoise>=6.12.0",
+]
