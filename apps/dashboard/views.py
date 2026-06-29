@@ -1,3 +1,8 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def crm(request):
+    """
+    Render CRM dashboard.
+    """
+    return render(request, "dashboard/crm.html")

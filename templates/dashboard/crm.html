@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickIndia Homes - CRM Workspace</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              orange: '#F3811E',
+              orangeDark: '#D96E14',
+              slate: '#4B6584',
+              slateDark: '#35495E',
+              dark: '#1E272E',
+              light: '#F9F9F9',
+              border: '#E5E9F0'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            accent: ['Outfit', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* Custom Scrollbar for Dashboard Panels */
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+
+    /* Premium Custom Dropdown styling selectors to avoid AI look */
+    .custom-select-indicator {
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234B6584'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/></svg>");
+      background-position: right 10px center;
+      background-repeat: no-repeat;
+      background-size: 14px;
+    }
+  </style>
+</head>
+<body class="h-full text-brand-dark font-sans antialiased overflow-hidden">
+
+  <!-- Floating Toast Notifications -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
+
+  <!-- MAIN DASHBOARD CONTAINER -->
+  <div class="h-full flex overflow-hidden">
+
+    <!-- ==========================================================================
+        SIDEBAR NAVIGATION (REBUILT PREMIUM VISUAL PARADIGM)
+        ========================================================================== -->
+    <aside id="dashboard-sidebar" class="hidden lg:flex lg:flex-shrink-0 w-64 bg-[#11161B] text-slate-300 flex-col justify-between border-r border-slate-800 z-40 transition-all duration-300 fixed lg:static inset-y-0 left-0">
+      
+      <!-- Brand & Header Links -->
+      <div class="flex flex-col flex-1 min-h-0">
+        
+        <!-- Header Brand Container -->
+        <div class="h-20 flex items-center px-6 border-b border-slate-800/80 justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-orange to-amber-500 text-white font-accent font-extrabold text-xl flex items-center justify-center shadow-lg shadow-orange-500/25">
+              Q
+            </div>
+            <div class="flex flex-col">
+              <span class="font-accent font-extrabold text-lg text-white leading-tight">QuickIndia</span>
+              <span class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">CRM Workspace</span>
+            </div>
+          </div>
+          <!-- Mobile Sidebar Collapse Button -->
+          <button onclick="toggleSidebar()" class="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto custom-scroll">
+          <span class="px-4 text-[9px] uppercase font-extrabold tracking-widest text-slate-500 block mb-2">Workspace</span>
+          
+          <a href="#" onclick="setActiveNav('leads')" id="nav-leads" class="nav-item group flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orangeDark text-white font-semibold text-sm transition-all shadow-md shadow-orange-500/10">
+            <i class="fa-solid fa-user-group text-base"></i>
+            <span>Leads Directory</span>
+          </a>
+          
+          <a href="#" onclick="setActiveNav('property')" id="nav-property" class="nav-item group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800/40 hover:text-white text-slate-400 text-sm font-medium transition-all">
+            <i class="fa-solid fa-house-chimney text-base"></i>
+            <span>Add Property</span>
+          </a>
+          
+          <a href="#" onclick="setActiveNav('performance')" id="nav-performance" class="nav-item group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800/40 hover:text-white text-slate-400 text-sm font-medium transition-all">
+            <i class="fa-solid fa-chart-line text-base"></i>
+            <span>Performance</span>
+          </a>
+          
+          <div class="pt-8 border-t border-slate-800/80 my-5 space-y-1.5">
+            <span class="px-4 text-[9px] uppercase font-extrabold tracking-widest text-slate-500 block mb-2">External Links</span>
+            <a href="index.html" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-slate-800/20 hover:text-white text-slate-400 text-sm font-medium transition-all">
+              <i class="fa-solid fa-arrow-left-long"></i>
+              <span>Back to Public Site</span>
+            </a>
+          </div>
+        </nav>
+      </div>
+
+      <!-- User Profile Card & Logout -->
+      <div class="p-4 border-t border-slate-800/80 bg-[#0A0D12]">
+        <div class="flex items-center gap-3 mb-4 bg-white/5 p-3 rounded-xl border border-white/5">
+          <img class="w-10 h-10 rounded-full object-cover border-2 border-slate-700 shadow-inner" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&h=120&q=80" alt="Active user">
+          <div class="truncate">
+            <h5 class="font-bold text-sm text-white truncate leading-tight">Ananya Iyer</h5>
+            <span class="text-[10px] font-bold text-brand-orange uppercase tracking-wider block mt-0.5">Senior Manager</span>
+          </div>
+        </div>
+        <a href="index.html" class="flex items-center justify-center gap-2 w-full py-3 bg-slate-800/50 hover:bg-red-950/40 hover:text-red-400 text-slate-400 text-xs font-bold rounded-xl transition-all border border-slate-700/40">
+          <i class="fa-solid fa-right-from-bracket text-sm"></i>
+          <span>Logout CRM</span>
+        </a>
+      </div>
+
+    </aside>
+
+    <!-- Backdrop for Mobile Sidebar menu -->
+    <div id="sidebar-backdrop" onclick="toggleSidebar()" class="hidden fixed inset-0 bg-brand-dark/40 backdrop-blur-sm z-30 lg:hidden"></div>
+
+    <!-- ==========================================================================
+        RIGHT SIDE MAIN INDEPENDENT VIEWPORT CONTENT AREA
+        ========================================================================== -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      
+      <!-- Top Dashboard Header with Locked Role Status Badge -->
+      <header class="h-20 bg-white border-b border-brand-border flex items-center justify-between px-4 sm:px-8 flex-shrink-0 relative z-20">
+        
+        <div class="flex items-center gap-4">
+          <!-- Mobile Sidebar Toggle Icon -->
+          <button onclick="toggleSidebar()" class="lg:hidden p-2 hover:bg-slate-100 rounded-lg text-brand-dark transition-colors">
+            <i class="fa-solid fa-bars text-xl"></i>
+          </button>
+          
+          <div class="flex items-center gap-3">
+            <h2 id="crm-view-title" class="font-accent font-extrabold text-xl sm:text-2xl text-brand-dark tracking-tight">Leads Directory</h2>
+            
+            <!-- Locked Role Status Badge Panel -->
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <!-- Notification Bell Dropdown Button -->
+          <button onclick="toggleNotificationBadge()" class="w-10 h-10 rounded-xl hover:bg-slate-100 border border-slate-200/80 flex items-center justify-center text-slate-500 relative transition-all">
+            <i class="fa-regular fa-bell"></i>
+            <span id="bell-dot" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-brand-orange"></span>
+          </button>
+        </div>
+
+      </header>
+
+      <!-- Dashboard Body Area Scrollable Content viewport -->
+      <main class="flex-1 overflow-y-auto custom-scroll bg-[#F8FAFC] p-4 sm:p-8">
+        
+        <!-- LEADS VIEW CONTAINER -->
+        <div id="crm-leads-view" class="block space-y-6 max-w-7xl mx-auto">
+          
+          <!-- Top Controls Deck -->
+          <div class="bg-white p-4 sm:p-6 rounded-3xl border border-slate-200/80 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center">
+            
+            <!-- Filters & Search block -->
+            <div class="flex-1 grid grid-cols-1 sm:grid-cols-12 gap-3">
+              
+              <!-- Search query input -->
+              <div class="relative sm:col-span-7">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input id="lead-search" oninput="filterLeads()" type="text" placeholder="Search by name, area, advisor..." class="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange transition-all">
+              </div>
+
+              <!-- Filter status selector -->
+              <div class="relative sm:col-span-5">
+                <select id="lead-filter-status" onchange="filterLeads()" class="w-full pl-4 pr-10 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-orange appearance-none cursor-pointer transition-all">
+                  <option value="ALL">All Lead Statuses</option>
+                  <option value="New">New</option>
+                  <option value="Called">Called</option>
+                  <option value="Interested">Interested</option>
+                  <option value="Site Visit Scheduled">Site Visit Scheduled</option>
+                  <option value="Closed">Closed</option>
+                </select>
+                <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
+              </div>
+
+            </div>
+
+            <!-- Manually Trigger Adding Lead button -->
+            <button onclick="openAddLeadModal()" class="py-3 px-6 rounded-xl bg-brand-orange hover:bg-brand-orangeDark text-white font-accent font-bold text-sm shadow-md hover:shadow-lg flex items-center justify-center gap-2 transition-all shrink-0">
+              <i class="fa-solid fa-plus text-xs"></i>
+              <span>Add Lead Manually</span>
+            </button>
+
+          </div>
+
+          <!-- LEADS DIRECTORY INTERACTIVE AREA -->
+          
+          <!-- Desktop & Tablet view (Shown >= md Breakpoint) -->
+          <div class="hidden md:block bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
+            <div class="overflow-x-auto custom-scroll">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-50/80 border-b border-slate-200">
+                    <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Lead Info & Priority</th>
+                    <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Property Interest</th>
+                    <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Timestamp</th>
+                    <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Assigned Advisor</th>
+                    <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Status State</th>
+                    <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="leads-table-body" class="divide-y divide-slate-100">
+                  <!-- Desktop Rows dynamically loaded -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Mobile responsive lists (Shown < md Breakpoint, no horizontal breaks) -->
+          <div id="leads-mobile-container" class="block md:hidden space-y-4">
+            <!-- Mobile cards dynamically loaded -->
+          </div>
+
+          <!-- Table/List empty state helper placeholder -->
+          <div id="table-empty-state" class="hidden flex-col items-center justify-center py-16 text-center bg-white rounded-3xl border border-slate-200/80">
+            <div class="w-14 h-14 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 mb-3">
+              <i class="fa-regular fa-folder-open text-xl"></i>
+            </div>
+            <h4 class="font-bold text-slate-700">No leads match the filters</h4>
+            <p class="text-sm text-slate-400 mt-1">Try resetting the query or entering another value.</p>
+          </div>
+
+        </div>
+
+        <!-- STUB SCREEN: PROPERTY FORM -->
+        <div id="crm-property-view" class="hidden space-y-6 max-w-3xl mx-auto bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm">
+          <h3 class="font-accent font-extrabold text-2xl text-brand-dark mb-4">Register New Property Asset</h3>
+          <p class="text-sm text-brand-slate mb-6">CRM inventory panel to inject tested premium real-estate locations for public showcase.</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <input type="text" placeholder="Property Title" class="p-3 border border-slate-200 rounded-xl text-sm focus:outline-none">
+            <input type="text" placeholder="Price (e.g. ₹1.5 Cr)" class="p-3 border border-slate-200 rounded-xl text-sm focus:outline-none">
+            <input type="text" placeholder="Locality" class="p-3 border border-slate-200 rounded-xl text-sm focus:outline-none">
+            <input type="text" placeholder="BHK Config" class="p-3 border border-slate-200 rounded-xl text-sm focus:outline-none">
+          </div>
+          <button onclick="showToast('Mock Property Draft Saved!')" class="mt-6 bg-brand-orange text-white px-6 py-3 rounded-xl font-bold text-sm">Save Property Draft</button>
+        </div>
+
+        <!-- STUB SCREEN: PERFORMANCE TRACKER -->
+        <div id="crm-performance-view" class="hidden space-y-6 max-w-7xl mx-auto bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm">
+          <h3 class="font-accent font-extrabold text-2xl text-brand-dark mb-4">Branch Performance Dashboard</h3>
+          <p class="text-sm text-brand-slate mb-6">Real-time charts monitoring site-visit conversion schedules, called callbacks, and closed crore levels.</p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center">
+              <span class="text-xs uppercase font-bold text-slate-400 block mb-1">Inbound Leads</span>
+              <strong class="text-3xl text-brand-orange font-accent font-extrabold">1,480</strong>
+            </div>
+            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center">
+              <span class="text-xs uppercase font-bold text-slate-400 block mb-1">Site Visits scheduled</span>
+              <strong class="text-3xl text-teal-600 font-accent font-extrabold">244</strong>
+            </div>
+            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center">
+              <span class="text-xs uppercase font-bold text-slate-400 block mb-1">Closed Deals (Month)</span>
+              <strong class="text-3xl text-brand-slateDark font-accent font-extrabold">₹18.4 Cr</strong>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+
+  </div>
+
+  <!-- ==========================================================================
+      CONTEXTUAL SLIDE-OVER DETAIL LEAF (EXPANDED DUAL WORKSPACE)
+      ========================================================================== -->
+  <div id="lead-slideover" class="fixed inset-0 z-50 overflow-hidden pointer-events-none" aria-labelledby="slideover-title" role="dialog" aria-modal="true">
+    
+    <!-- Backdrop panel -->
+    <div id="slideover-backdrop" onclick="closeLeadSlideover()" class="absolute inset-0 bg-brand-dark/0 transition-all duration-500 ease-in-out pointer-events-auto"></div>
+
+    <div class="absolute inset-y-0 right-0 max-w-full flex pl-4 sm:pl-10">
+      
+      <!-- Expanded Slide-over panel structure -->
+      <div id="slideover-panel" class="w-screen max-w-2xl bg-white translate-x-full transition-transform duration-500 ease-in-out pointer-events-auto border-l border-brand-border shadow-2xl flex flex-col h-full">
+        
+        <!-- Slide-over Header -->
+        <div class="px-6 py-5 border-b border-slate-200 bg-slate-50/60 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-2xl bg-orange-100 flex items-center justify-center text-brand-orange text-xl shadow-inner">
+              <i class="fa-solid fa-address-card"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2.5">
+                <h3 id="slide-lead-name" class="font-accent font-extrabold text-xl text-brand-dark leading-tight">Lead Name</h3>
+                <span id="slide-lead-priority-badge" class="px-2 py-0.5 rounded-lg text-[9px] font-extrabold tracking-wider uppercase bg-red-100 text-red-700">HOT</span>
+              </div>
+              <span id="slide-lead-handler" class="text-xs text-brand-slate block mt-0.5">CRM Handler: Amit Sharma</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <!-- Delete inside Slide-Over -->
+            <button id="slide-lead-delete-btn" class="p-2.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors" title="Delete Lead">
+              <i class="fa-solid fa-trash-can text-base"></i>
+            </button>
+            <button onclick="closeLeadSlideover()" class="p-2.5 text-slate-400 hover:text-brand-dark hover:bg-slate-200/50 rounded-xl transition-colors">
+              <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Custom Slide-over Work Tabs -->
+        <div class="flex border-b border-slate-200 bg-white">
+          <button onclick="setSlideoverTab('overview')" id="tab-btn-overview" class="flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-brand-orange text-brand-orange transition-all">
+            <i class="fa-solid fa-chart-simple mr-1.5"></i> Overview & Logs
+          </button>
+          <button onclick="setSlideoverTab('edit')" id="tab-btn-edit" class="flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-brand-dark transition-all">
+            <i class="fa-solid fa-user-pen mr-1.5"></i> Edit Profile & Reassign
+          </button>
+        </div>
+
+        <!-- Scrollable content sections based on tabs -->
+        <div class="flex-1 overflow-y-auto custom-scroll px-6 py-6 bg-slate-50/50">
+          
+          <!-- TAB 1: OVERVIEW & TIMELINE -->
+          <div id="slide-tab-overview" class="block space-y-6">
+            
+            <!-- Quick Scheduled Next Action Summary Card -->
+            <div class="bg-gradient-to-r from-brand-slateDark to-brand-dark p-5 rounded-2xl text-white shadow-md relative overflow-hidden">
+              <div class="absolute right-0 bottom-0 w-24 h-24 bg-white/5 rounded-full translate-x-8 translate-y-8"></div>
+              <span class="text-[9px] uppercase font-extrabold tracking-wider text-slate-300 block mb-1">CRM Follow-Up Agenda</span>
+              <h4 class="font-accent font-bold text-base mb-3">Scheduled Next Step Action</h4>
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm bg-white/5 p-3.5 rounded-xl border border-white/5">
+                <div>
+                  <span class="text-[10px] text-slate-300 font-bold block uppercase tracking-wider">Action</span>
+                  <span id="slide-next-step-lbl" class="font-semibold block mt-0.5">Call to confirm site visit timings</span>
+                </div>
+                <div>
+                  <span class="text-[10px] text-slate-300 font-bold block uppercase tracking-wider">Target Date</span>
+                  <span id="slide-next-date-lbl" class="font-semibold block mt-0.5">July 02, 2026</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Indian Property Preferences Grid -->
+            <div class="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm space-y-4">
+              <h4 class="text-xs uppercase font-extrabold text-slate-400 tracking-wider">Inquiry Specifications</h4>
+              
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <span class="text-[10px] text-slate-400 uppercase font-bold block mb-1">Target Locality</span>
+                  <strong id="slide-lead-locality" class="text-sm text-brand-dark block font-semibold">-</strong>
+                </div>
+                <div>
+                  <span class="text-[10px] text-slate-400 uppercase font-bold block mb-1">Target Budget</span>
+                  <strong id="slide-lead-budget" class="text-sm text-brand-dark block font-semibold">-</strong>
+                </div>
+                <div>
+                  <span class="text-[10px] text-slate-400 uppercase font-bold block mb-1">Config Target</span>
+                  <strong id="slide-lead-bhk" class="text-sm text-brand-dark block font-semibold">-</strong>
+                </div>
+                <div>
+                  <span class="text-[10px] text-slate-400 uppercase font-bold block mb-1">Contact Reference</span>
+                  <strong id="slide-lead-contact" class="text-sm text-brand-dark block font-semibold">-</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Append Timeline logs remark form -->
+            <div class="space-y-3 pt-2">
+              <label class="text-xs uppercase font-extrabold text-slate-400 tracking-wider block">Log Client Intervention Notes</label>
+              <form onsubmit="handleAppendLog(event)" class="flex gap-2.5">
+                <input id="timeline-remark-input" type="text" required placeholder="Ex: Met with client, interested in 4BHK units near IT park..." class="flex-1 py-3 px-4 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-orange shadow-sm bg-white">
+                <button type="submit" class="bg-brand-dark hover:bg-brand-orange text-white font-bold text-sm px-6 py-3 rounded-xl transition-colors shrink-0 shadow-md">
+                  Log Note
+                </button>
+              </form>
+            </div>
+
+            <!-- Timeline Logs tracker -->
+            <div class="space-y-4 pt-2">
+              <h4 class="text-xs uppercase font-extrabold text-slate-400 tracking-wider">Follow-Up Action Logs</h4>
+              
+              <div id="slide-lead-timeline" class="relative pl-6 border-l-2 border-slate-200 space-y-6 ml-3">
+                <!-- Timeline node entries get appended here dynamically -->
+              </div>
+            </div>
+
+          </div>
+
+          <!-- TAB 2: EDIT PROFILE & HANDLER ASSIGNMENT -->
+          <div id="slide-tab-edit" class="hidden">
+            <form onsubmit="handleEditLeadSubmit(event)" class="space-y-5 bg-white border border-slate-200/80 p-6 rounded-2xl shadow-sm">
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Lead Name -->
+                <div class="flex flex-col gap-1.5">
+                  <label class="text-[10px] uppercase font-bold text-slate-400">Client Name</label>
+                  <input id="edit-lead-name" type="text" required class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange">
+                </div>
+                <!-- Contact Number -->
+                <div class="flex flex-col gap-1.5">
+                  <label class="text-[10px] uppercase font-bold text-slate-400">Contact Number</label>
+                  <input id="edit-lead-contact" type="tel" required class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Assigned Advisor Select -->
+                <div class="flex flex-col gap-1.5">
+                  <label class="text-[10px] uppercase font-bold text-slate-400">Assigned CRM Specialist</label>
+                  <div class="relative">
+                    <select id="edit-lead-handler" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange bg-white pr-10">
+                      <option value="Ananya Iyer">Ananya Iyer</option>
+                      <option value="Vikram Sen">Vikram Sen</option>
+                      <option value="Neha Sharma">Neha Sharma</option>
+                      <option value="Amit Sharma">Amit Sharma</option>
+                    </select>
+                  </div>
+                </div>
+                <!-- Priority Status -->
+                <div class="flex flex-col gap-1.5">
+                  <label class="text-[10px] uppercase font-bold text-slate-400">Lead Temperature / Priority</label>
+                  <div class="relative">
+                    <select id="edit-lead-priority" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange bg-white pr-10">
+                      <option value="Hot">Hot (High Intent)</option>
+                      <option value="Warm">Warm (Nurturing)</option>
+                      <option value="Cold">Cold (Inbound/Low)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Target Locality -->
+              <div class="flex flex-col gap-1.5">
+                <label class="text-[10px] uppercase font-bold text-slate-400">Target Locality / Area</label>
+                <input id="edit-lead-locality" type="text" required class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange">
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Config -->
+                <div class="flex flex-col gap-1.5">
+                  <label class="text-[10px] uppercase font-bold text-slate-400">BHK Configuration Target</label>
+                  <div class="relative">
+                    <select id="edit-lead-bhk" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange bg-white pr-10">
+                      <option value="1 BHK">1 BHK</option>
+                      <option value="2 BHK">2 BHK</option>
+                      <option value="3 BHK">3 BHK</option>
+                      <option value="3 BHK+">3 BHK+</option>
+                      <option value="4 BHK">4 BHK</option>
+                      <option value="5 BHK">5 BHK</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Target Budget -->
+                <div class="flex flex-col gap-1.5">
+                  <label class="text-[10px] uppercase font-bold text-slate-400">Target Budget (Lakhs/Crores)</label>
+                  <input id="edit-lead-budget" type="text" required class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange">
+                </div>
+              </div>
+
+              <!-- Next Action parameters -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+                <div class="flex flex-col gap-1.5">
+                  <label class="text-[10px] uppercase font-bold text-slate-400">Next Follow-Up Agenda</label>
+                  <input id="edit-lead-next-step" type="text" placeholder="Ex: Call to schedule site tour" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange">
+                </div>
+                <div class="flex flex-col gap-1.5">
+                  <label class="text-[10px] uppercase font-bold text-slate-400">Next Action Target Date</label>
+                  <input id="edit-lead-next-date" type="text" placeholder="Ex: July 02, 2026" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange">
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="pt-4">
+                <button type="submit" class="w-full bg-brand-orange hover:bg-brand-orangeDark text-white py-3.5 rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition-all">
+                  Save Changes & Log Audit
+                </button>
+              </div>
+
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD LEAD MANUALLY DIALOG/MODAL -->
+  <div id="add-lead-modal" class="hidden fixed inset-0 bg-brand-dark/60 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-brand-border relative animate-[scaleIn_0.3s_ease-out]">
+      <button onclick="closeAddLeadModal()" class="absolute top-5 right-5 text-slate-400 hover:text-brand-dark transition-colors">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+      <div class="mb-6">
+        <span class="text-brand-orange font-bold text-xs uppercase tracking-wider block mb-1">Inbound CRM Stream</span>
+        <h3 class="font-accent text-2xl font-extrabold text-brand-dark tracking-tight">Manual Lead Intake</h3>
+      </div>
+      <form id="add-lead-form" onsubmit="handleAddLeadSubmit(event)" class="space-y-4">
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[10px] uppercase font-bold text-slate-400">Client Name</label>
+          <input id="new-lead-name" type="text" required placeholder="Ex: Amit Sharma" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange bg-white shadow-sm">
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex flex-col gap-1.5">
+            <label class="text-[10px] uppercase font-bold text-slate-400">Contact Number</label>
+            <input id="new-lead-contact" type="tel" required placeholder="Ex: +91 99999 99999" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm">
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="text-[10px] uppercase font-bold text-slate-400">Assign Advisor</label>
+            <div class="relative">
+              <select id="new-lead-handler" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm pr-8">
+                <option value="Ananya Iyer">Ananya Iyer</option>
+                <option value="Vikram Sen">Vikram Sen</option>
+                <option value="Neha Sharma">Neha Sharma</option>
+                <option value="Amit Sharma">Amit Sharma</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-2.5">
+          <div class="flex flex-col gap-1.5 col-span-2">
+            <label class="text-[10px] uppercase font-bold text-slate-400">Preferred Locality</label>
+            <input id="new-lead-locality" type="text" required placeholder="Ex: Whitefield" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm">
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="text-[10px] uppercase font-bold text-slate-400">BHK</label>
+            <div class="relative">
+              <select id="new-lead-bhk" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm pr-8">
+                <option value="1 BHK">1 BHK</option>
+                <option value="2 BHK">2 BHK</option>
+                <option value="3 BHK+">3 BHK+</option>
+                <option value="4 BHK">4 BHK</option>
+                <option value="5 BHK">5 BHK</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex flex-col gap-1.5">
+            <label class="text-[10px] uppercase font-bold text-slate-400">Target Budget</label>
+            <input id="new-lead-budget" type="text" required placeholder="Ex: ₹1.85 Cr" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm">
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="text-[10px] uppercase font-bold text-slate-400">Priority Level</label>
+            <div class="relative">
+              <select id="new-lead-priority" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm pr-8">
+                <option value="Hot">Hot</option>
+                <option value="Warm">Warm</option>
+                <option value="Cold">Cold</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="w-full bg-brand-orange hover:bg-brand-orangeDark text-white py-3.5 px-6 rounded-xl font-accent font-bold text-sm tracking-wide shadow-lg shadow-orange-500/20 transition-all duration-300">
+          Inject Into Lead Board
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- REAL-TIME INTERACTIVE NOTIFICATION POPUP (Toggled via header bell click) -->
+  <div id="notification-dropdown" class="hidden absolute right-4 sm:right-8 top-16 w-80 sm:w-96 bg-white rounded-2xl border border-slate-200/80 shadow-2xl z-50 overflow-hidden">
+    <div class="px-5 py-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+      <h4 class="font-accent font-extrabold text-sm text-brand-dark">CRM Notifications</h4>
+      <button onclick="clearAllNotifications()" class="text-[10px] font-extrabold uppercase text-brand-orange hover:text-brand-orangeDark transition-colors">
+        Mark all as read
+      </button>
+    </div>
+    <div id="notification-items-list" class="max-h-[320px] overflow-y-auto custom-scroll divide-y divide-slate-100">
+      <!-- Notification nodes dynamically populated -->
+    </div>
+    <div id="notifications-empty-state" class="hidden p-6 text-center text-slate-400 text-xs font-semibold">
+      <i class="fa-regular fa-bell-slash text-xl text-slate-300 block mb-2"></i>
+      <span>All caught up! No unread notifications.</span>
+    </div>
+  </div>
+
+  <!-- DELETE CONFIRMATION MODERN MODAL -->
+  <div id="delete-confirm-modal" class="hidden fixed inset-0 bg-brand-dark/65 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-brand-border text-center">
+      <div class="w-14 h-14 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-2xl mx-auto mb-4">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <h3 class="font-accent font-extrabold text-xl text-brand-dark mb-2">Delete Lead Record?</h3>
+      <p class="text-sm text-brand-slate mb-6">Are you sure you want to delete <strong id="delete-lead-name-placeholder" class="text-brand-dark">Amit Malviya</strong>? This action cannot be undone.</p>
+      
+      <div class="flex gap-3">
+        <button onclick="closeDeleteConfirmModal()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-brand-dark text-sm font-bold rounded-xl transition-all">
+          No, Cancel
+        </button>
+        <button id="delete-confirm-action-btn" class="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-red-600/10">
+          Yes, Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE SYSTEM SCRIPT -->
+  <script>
+    // Live Client Memory Database Arrays
+    let leadList = [
+      {
+        id: 1,
+        name: "Amit Malviya",
+        contact: "+91 98765 01011",
+        timestamp: "2026-06-27 10:15",
+        locality: "Whitefield, Bengaluru",
+        budget: "₹1.85 Cr",
+        bhk: "4 BHK",
+        handler: "Ananya Iyer",
+        status: "New",
+        priority: "Hot",
+        nextStep: "Call to confirm site visit timings",
+        nextDate: "July 02, 2026",
+        logs: [
+          { time: "2026-06-27 10:15", note: "Lead automatically captured from the Serene Villa page." }
+        ]
+      },
+      {
+        id: 2,
+        name: "Preeti Nair",
+        contact: "+91 99887 23412",
+        timestamp: "2026-06-27 09:30",
+        locality: "Bandra West, Mumbai",
+        budget: "₹4.90 Cr",
+        bhk: "5 BHK",
+        handler: "Vikram Sen",
+        status: "Interested",
+        priority: "Hot",
+        nextStep: "Arrange personal video call presentation",
+        nextDate: "July 05, 2026",
+        logs: [
+          { time: "2026-06-27 09:30", note: "Client enquired about the Skyline Penthouse deck balconies." },
+          { time: "2026-06-27 09:45", note: "Sent virtual reality walkthrough link via Whatsapp Reference." }
+        ]
+      },
+      {
+        id: 3,
+        name: "Rahul Deshmukh",
+        contact: "+91 91234 56789",
+        timestamp: "2026-06-26 18:22",
+        locality: "Sector 65, Gurgaon",
+        budget: "₹3.40 Cr",
+        bhk: "4 BHK",
+        handler: "Neha Sharma",
+        status: "Called",
+        priority: "Warm",
+        nextStep: "Follow up on modular kitchen inquiries",
+        nextDate: "July 01, 2026",
+        logs: [
+          { time: "2026-06-26 18:22", note: "Initial callback registered on Royal Manor query." },
+          { time: "2026-06-27 11:00", note: "Connected via phone call. Discussed layout options." }
+        ]
+      },
+      {
+        id: 4,
+        name: "Meera Krishnan",
+        contact: "+91 94567 11223",
+        timestamp: "2026-06-26 14:10",
+        locality: "Electronic City, Bengaluru",
+        budget: "₹1.15 Cr",
+        bhk: "3 BHK",
+        handler: "Ananya Iyer",
+        status: "Site Visit Scheduled",
+        priority: "Hot",
+        nextStep: "In-person tour with site specialist",
+        nextDate: "July 03, 2026",
+        logs: [
+          { time: "2026-06-26 14:10", note: "Captured from Prestige Cyber Heights page." },
+          { time: "2026-06-27 09:00", note: "Site visit scheduled for tomorrow morning at 11 AM." }
+        ]
+      },
+      {
+        id: 5,
+        name: "Deepak Chawla",
+        contact: "+91 97771 22334",
+        timestamp: "2026-06-25 11:15",
+        locality: "Prabhadevi, Mumbai",
+        budget: "₹2.75 Cr",
+        bhk: "3 BHK",
+        handler: "Vikram Sen",
+        status: "Closed",
+        priority: "Cold",
+        nextStep: "Archived after complete transaction closure",
+        nextDate: "Completed",
+        logs: [
+          { time: "2026-06-25 11:15", note: "Lead qualified for Sea Breeze suite." },
+          { time: "2026-06-26 16:30", note: "Booking amount received. Escrow account verified. CLOSED!" }
+        ]
+      }
+    ];
+
+    // Notification Hub Store Database
+    let notificationsList = [
+      { id: 1, type: "site-visit", title: "Site Tour scheduled tomorrow", leadName: "Meera Krishnan", time: "10 mins ago" },
+      { id: 2, type: "assignment", title: "New high-intent lead allocated to you", leadName: "Amit Malviya", time: "1 hour ago" },
+      { id: 3, type: "system", title: "Stamp duty clearance logged", leadName: "Deepak Chawla", time: "Yesterday" }
+    ];
+
+    let activeNav = "leads";
+    let activeLeadId = null;
+    let leadIdToDelete = null;
+
+    // Set Active Dashboard Module
+    function setActiveNav(navKey) {
+      activeNav = navKey;
+      
+      const views = {
+        leads: document.getElementById('crm-leads-view'),
+        property: document.getElementById('crm-property-view'),
+        performance: document.getElementById('crm-performance-view')
+      };
+
+      const titleNode = document.getElementById('crm-view-title');
+      if (navKey === 'leads') titleNode.innerText = 'Leads Directory';
+      else if (navKey === 'property') titleNode.innerText = 'Add Property';
+      else if (navKey === 'performance') titleNode.innerText = 'Performance';
+
+      // Reset menu items background highlights
+      const keys = ['leads', 'property', 'performance'];
+      keys.forEach(k => {
+        const item = document.getElementById(`nav-${k}`);
+        if (k === navKey) {
+          item.className = "nav-item group flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orangeDark text-white font-semibold text-sm transition-all shadow-md shadow-orange-500/10";
+        } else {
+          item.className = "nav-item group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800/40 hover:text-white text-slate-400 text-sm font-medium transition-all";
+        }
+      });
+
+      // Show Selected Section
+      Object.keys(views).forEach(key => {
+        if (key === navKey) {
+          views[key].classList.remove('hidden');
+          views[key].classList.add('block');
+        } else {
+          views[key].classList.remove('block');
+          views[key].classList.add('hidden');
+        }
+      });
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('dashboard-sidebar');
+      const backdrop = document.getElementById('sidebar-backdrop');
+
+      if (sidebar.classList.contains('hidden')) {
+        sidebar.classList.remove('hidden');
+        sidebar.classList.add('flex');
+        backdrop.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('hidden');
+        sidebar.classList.remove('flex');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    // Change slide-over working tabs
+    function setSlideoverTab(tabId) {
+      const overviewTab = document.getElementById('slide-tab-overview');
+      const editTab = document.getElementById('slide-tab-edit');
+      const overviewBtn = document.getElementById('tab-btn-overview');
+      const editBtn = document.getElementById('tab-btn-edit');
+
+      if (tabId === 'overview') {
+        overviewTab.classList.remove('hidden');
+        overviewTab.classList.add('block');
+        editTab.classList.remove('block');
+        editTab.classList.add('hidden');
+
+        overviewBtn.className = "flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-brand-orange text-brand-orange transition-all";
+        editBtn.className = "flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-brand-dark transition-all";
+      } else {
+        editTab.classList.remove('hidden');
+        editTab.classList.add('block');
+        overviewTab.classList.remove('block');
+        overviewTab.classList.add('hidden');
+
+        editBtn.className = "flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-brand-orange text-brand-orange transition-all";
+        overviewBtn.className = "flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-brand-dark transition-all";
+      }
+    }
+
+    function getPriorityStyleClass(priorityStr) {
+      switch (priorityStr) {
+        case 'Hot':
+          return 'bg-red-50 text-red-600 border-red-200/60';
+        case 'Warm':
+          return 'bg-amber-50 text-amber-700 border-amber-200/60';
+        case 'Cold':
+          return 'bg-slate-100 text-slate-500 border-slate-200/60';
+        default:
+          return 'bg-slate-50 text-slate-700 border-slate-100';
+      }
+    }
+
+    // Render Table & Mobile Cards dynamically (Fully responsive)
+    function renderLeads(leadsData) {
+      const tbody = document.getElementById('leads-table-body');
+      const mobileContainer = document.getElementById('leads-mobile-container');
+      const emptyState = document.getElementById('table-empty-state');
+      
+      tbody.innerHTML = "";
+      mobileContainer.innerHTML = "";
+
+      if (leadsData.length === 0) {
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('flex');
+        return;
+      } else {
+        emptyState.classList.remove('flex');
+        emptyState.classList.add('hidden');
+      }
+
+      leadsData.forEach(lead => {
+        // --- DESKTOP VIEW ROW ---
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50/40 transition-colors group/row";
+        
+        tr.innerHTML = `
+          <td class="py-5 px-6">
+            <div class="flex items-start gap-3">
+              <div class="pt-0.5">
+                <span class="inline-flex items-center justify-center text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-lg border ${getPriorityStyleClass(lead.priority)} tracking-wider shadow-sm">
+                  ${lead.priority || 'Warm'}
+                </span>
+              </div>
+              <div>
+                <div class="font-bold text-slate-900 group-hover/row:text-brand-orange transition-all duration-300 cursor-pointer text-sm font-accent tracking-tight leading-snug" onclick="openSlideOver(${lead.id})">
+                  ${lead.name}
+                </div>
+                <div class="text-xs text-slate-400 mt-1 flex items-center gap-1.5 font-medium">
+                  <i class="fa-solid fa-phone text-[10px]"></i> ${lead.contact}
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="py-5 px-6 text-sm">
+            <div class="font-semibold text-slate-800 font-accent">${lead.locality}</div>
+            <div class="text-xs text-slate-400 mt-1 flex items-center gap-1.5 font-medium">
+              <i class="fa-solid fa-bed text-brand-orange"></i> ${lead.bhk || 'N/A'} 
+              <span class="text-slate-300">•</span> 
+              <i class="fa-solid fa-wallet text-brand-orange"></i> Budget: ${lead.budget || 'N/A'}
+            </div>
+          </td>
+          <td class="py-5 px-6 text-xs text-slate-400 font-medium">
+            <div class="flex items-center gap-1.5">
+              <i class="fa-regular fa-clock"></i>
+              <span>${lead.timestamp}</span>
+            </div>
+          </td>
+          <td class="py-5 px-6">
+            <div class="relative max-w-[170px]">
+              <select onchange="handleAdvisorReassign(${lead.id}, this.value)" class="custom-select-indicator appearance-none w-full text-xs font-semibold pl-3 pr-8 py-2 bg-slate-50 border border-slate-200/80 rounded-xl hover:border-slate-300 focus:outline-none focus:ring-1 focus:ring-brand-orange cursor-pointer">
+                <option value="Ananya Iyer" ${lead.handler === 'Ananya Iyer' ? 'selected' : ''}>Ananya Iyer</option>
+                <option value="Vikram Sen" ${lead.handler === 'Vikram Sen' ? 'selected' : ''}>Vikram Sen</option>
+                <option value="Neha Sharma" ${lead.handler === 'Neha Sharma' ? 'selected' : ''}>Neha Sharma</option>
+                <option value="Amit Sharma" ${lead.handler === 'Amit Sharma' ? 'selected' : ''}>Amit Sharma</option>
+              </select>
+            </div>
+          </td>
+          <td class="py-4.5 px-6">
+            <div class="relative max-w-[150px]">
+              <select onchange="handleStatusChange(${lead.id}, this.value)" class="custom-select-indicator appearance-none text-xs font-bold pl-3.5 pr-8 py-2 rounded-xl focus:outline-none focus:ring-1 focus:ring-brand-orange/20 cursor-pointer border ${getStatusStyleClasses(lead.status)}">
+                <option value="New" ${lead.status === 'New' ? 'selected' : ''}>New</option>
+                <option value="Called" ${lead.status === 'Called' ? 'selected' : ''}>Called</option>
+                <option value="Interested" ${lead.status === 'Interested' ? 'selected' : ''}>Interested</option>
+                <option value="Site Visit Scheduled" ${lead.status === 'Site Visit Scheduled' ? 'selected' : ''}>Site Visit Scheduled</option>
+                <option value="Closed" ${lead.status === 'Closed' ? 'selected' : ''}>Closed</option>
+              </select>
+            </div>
+          </td>
+          <td class="py-5 px-6 text-right">
+            <div class="flex items-center justify-end gap-2">
+              <button onclick="openSlideOver(${lead.id})" class="text-xs font-bold text-slate-500 hover:text-brand-orange bg-slate-100 hover:bg-orange-50 w-8.5 h-8.5 rounded-xl transition-all border border-slate-200 hover:border-brand-orange/30 flex items-center justify-center shadow-sm" title="Open Full Lead Form">
+                <i class="fa-solid fa-expand"></i>
+              </button>
+              <button onclick="openDeleteConfirmModal(${lead.id}, '${lead.name}')" class="text-xs font-bold text-slate-400 hover:text-red-500 bg-slate-100 hover:bg-red-50 w-8.5 h-8.5 rounded-xl transition-all border border-slate-200 hover:border-red-200 flex items-center justify-center shadow-sm" title="Delete Lead Record">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+
+        // --- MOBILE CARD VIEW ---
+        const mCard = document.createElement('div');
+        mCard.className = "bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4";
+        mCard.innerHTML = `
+          <div class="flex justify-between items-start gap-4">
+            <div>
+              <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md border ${getPriorityStyleClass(lead.priority)} mb-1.5">
+                ${lead.priority || 'Warm'}
+              </span>
+              <h4 onclick="openSlideOver(${lead.id})" class="font-bold text-slate-900 text-base font-accent cursor-pointer hover:text-brand-orange transition-colors">${lead.name}</h4>
+              <p class="text-xs text-slate-400 mt-0.5 flex items-center gap-1.5"><i class="fa-solid fa-phone"></i> ${lead.contact}</p>
+            </div>
+            <div class="flex gap-1.5 shrink-0">
+              <button onclick="openSlideOver(${lead.id})" class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 text-slate-500 hover:text-brand-orange flex items-center justify-center text-xs">
+                <i class="fa-solid fa-expand"></i>
+              </button>
+              <button onclick="openDeleteConfirmModal(${lead.id}, '${lead.name}')" class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 text-slate-400 hover:text-red-500 flex items-center justify-center text-xs">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-3 pt-3.5 border-t border-slate-100 text-xs text-slate-600">
+            <div>
+              <span class="text-[10px] text-slate-400 font-semibold block mb-0.5">LOCALITY</span>
+              <strong class="text-slate-800">${lead.locality}</strong>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400 block mb-0.5">REQUIREMENTS</span>
+              <strong class="text-slate-800">${lead.bhk || 'N/A'} • ${lead.budget || 'N/A'}</strong>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 pt-3.5 border-t border-slate-100">
+            <div>
+              <label class="text-[9px] text-slate-400 font-bold block mb-1">ASSIGNED ADVISOR</label>
+              <div class="relative">
+                <select onchange="handleAdvisorReassign(${lead.id}, this.value)" class="custom-select-indicator appearance-none w-full text-xs font-semibold pl-2 pr-6 py-1.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none bg-white">
+                  <option value="Ananya Iyer" ${lead.handler === 'Ananya Iyer' ? 'selected' : ''}>Ananya Iyer</option>
+                  <option value="Vikram Sen" ${lead.handler === 'Vikram Sen' ? 'selected' : ''}>Vikram Sen</option>
+                  <option value="Neha Sharma" ${lead.handler === 'Neha Sharma' ? 'selected' : ''}>Neha Sharma</option>
+                  <option value="Amit Sharma" ${lead.handler === 'Amit Sharma' ? 'selected' : ''}>Amit Sharma</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="text-[9px] text-slate-400 font-bold block mb-1">STATUS</label>
+              <div class="relative">
+                <select onchange="handleStatusChange(${lead.id}, this.value)" class="custom-select-indicator appearance-none w-full text-xs font-bold pl-2 pr-6 py-1.5 border rounded-xl focus:outline-none ${getStatusStyleClasses(lead.status)}">
+                  <option value="New" ${lead.status === 'New' ? 'selected' : ''}>New</option>
+                  <option value="Called" ${lead.status === 'Called' ? 'selected' : ''}>Called</option>
+                  <option value="Interested" ${lead.status === 'Interested' ? 'selected' : ''}>Interested</option>
+                  <option value="Site Visit Scheduled" ${lead.status === 'Site Visit Scheduled' ? 'selected' : ''}>Site Visit Scheduled</option>
+                  <option value="Closed" ${lead.status === 'Closed' ? 'selected' : ''}>Closed</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="text-[10px] text-slate-400 pt-1 flex items-center justify-between font-medium">
+            <span>CRM Database Intake</span>
+            <span>${lead.timestamp}</span>
+          </div>
+        `;
+        mobileContainer.appendChild(mCard);
+      });
+    }
+
+    // CSS Class Resolver depending on Lead status state
+    function getStatusStyleClasses(status) {
+      switch (status) {
+        case 'New':
+          return 'bg-blue-50 text-blue-700 border-blue-200';
+        case 'Called':
+          return 'bg-amber-50 text-amber-700 border-amber-200';
+        case 'Interested':
+          return 'bg-indigo-50 text-indigo-700 border-indigo-200';
+        case 'Site Visit Scheduled':
+          return 'bg-purple-50 text-purple-700 border-purple-200';
+        case 'Closed':
+          return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+        default:
+          return 'bg-slate-50 text-slate-700 border-slate-200';
+      }
+    }
+
+    // Inline Reassign Handler Action
+    function handleAdvisorReassign(leadId, newAdvisor) {
+      const lead = leadList.find(l => l.id === leadId);
+      if (lead) {
+        const oldAdvisor = lead.handler;
+        lead.handler = newAdvisor;
+
+        // Auto timeline audit log
+        const nowStr = new Date().toISOString().slice(0, 16).replace('T', ' ');
+        lead.logs.unshift({
+          time: nowStr,
+          note: `Lead handler reassigned from "${oldAdvisor}" to "${newAdvisor}" via Advisor Picker.`
+        });
+
+        showToast(`Reassigned "${lead.name}" handler to ${newAdvisor}`);
+        
+        if (activeLeadId === leadId) {
+          populateSlideoverData(lead);
+        }
+        filterLeads();
+      }
+    }
+
+    // Real-time status update from dropdown interaction
+    function handleStatusChange(leadId, newStatus) {
+      const lead = leadList.find(l => l.id === leadId);
+      if (lead) {
+        const oldStatus = lead.status;
+        lead.status = newStatus;
+        
+        // Add log entry dynamically
+        const nowStr = new Date().toISOString().slice(0, 16).replace('T', ' ');
+        lead.logs.unshift({
+          time: nowStr,
+          note: `Status modified from "${oldStatus}" to "${newStatus}"`
+        });
+
+        // Trigger notification toast
+        showToast(`Lead status for "${lead.name}" changed to ${newStatus}`);
+        
+        // If current slideover is open, update timeline automatically
+        if (activeLeadId === leadId) {
+          populateSlideoverData(lead);
+        }
+
+        filterLeads();
+      }
+    }
+
+    // Contextual Slide-Over Profile Leaf Engine
+    function openSlideOver(leadId) {
+      activeLeadId = leadId;
+      const lead = leadList.find(l => l.id === leadId);
+      if (lead) {
+        setSlideoverTab('overview'); // Default to overview
+        populateSlideoverData(lead);
+        
+        // Trigger CSS transition triggers
+        const backdrop = document.getElementById('slideover-backdrop');
+        const panel = document.getElementById('slideover-panel');
+        const root = document.getElementById('lead-slideover');
+
+        root.classList.remove('pointer-events-none');
+        backdrop.classList.remove('bg-brand-dark/0');
+        backdrop.classList.add('bg-brand-dark/40', 'backdrop-blur-sm', 'pointer-events-auto');
+        panel.classList.remove('translate-x-full');
+      }
+    }
+
+    function closeLeadSlideover() {
+      const backdrop = document.getElementById('slideover-backdrop');
+      const panel = document.getElementById('slideover-panel');
+      const root = document.getElementById('lead-slideover');
+
+      backdrop.classList.add('bg-brand-dark/0');
+      backdrop.classList.remove('bg-brand-dark/40', 'backdrop-blur-sm', 'pointer-events-auto');
+      panel.classList.add('translate-x-full');
+      root.classList.add('pointer-events-none');
+      activeLeadId = null;
+    }
+
+    // Populate profile details in panel
+    function populateSlideoverData(lead) {
+      // Basic titles
+      document.getElementById('slide-lead-name').innerText = lead.name;
+      document.getElementById('slide-lead-handler').innerText = `CRM Handler: ${lead.handler}`;
+      
+      // Update Priority Pill in slideover
+      const prioBadge = document.getElementById('slide-lead-priority-badge');
+      prioBadge.innerText = lead.priority.toUpperCase();
+      prioBadge.className = `px-2.5 py-0.5 rounded-lg text-[9px] font-extrabold tracking-wider uppercase ${getPriorityStyleClass(lead.priority)}`;
+
+      // Target Fields in tab 1
+      document.getElementById('slide-lead-locality').innerText = lead.locality;
+      document.getElementById('slide-lead-budget').innerText = lead.budget;
+      document.getElementById('slide-lead-bhk').innerText = lead.bhk;
+      document.getElementById('slide-lead-contact').innerText = lead.contact;
+
+      // Follow up next steps labels
+      document.getElementById('slide-next-step-lbl').innerText = lead.nextStep || 'No pending agenda logged';
+      document.getElementById('slide-next-date-lbl').innerText = lead.nextDate || 'Not scheduled';
+
+      // Prefill Fields in tab 2 Edit Form
+      document.getElementById('edit-lead-name').value = lead.name;
+      document.getElementById('edit-lead-contact').value = lead.contact;
+      document.getElementById('edit-lead-handler').value = lead.handler;
+      document.getElementById('edit-lead-priority').value = lead.priority || 'Warm';
+      document.getElementById('edit-lead-locality').value = lead.locality;
+      document.getElementById('edit-lead-bhk').value = lead.bhk;
+      document.getElementById('edit-lead-budget').value = lead.budget;
+      document.getElementById('edit-lead-next-step').value = lead.nextStep || '';
+      document.getElementById('edit-lead-next-date').value = lead.nextDate || '';
+
+      // Direct delete button setup within Slide-over
+      const sDeleteBtn = document.getElementById('slide-lead-delete-btn');
+      sDeleteBtn.onclick = function() {
+        openDeleteConfirmModal(lead.id, lead.name);
+      };
+
+      const timeline = document.getElementById('slide-lead-timeline');
+      timeline.innerHTML = "";
+
+      lead.logs.forEach(log => {
+        const item = document.createElement('div');
+        item.className = "relative group/time";
+        item.innerHTML = `
+          <span class="absolute -left-[30px] top-1.5 w-3.5 h-3.5 rounded-full bg-white border-2 border-brand-orange group-hover/time:bg-brand-orange transition-colors"></span>
+          <span class="text-[10px] text-slate-400 font-bold block mb-1">${log.time}</span>
+          <p class="text-xs text-slate-600 leading-relaxed font-medium">${log.note}</p>
+        `;
+        timeline.appendChild(item);
+      });
+    }
+
+    // Save changes submitted from profile editor form
+    function handleEditLeadSubmit(event) {
+      event.preventDefault();
+      
+      if (!activeLeadId) return;
+      const lead = leadList.find(l => l.id === activeLeadId);
+      if (!lead) return;
+
+      const newName = document.getElementById('edit-lead-name').value.trim();
+      const newContact = document.getElementById('edit-lead-contact').value.trim();
+      const newHandler = document.getElementById('edit-lead-handler').value;
+      const newPriority = document.getElementById('edit-lead-priority').value;
+      const newLocality = document.getElementById('edit-lead-locality').value.trim();
+      const newBhk = document.getElementById('edit-lead-bhk').value;
+      const newBudget = document.getElementById('edit-lead-budget').value.trim();
+      const newNextStep = document.getElementById('edit-lead-next-step').value.trim();
+      const newNextDate = document.getElementById('edit-lead-next-date').value.trim();
+
+      let changeSummaries = [];
+
+      // Audit profile modifications
+      if (lead.name !== newName) { changeSummaries.push(`name to "${newName}"`); lead.name = newName; }
+      if (lead.contact !== newContact) { changeSummaries.push(`contact to "${newContact}"`); lead.contact = newContact; }
+      if (lead.handler !== newHandler) { changeSummaries.push(`assigned advisor to "${newHandler}"`); lead.handler = newHandler; }
+      if (lead.priority !== newPriority) { changeSummaries.push(`priority to "${newPriority}"`); lead.priority = newPriority; }
+      if (lead.locality !== newLocality) { changeSummaries.push(`locality parameters to "${newLocality}"`); lead.locality = newLocality; }
+      if (lead.bhk !== newBhk) { changeSummaries.push(`BHK requirements to "${newBhk}"`); lead.bhk = newBhk; }
+      if (lead.budget !== newBudget) { changeSummaries.push(`budget parameters to "${newBudget}"`); lead.budget = newBudget; }
+      if (lead.nextStep !== newNextStep) { changeSummaries.push(`agenda schedule to "${newNextStep}"`); lead.nextStep = newNextStep; }
+      if (lead.nextDate !== newNextDate) { changeSummaries.push(`action date target to "${newNextDate}"`); lead.nextDate = newNextDate; }
+
+      if (changeSummaries.length > 0) {
+        const nowStr = new Date().toISOString().slice(0, 16).replace('T', ' ');
+        lead.logs.unshift({
+          time: nowStr,
+          note: `Profile requirements updated: modified ${changeSummaries.join(', ')}`
+        });
+
+        showToast("Profile specifications & advisor parameters saved successfully!");
+        populateSlideoverData(lead);
+        filterLeads();
+      }
+
+      setSlideoverTab('overview');
+    }
+
+    // Add remark follow-up input logic
+    function handleAppendLog(event) {
+      event.preventDefault();
+      const input = document.getElementById('timeline-remark-input');
+      const remarkVal = input.value.trim();
+      
+      if (remarkVal && activeLeadId) {
+        const lead = leadList.find(l => l.id === activeLeadId);
+        if (lead) {
+          const nowStr = new Date().toISOString().slice(0, 16).replace('T', ' ');
+          lead.logs.unshift({
+            time: nowStr,
+            note: remarkVal
+          });
+          
+          populateSlideoverData(lead);
+          showToast('Remark logged on the client timeline!');
+          input.value = "";
+        }
+      }
+    }
+
+    // Manual Lead Creation Dialog
+    function openAddLeadModal() {
+      document.getElementById('add-lead-modal').classList.remove('hidden');
+    }
+
+    function closeAddLeadModal() {
+      document.getElementById('add-lead-modal').classList.add('hidden');
+    }
+
+    function handleAddLeadSubmit(event) {
+      event.preventDefault();
+      
+      const newLead = {
+        id: leadList.length > 0 ? Math.max(...leadList.map(l => l.id)) + 1 : 1,
+        name: document.getElementById('new-lead-name').value.trim(),
+        contact: document.getElementById('new-lead-contact').value.trim(),
+        timestamp: new Date().toISOString().slice(0, 16).replace('T', ' '),
+        locality: document.getElementById('new-lead-locality').value.trim(),
+        budget: document.getElementById('new-lead-budget').value.trim(),
+        bhk: document.getElementById('new-lead-bhk').value,
+        handler: document.getElementById('new-lead-handler').value,
+        status: "New",
+        priority: document.getElementById('new-lead-priority').value,
+        nextStep: "Call to introduce QuickIndia team",
+        nextDate: "Scheduled on intake",
+        logs: [
+          { time: new Date().toISOString().slice(0, 16).replace('T', ' '), note: "Lead manually registered in database." }
+        ]
+      };
+
+      leadList.unshift(newLead);
+      closeAddLeadModal();
+      showToast(`Manual lead "${newLead.name}" successfully created!`);
+      event.target.reset();
+      
+      filterLeads();
+    }
+
+    // Delete Lead Confirmation Dialog Engines
+    function openDeleteConfirmModal(leadId, leadName) {
+      leadIdToDelete = leadId;
+      document.getElementById('delete-lead-name-placeholder').innerText = leadName;
+      document.getElementById('delete-confirm-modal').classList.remove('hidden');
+      
+      // Hook up direct action binding
+      document.getElementById('delete-confirm-action-btn').onclick = function() {
+        triggerLeadDeletion();
+      }
+    }
+
+    function closeDeleteConfirmModal() {
+      document.getElementById('delete-confirm-modal').classList.add('hidden');
+      leadIdToDelete = null;
+    }
+
+    function triggerLeadDeletion() {
+      if (leadIdToDelete) {
+        const deletedLead = leadList.find(l => l.id === leadIdToDelete);
+        leadList = leadList.filter(l => l.id !== leadIdToDelete);
+        
+        closeDeleteConfirmModal();
+        
+        // If slideover details were viewing the deleted item, close it immediately
+        if (activeLeadId === leadIdToDelete) {
+          closeLeadSlideover();
+        }
+
+        showToast(`Lead "${deletedLead ? deletedLead.name : ''}" permanently deleted.`);
+        filterLeads();
+      }
+    }
+
+    // ==========================================================================
+    // NOTIFICATION DROPDOWN CONTROLS
+    // ==========================================================================
+    function toggleNotificationBadge() {
+      const dropdown = document.getElementById('notification-dropdown');
+      dropdown.classList.toggle('hidden');
+      renderNotifications();
+    }
+
+    function renderNotifications() {
+      const container = document.getElementById('notification-items-list');
+      const emptyState = document.getElementById('notifications-empty-state');
+      container.innerHTML = "";
+
+      if (notificationsList.length === 0) {
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('block');
+        return;
+      } else {
+        emptyState.classList.remove('block');
+        emptyState.classList.add('hidden');
+      }
+
+      notificationsList.forEach(notif => {
+        const div = document.createElement('div');
+        div.className = "p-4 hover:bg-slate-50 flex items-start justify-between gap-4 transition-all";
+        
+        let iconClass = "fa-solid fa-bell text-brand-orange bg-orange-50";
+        if (notif.type === 'site-visit') iconClass = "fa-solid fa-calendar-days text-teal-600 bg-teal-50";
+        if (notif.type === 'assignment') iconClass = "fa-solid fa-user-plus text-blue-600 bg-blue-50";
+
+        div.innerHTML = `
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${iconClass.split(' ').slice(2).join(' ')}">
+              <i class="${iconClass.split(' ').slice(0, 2).join(' ')} text-xs"></i>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-slate-800 leading-normal">${notif.note}</p>
+              <span class="text-[10px] text-slate-400 font-bold block mt-1 uppercase tracking-wider">${notif.time}</span>
+            </div>
+          </div>
+          <button onclick="dismissNotification(${notif.id})" class="text-slate-300 hover:text-slate-500 transition-colors">
+            <i class="fa-solid fa-xmark text-xs"></i>
+          </button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function dismissNotification(id) {
+      notificationsList = notificationsList.filter(n => n.id !== id);
+      renderNotifications();
+      updateBellBadge();
+    }
+
+    function clearAllNotifications() {
+      notificationsList = [];
+      renderNotifications();
+      updateBellBadge();
+    }
+
+    function updateBellBadge() {
+      const badge = document.querySelector('header .relative span');
+      if (notificationsList.length === 0) {
+        badge.classList.add('hidden');
+      } else {
+        badge.classList.remove('hidden');
+      }
+    }
+
+    function dismissNotification(id) {
+      notificationsList = notificationsList.filter(n => n.id !== id);
+      renderNotifications();
+      updateBellBadge();
+      showToast("Notification dismissed");
+    }
+
+    // Close dropdown on outside clicks
+    document.addEventListener('click', function(e) {
+      const dropdown = document.getElementById('notification-dropdown');
+      const bellButton = document.querySelector('header button');
+      if (!dropdown.contains(e.target) && !bellButton.contains(e.target)) {
+        dropdown.classList.add('hidden');
+      }
+    });
+
+    // Toast Notification System
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `p-4 rounded-xl shadow-lg border text-sm font-semibold flex items-center gap-3 bg-white transform translate-y-2 opacity-0 transition-all duration-300 pointer-events-auto min-w-[280px] max-w-[340px] border-emerald-100 text-emerald-800`;
+      toast.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i> ${message}`;
+
+      container.appendChild(toast);
+      
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => {
+          toast.remove();
+        }, 300);
+      }, 3500);
+    }
+
+    // Load initial leads on load
+    window.onload = function() {
+      renderLeads(leadList);
+    }
+  </script>
+</body>
+</html>

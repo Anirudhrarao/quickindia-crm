@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickIndia Homes - Premium Real Estate</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              orange: '#F3811E',
+              orangeDark: '#D96E14',
+              slate: '#4B6584',
+              slateDark: '#35495E',
+              dark: '#1E272E',
+              light: '#F9F9F9',
+              border: '#E5E9F0'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            accent: ['Outfit', 'sans-serif'],
+            hindi: ['Noto Serif Devanagari', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+Devanagari:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons for modern UI symbols -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    
+    /* Premium Slide Transition Animation */
+    .hero-slide {
+      opacity: 0;
+      transform: scale(0.96) translateY(15px);
+      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .hero-slide.active {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      pointer-events: auto;
+    }
+
+    /* Elegant continuous floating animations for extra aesthetic depth */
+    @keyframes float-gentle {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(1deg); }
+    }
+    @keyframes float-delayed {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(-1deg); }
+    }
+    
+    .animate-float-1 {
+      animation: float-gentle 6s ease-in-out infinite;
+    }
+    .animate-float-2 {
+      animation: float-delayed 8s ease-in-out infinite;
+    }
+
+    /* Ambient continuous background mesh pulse */
+    @keyframes ambient-glow {
+      0%, 100% { transform: scale(1) translate(0px, 0px); opacity: 0.8; }
+      33% { transform: scale(1.15) translate(30px, -20px); opacity: 0.95; }
+      66% { transform: scale(0.9) translate(-20px, 20px); opacity: 0.7; }
+    }
+    .animate-ambient {
+      animation: ambient-glow 15s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="bg-[#F8FAFC] text-brand-dark font-sans overflow-x-hidden antialiased">
+
+  <!-- Toast Notification Area -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
+
+  <!-- NAVIGATION HEADER -->
+  <header class="sticky top-0 left-0 w-full glass-nav border-b border-brand-border z-50 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- QuickIndia Homes Brand Logo -->
+      <a href="#" class="flex items-center gap-2 group" aria-label="QuickIndia Homes Homepage">
+        <div class="relative flex items-center justify-center w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-orange to-amber-500 text-white font-accent font-extrabold text-2xl shadow-lg shadow-orange-500/20 transform group-hover:rotate-6 transition-all duration-300">
+          Q
+        </div>
+        <div class="font-accent font-extrabold text-2xl tracking-tight text-brand-dark flex items-center">
+          QuickIndia<span class="text-brand-orange ml-1 font-light">Homes</span>
+        </div>
+      </a>
+
+      <!-- Simple Nav Menu Links -->
+      <nav class="hidden lg:flex items-center gap-8">
+        <ul class="flex items-center gap-8 font-accent font-semibold text-[15px]">
+          <li><a href="#properties-section" class="text-brand-dark hover:text-brand-orange relative py-2 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-brand-orange hover:after:w-full after:transition-all after:duration-300 transition-colors">Our Properties</a></li>
+          <li><a href="#achievements-section" class="text-brand-dark hover:text-brand-orange relative py-2 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-brand-orange hover:after:w-full after:transition-all after:duration-300 transition-colors">Achievements</a></li>
+          <li><a href="#features-section" class="text-brand-dark hover:text-brand-orange relative py-2 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-brand-orange hover:after:w-full after:transition-all after:duration-300 transition-colors">Why Choose Us</a></li>
+        </ul>
+      </nav>
+
+      <!-- Contact Concierge & Secure CRM Portal Triggers -->
+      <div class="hidden lg:flex items-center gap-4">
+        <!-- Direct Demo Entry to crm.html -->
+        <a href="crm.html" class="font-accent font-semibold text-sm border border-brand-slate/40 text-brand-slate hover:text-brand-orange hover:border-brand-orange py-3 px-5 rounded-xl transition-all duration-300 flex items-center gap-2">
+          <i class="fa-solid fa-lock-open text-xs"></i>
+          <span>CRM Portal</span>
+        </a>
+        <button onclick="openLeadModal('General Consultation')" class="font-accent font-semibold text-sm bg-brand-slate hover:bg-brand-orange text-white py-3 px-6 rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300">
+          Contact Concierge
+        </button>
+      </div>
+
+      <!-- Mobile Menu Hamburger & Quick CRM Link -->
+      <div class="flex items-center lg:hidden gap-2">
+        <a href="crm.html" class="p-3 text-slate-500 hover:text-brand-orange min-w-[48px] min-h-[48px] flex items-center justify-center" title="Go to CRM Dashboard Portal">
+          <i class="fa-solid fa-lock-open text-lg"></i>
+        </a>
+        <button onclick="toggleMobileMenu()" id="mobile-menu-btn" class="p-3 text-brand-dark focus:outline-none min-w-[48px] min-h-[48px] flex items-center justify-center" aria-label="Toggle menu">
+          <i id="mobile-menu-icon" class="fa-solid fa-bars text-2xl"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-drawer" class="hidden fixed inset-0 top-20 bg-brand-dark/40 backdrop-blur-sm z-40 transition-opacity duration-300 lg:hidden">
+      <div class="bg-white w-full py-6 px-6 border-b border-brand-border flex flex-col gap-6 shadow-2xl">
+        <ul class="flex flex-col gap-4 font-accent font-semibold text-lg">
+          <li><a href="#properties-section" onclick="toggleMobileMenu()" class="block text-brand-dark hover:text-brand-orange transition-colors">Our Properties</a></li>
+          <li><a href="#achievements-section" onclick="toggleMobileMenu()" class="block text-brand-dark hover:text-brand-orange transition-colors">Achievements</a></li>
+          <li><a href="#features-section" onclick="toggleMobileMenu()" class="block text-brand-dark hover:text-brand-orange transition-colors">Why Choose Us</a></li>
+          <li class="pt-3 border-t border-slate-100">
+            <a href="crm.html" onclick="toggleMobileMenu()" class="flex items-center gap-2 text-brand-orange hover:text-brand-orangeDark font-bold text-base transition-colors">
+              <i class="fa-solid fa-lock-open text-sm"></i>
+              <span>Staff CRM Portal Workspace</span>
+            </a>
+          </li>
+        </ul>
+        <div class="border-t border-brand-border pt-4">
+          <button onclick="openLeadModal('General Consultation'); toggleMobileMenu()" class="w-full text-center font-accent font-bold bg-brand-orange hover:bg-brand-orangeDark text-white py-3.5 rounded-xl transition-all shadow-lg shadow-orange-500/10">
+            Contact Concierge
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- PRO LANDING HERO SECTION -->
+  <section class="relative bg-gradient-to-br from-slate-50 via-[#F3F4F6] to-orange-50/20 py-12 lg:py-28 overflow-hidden border-b border-slate-200/40">
+    
+    <!-- Premium Interactive Grid Layer & Glow Shapes -->
+    <div class="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:20px_20px] opacity-70 pointer-events-none"></div>
+    <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-[radial-gradient(circle_at_top_right,rgba(243,129,30,0.1),transparent_65%)] pointer-events-none animate-ambient"></div>
+    <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[radial-gradient(circle_at_bottom_left,rgba(75,101,132,0.06),transparent_60%)] pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+        
+        <!-- Left Column: Branding Copy and Hindi Tagline -->
+        <div class="lg:col-span-6 flex flex-col items-start text-left space-y-6 sm:space-y-8">
+          
+          <!-- Elegant Editorial Tagline -->
+          <div class="flex items-center gap-3 select-none">
+            <span class="font-hindi text-brand-orange text-lg sm:text-xl font-bold tracking-wide">एक कदम अपने घर की ओर</span>
+          </div>
+
+          <!-- Main Bold Header -->
+          <div class="space-y-4 w-full">
+            <span class="text-xs font-accent font-extrabold uppercase tracking-[0.2em] text-brand-slate block">Welcome to</span>
+            <h1 class="font-accent text-4xl sm:text-6xl lg:text-[68px] font-extrabold tracking-tight text-brand-dark leading-[1.15] transition-all">
+              QuickIndia<br>
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange via-amber-500 to-brand-orangeDark font-extrabold relative inline-block">
+                Homes
+              </span>
+            </h1>
+          </div>
+
+          <!-- Simple Copy explaining value -->
+          <p class="text-base sm:text-lg text-brand-slate max-w-lg leading-relaxed font-normal">
+            Your premium real estate partner in India. We curate top-tier villas, city apartments, and exclusive properties designed around your dreams. Find tested options with direct support.
+          </p>
+
+          <!-- Direct Pro Action Buttons -->
+          <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto pt-2">
+            <a href="#properties-section" class="inline-flex items-center justify-center gap-2.5 px-8 py-4.5 rounded-2xl bg-brand-orange hover:bg-brand-orangeDark text-white font-accent font-bold shadow-lg shadow-orange-500/20 hover:shadow-xl hover:shadow-orange-500/25 transform hover:-translate-y-1 transition-all duration-300 min-h-[56px] group">
+              <span>Explore Verified Properties</span>
+              <i class="fa-solid fa-arrow-right text-sm group-hover:translate-x-1.5 transition-transform"></i>
+            </a>
+            
+            <button onclick="openLeadModal('Direct Advisory Call')" class="inline-flex items-center justify-center gap-2.5 px-8 py-4.5 rounded-2xl bg-white border border-slate-200 hover:border-brand-orange hover:bg-slate-50 text-brand-dark hover:text-brand-orange font-accent font-semibold shadow-sm transition-all duration-300 min-h-[56px]">
+              <i class="fa-solid fa-user-tie text-brand-slate group-hover:text-brand-orange"></i>
+              <span>Contact Concierge</span>
+            </button>
+          </div>
+
+          <!-- Quick Trust Stack with Online Advisors -->
+          <div class="flex items-center gap-4.5 pt-8 border-t border-slate-200/80 w-full max-w-lg">
+            <div class="flex -space-x-3">
+              <img class="w-10 h-10 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&h=120&q=80" alt="Advisor">
+              <img class="w-10 h-10 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=120&h=120&q=80" alt="Advisor">
+              <div class="w-10 h-10 rounded-full border-2 border-white bg-brand-slate text-white flex items-center justify-center text-[10px] font-bold font-accent">+12</div>
+            </div>
+            <div class="text-left">
+              <div class="flex items-center gap-1.5">
+                <span class="h-2 w-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+                <span class="font-accent font-bold text-xs uppercase tracking-wider text-brand-slate">Concierge Desk Live</span>
+              </div>
+              <p class="text-xs text-brand-slate mt-0.5">Callback in under 15 minutes</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Premium Active Property Slider (Fluid on Mobile, Centered) -->
+        <div class="lg:col-span-6 relative w-full flex flex-col items-center justify-center min-h-[460px] sm:min-h-[540px]">
+          
+          <!-- Continuous Ambient Accent Glow behind Slider -->
+          <div class="absolute w-64 h-64 sm:w-[340px] sm:h-[340px] bg-brand-orange/15 rounded-full blur-3xl -z-10 animate-pulse"></div>
+
+          <!-- Decorative Floating Card 1 (Top Left) -->
+          <div class="absolute -top-4 left-0 sm:left-4 z-20 bg-white/90 backdrop-blur-md p-3 sm:p-3.5 rounded-2xl border border-slate-200/50 shadow-xl flex items-center gap-3 animate-float-1 max-w-[150px] sm:max-w-[170px]">
+            <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-orange-100 flex items-center justify-center text-brand-orange">
+              <i class="fa-solid fa-shield-halved text-xs"></i>
+            </div>
+            <div>
+              <h4 class="font-accent font-bold text-[10px] sm:text-[11px] text-brand-dark">RERA Checked</h4>
+              <p class="text-[9px] text-brand-slate">100% Safe Deals</p>
+            </div>
+          </div>
+
+          <!-- Decorative Floating Card 2 (Bottom Right) -->
+          <div class="absolute -bottom-4 right-0 sm:right-4 z-20 bg-white/90 backdrop-blur-md p-3 sm:p-3.5 rounded-2xl border border-slate-200/50 shadow-xl flex items-center gap-3 animate-float-2 max-w-[150px] sm:max-w-[170px]">
+            <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
+              <i class="fa-solid fa-bolt text-xs"></i>
+            </div>
+            <div>
+              <h4 class="font-accent font-bold text-[10px] sm:text-[11px] text-brand-dark">Best Pricing</h4>
+              <p class="text-[9px] text-brand-slate">Zero Brokerage</p>
+            </div>
+          </div>
+
+          <!-- Premium Frame Container -->
+          <div class="relative w-full max-w-[440px] h-[460px] sm:h-[500px] rounded-[36px] overflow-hidden shadow-[0_32px_64px_-16px_rgba(30,39,46,0.16)] border-[6px] border-white bg-white group/slider">
+            
+            <!-- Dynamic Property Card Slide 1 (VILLA) -->
+            <div id="slide-1" class="hero-slide active flex flex-col justify-between bg-slate-900 text-white h-full">
+              <div class="relative w-full h-[55%] overflow-hidden bg-slate-800">
+                <img class="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover/slider:scale-105" 
+                     src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=700&q=90" 
+                     alt="The Serene Villa"
+                     onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22180%22 fill=%22%23334155%22><rect width=%22300%22 height=%22180%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23F3811E%22 font-family=%22sans-serif%22 font-weight=%22bold%22 text-anchor=%22middle%22>Modern Villa</text></svg>';">
+                <div class="absolute top-4 left-4 bg-emerald-600/95 backdrop-blur-md text-white font-accent font-extrabold text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-xl border border-white/10 shadow-sm">
+                  Verified Builder
+                </div>
+                <div class="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-white/10 flex items-center gap-1.5">
+                  <i class="fa-solid fa-location-dot text-brand-orange"></i>
+                  <span>Whitefield, Bengaluru</span>
+                </div>
+              </div>
+              
+              <div class="p-6 flex-1 flex flex-col justify-between bg-gradient-to-b from-slate-900 to-slate-950">
+                <div>
+                  <div class="flex items-center justify-between gap-2">
+                    <h3 class="font-accent font-extrabold text-xl sm:text-2xl tracking-tight truncate">The Serene Villa</h3>
+                    <span class="text-brand-orange font-bold font-accent text-lg sm:text-xl shrink-0">₹1.85 Cr</span>
+                  </div>
+                  <p class="text-xs text-slate-300 mt-2 line-clamp-2 leading-relaxed">Luxury automated smart villa with solar integration, wrap-around landscape garden and double car deck space.</p>
+                </div>
+                <div class="flex items-center justify-between border-t border-white/10 pt-4 mt-2">
+                  <div class="flex items-center gap-4 text-xs text-slate-300 font-medium">
+                    <span><i class="fa-solid fa-bed text-brand-orange mr-1.5"></i>4 BHK</span>
+                    <span class="text-white/20">|</span>
+                    <span><i class="fa-solid fa-maximize text-brand-orange mr-1.5"></i>3,200 sqft</span>
+                  </div>
+                  <button onclick="openLeadModal('The Serene Villa')" class="bg-brand-orange hover:bg-brand-orangeDark text-white font-accent font-bold text-xs px-4 py-2.5 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/25">
+                    Details <i class="fa-solid fa-arrow-right ml-1"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dynamic Property Card Slide 2 (APARTMENT) -->
+            <div id="slide-2" class="hero-slide flex flex-col justify-between bg-slate-900 text-white h-full">
+              <div class="relative w-full h-[55%] overflow-hidden bg-slate-800">
+                <img class="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover/slider:scale-105" 
+                     src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=700&q=90" 
+                     alt="Cyber Heights Suite"
+                     onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22180%22 fill=%22%231E293B%22><rect width=%22300%22 height=%22180%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23F3811E%22 font-family=%22sans-serif%22 font-weight=%22bold%22 text-anchor=%22middle%22>Premium Apartment</text></svg>';">
+                <div class="absolute top-4 left-4 bg-emerald-600/95 backdrop-blur-md text-white font-accent font-extrabold text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-xl border border-white/10 shadow-sm">
+                  Title Inspected
+                </div>
+                <div class="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-white/10 flex items-center gap-1.5">
+                  <i class="fa-solid fa-location-dot text-brand-orange"></i>
+                  <span>Electronic City, Bengaluru</span>
+                </div>
+              </div>
+              
+              <div class="p-6 flex-1 flex flex-col justify-between bg-gradient-to-b from-slate-900 to-slate-950">
+                <div>
+                  <div class="flex items-center justify-between gap-2">
+                    <h3 class="font-accent font-extrabold text-xl sm:text-2xl tracking-tight truncate">Cyber Heights Suite</h3>
+                    <span class="text-brand-orange font-bold font-accent text-lg sm:text-xl shrink-0">₹1.15 Cr</span>
+                  </div>
+                  <p class="text-xs text-slate-300 mt-2 line-clamp-2 leading-relaxed">Luxury automated smart apartment featuring executive concierge service desk, clubhouse amenities, and high-tech safety security.</p>
+                </div>
+                <div class="flex items-center justify-between border-t border-white/10 pt-4 mt-2">
+                  <div class="flex items-center gap-4 text-xs text-slate-300 font-medium">
+                    <span><i class="fa-solid fa-bed text-brand-orange mr-1.5"></i>3 BHK</span>
+                    <span class="text-white/20">|</span>
+                    <span><i class="fa-solid fa-maximize text-brand-orange mr-1.5"></i>1,850 sqft</span>
+                  </div>
+                  <button onclick="openLeadModal('Cyber Heights Suite')" class="bg-brand-orange hover:bg-brand-orangeDark text-white font-accent font-bold text-xs px-4 py-2.5 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/25">
+                    Details <i class="fa-solid fa-arrow-right ml-1"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dynamic Property Card Slide 3 (PENTHOUSE) -->
+            <div id="slide-3" class="hero-slide flex flex-col justify-between bg-slate-900 text-white h-full">
+              <div class="relative w-full h-[55%] overflow-hidden bg-slate-800">
+                <img class="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover/slider:scale-105" 
+                     src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=700&q=90" 
+                     alt="Skyline Penthouse"
+                     onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22180%22 fill=%22%23475569%22><rect width=%22300%22 height=%22180%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23F3811E%22 font-family=%22sans-serif%22 font-weight=%22bold%22 text-anchor=%22middle%22>Skyline Penthouse</text></svg>';">
+                <div class="absolute top-4 left-4 bg-emerald-600/95 backdrop-blur-md text-white font-accent font-extrabold text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-xl border border-white/10 shadow-sm">
+                  Premium Category
+                </div>
+                <div class="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-white/10 flex items-center gap-1.5">
+                  <i class="fa-solid fa-location-dot text-brand-orange"></i>
+                  <span>Bandra West, Mumbai</span>
+                </div>
+              </div>
+              
+              <div class="p-6 flex-1 flex flex-col justify-between bg-gradient-to-b from-slate-900 to-slate-950">
+                <div>
+                  <div class="flex items-center justify-between gap-2">
+                    <h3 class="font-accent font-extrabold text-xl sm:text-2xl tracking-tight truncate">Skyline Penthouse</h3>
+                    <span class="text-brand-orange font-bold font-accent text-lg sm:text-xl shrink-0">₹4.90 Cr</span>
+                  </div>
+                  <p class="text-xs text-slate-300 mt-2 line-clamp-2 leading-relaxed">High luxury, double deck panoramic sky home. Italian marble premium layout finishes, private infinity pool view balconies.</p>
+                </div>
+                <div class="flex items-center justify-between border-t border-white/10 pt-4 mt-2">
+                  <div class="flex items-center gap-4 text-xs text-slate-300 font-medium">
+                    <span><i class="fa-solid fa-bed text-brand-orange mr-1.5"></i>5 BHK</span>
+                    <span class="text-white/20">|</span>
+                    <span><i class="fa-solid fa-maximize text-brand-orange mr-1.5"></i>5,200 sqft</span>
+                  </div>
+                  <button onclick="openLeadModal('Skyline Penthouse')" class="bg-brand-orange hover:bg-brand-orangeDark text-white font-accent font-bold text-xs px-4 py-2.5 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/25">
+                    Details <i class="fa-solid fa-arrow-right ml-1"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Custom Navigation Arrows inside Slider -->
+            <button onclick="prevSlide()" class="absolute left-4 top-[28%] -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-md border border-white/10 transition-all z-20" aria-label="Previous property">
+              <i class="fa-solid fa-chevron-left text-xs"></i>
+            </button>
+            <button onclick="nextSlide()" class="absolute right-4 top-[28%] -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-md border border-white/10 transition-all z-20" aria-label="Next property">
+              <i class="fa-solid fa-chevron-right text-xs"></i>
+            </button>
+
+          </div>
+
+          <!-- Slider Page Indicators -->
+          <div class="flex gap-2.5 mt-5 z-10">
+            <button onclick="setSlide(1)" id="dot-1" class="w-8 h-2.5 rounded-full bg-brand-orange transition-all duration-300" aria-label="Slide 1"></button>
+            <button onclick="setSlide(2)" id="dot-2" class="w-2.5 h-2.5 rounded-full bg-slate-300 hover:bg-brand-orange/50 transition-all duration-300" aria-label="Slide 2"></button>
+            <button onclick="setSlide(3)" id="dot-3" class="w-2.5 h-2.5 rounded-full bg-slate-300 hover:bg-brand-orange/50 transition-all duration-300" aria-label="Slide 3"></button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PROPERTIES SHOWROOM GRID -->
+  <section id="properties-section" class="py-16 sm:py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="mb-12">
+        <span class="text-brand-orange font-accent font-bold text-xs uppercase tracking-wider block mb-2">Featured Listings</span>
+        <h2 class="font-accent text-3xl sm:text-4xl font-extrabold text-brand-dark tracking-tight">Available Premium Spaces</h2>
+        <p class="text-brand-slate text-sm sm:text-base mt-2">Tested test data properties for your premium evaluations.</p>
+      </div>
+
+      <!-- Static Clean Grid displaying realistic test properties -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        <!-- Grid Item 1 -->
+        <div class="bg-white rounded-2xl overflow-hidden border border-brand-border shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1.5 flex flex-col h-full">
+          <div class="relative h-64 overflow-hidden bg-slate-100">
+            <img class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" 
+                 src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80" 
+                 alt="Serene Sanctuary Villa"
+                 onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22240%22 fill=%22%23334155%22><rect width=%22300%22 height=%22240%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23F3811E%22 font-family=%22sans-serif%22 font-weight=%22bold%22 text-anchor=%22middle%22>Villa Exterior</text></svg>';">
+            <div class="absolute top-4 left-4 bg-teal-600 text-white font-accent font-bold text-[10px] uppercase tracking-wider px-2.5 py-1 rounded">
+              RERA Compliant
+            </div>
+            <div class="absolute bottom-4 left-4 bg-brand-dark/80 backdrop-blur-md text-white font-accent font-semibold text-xs px-2.5 py-1 rounded">
+              <i class="fa-solid fa-location-dot text-brand-orange mr-1.5"></i>Whitefield, Bengaluru
+            </div>
+          </div>
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-brand-orange font-accent font-extrabold text-lg">₹1.85 Cr</span>
+                <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider bg-slate-50 px-2 py-1 rounded">Villa</span>
+              </div>
+              <h3 class="font-accent font-bold text-xl text-brand-dark mb-2">Serene Sanctuary Villa</h3>
+              <p class="text-sm text-brand-slate line-clamp-2 mb-4">An elegant high-end home built with thermal insulation, automatic home controls, and beautiful custom interiors.</p>
+            </div>
+            <div>
+              <div class="flex items-center justify-between border-t border-brand-border pt-4 mb-4 text-brand-slate text-xs font-semibold">
+                <span><i class="fa-solid fa-bed text-brand-orange mr-1.5"></i>4 Beds</span>
+                <span><i class="fa-solid fa-bath text-brand-orange mr-1.5"></i>4 Baths</span>
+                <span><i class="fa-solid fa-maximize text-brand-orange mr-1.5"></i>3,200 sqft</span>
+              </div>
+              <button onclick="openLeadModal('Serene Sanctuary Villa')" class="w-full bg-slate-50 hover:bg-brand-orange hover:text-white text-brand-dark border border-brand-border py-3 rounded-xl font-accent font-bold text-sm transition-all duration-300">
+                Get Callback Details
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid Item 2 -->
+        <div class="bg-white rounded-2xl overflow-hidden border border-brand-border shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1.5 flex flex-col h-full">
+          <div class="relative h-64 overflow-hidden bg-slate-100">
+            <img class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" 
+                 src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80" 
+                 alt="Prestige Cyber Heights"
+                 onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22240%22 fill=%22%231E293B%22><rect width=%22300%22 height=%22240%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23F3811E%22 font-family=%22sans-serif%22 font-weight=%22bold%22 text-anchor=%22middle%22>Luxury Highrise</text></svg>';">
+            <div class="absolute top-4 left-4 bg-teal-600 text-white font-accent font-bold text-[10px] uppercase tracking-wider px-2.5 py-1 rounded">
+              RERA Compliant
+            </div>
+            <div class="absolute bottom-4 left-4 bg-brand-dark/80 backdrop-blur-md text-white font-accent font-semibold text-xs px-2.5 py-1 rounded">
+              <i class="fa-solid fa-location-dot text-brand-orange mr-1.5"></i>Electronic City, Bengaluru
+            </div>
+          </div>
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-brand-orange font-accent font-extrabold text-lg">₹1.15 Cr</span>
+                <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider bg-slate-50 px-2 py-1 rounded">Apartment</span>
+              </div>
+              <h3 class="font-accent font-bold text-xl text-brand-dark mb-2">Prestige Cyber Heights</h3>
+              <p class="text-sm text-brand-slate line-clamp-2 mb-4">A high-luxury automation suite inside a premier high-rise complex. Directly near major technology parks.</p>
+            </div>
+            <div>
+              <div class="flex items-center justify-between border-t border-brand-border pt-4 mb-4 text-brand-slate text-xs font-semibold">
+                <span><i class="fa-solid fa-bed text-brand-orange mr-1.5"></i>3 Beds</span>
+                <span><i class="fa-solid fa-bath text-brand-orange mr-1.5"></i>3 Baths</span>
+                <span><i class="fa-solid fa-maximize text-brand-orange mr-1.5"></i>1,850 sqft</span>
+              </div>
+              <button onclick="openLeadModal('Prestige Cyber Heights')" class="w-full bg-slate-50 hover:bg-brand-orange hover:text-white text-brand-dark border border-brand-border py-3 rounded-xl font-accent font-bold text-sm transition-all duration-300">
+                Get Callback Details
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid Item 3 -->
+        <div class="bg-white rounded-2xl overflow-hidden border border-brand-border shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1.5 flex flex-col h-full">
+          <div class="relative h-64 overflow-hidden bg-slate-100">
+            <img class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" 
+                 src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=600&q=80" 
+                 alt="Imperial Skyline Penthouse"
+                 onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22240%22 fill=%22%23475569%22><rect width=%22300%22 height=%22240%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23F3811E%22 font-family=%22sans-serif%22 font-weight=%22bold%22 text-anchor=%22middle%22>Skyline Interior</text></svg>';">
+            <div class="absolute top-4 left-4 bg-teal-600 text-white font-accent font-bold text-[10px] uppercase tracking-wider px-2.5 py-1 rounded">
+              RERA Compliant
+            </div>
+            <div class="absolute bottom-4 left-4 bg-brand-dark/80 backdrop-blur-md text-white font-accent font-semibold text-xs px-2.5 py-1 rounded">
+              <i class="fa-solid fa-location-dot text-brand-orange mr-1.5"></i>Bandra West, Mumbai
+            </div>
+          </div>
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-brand-orange font-accent font-extrabold text-lg">₹4.90 Cr</span>
+                <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider bg-slate-50 px-2 py-1 rounded">Penthouse</span>
+              </div>
+              <h3 class="font-accent font-bold text-xl text-brand-dark mb-2">Imperial Skyline Penthouse</h3>
+              <p class="text-sm text-brand-slate line-clamp-2 mb-4">A beautiful dual-level penthouse with wide panoramic ocean views. Finished with quality imported Italian marble.</p>
+            </div>
+            <div>
+              <div class="flex items-center justify-between border-t border-brand-border pt-4 mb-4 text-brand-slate text-xs font-semibold">
+                <span><i class="fa-solid fa-bed text-brand-orange mr-1.5"></i>5 Beds</span>
+                <span><i class="fa-solid fa-bath text-brand-orange mr-1.5"></i>6 Baths</span>
+                <span><i class="fa-solid fa-maximize text-brand-orange mr-1.5"></i>5,200 sqft</span>
+              </div>
+              <button onclick="openLeadModal('Imperial Skyline Penthouse')" class="w-full bg-slate-50 hover:bg-brand-orange hover:text-white text-brand-dark border border-brand-border py-3 rounded-xl font-accent font-bold text-sm transition-all duration-300">
+                Get Callback Details
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid Item 4 -->
+        <div class="bg-white rounded-2xl overflow-hidden border border-brand-border shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1.5 flex flex-col h-full">
+          <div class="relative h-64 overflow-hidden bg-slate-100">
+            <img class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" 
+                 src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=600&q=80" 
+                 alt="The Royal Manor Estates"
+                 onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22240%22 fill=%22%233D566E%22><rect width=%22300%22 height=%22240%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23F3811E%22 font-family=%22sans-serif%22 font-weight=%22bold%22 text-anchor=%22middle%22>Manor Villa</text></svg>';">
+            <div class="absolute top-4 left-4 bg-teal-600 text-white font-accent font-bold text-[10px] uppercase tracking-wider px-2.5 py-1 rounded">
+              RERA Compliant
+            </div>
+            <div class="absolute bottom-4 left-4 bg-brand-dark/80 backdrop-blur-md text-white font-accent font-semibold text-xs px-2.5 py-1 rounded">
+              <i class="fa-solid fa-location-dot text-brand-orange mr-1.5"></i>Sector 65, Gurgaon
+            </div>
+          </div>
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-brand-orange font-accent font-extrabold text-lg">₹3.40 Cr</span>
+                <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider bg-slate-50 px-2 py-1 rounded">Villa</span>
+              </div>
+              <h3 class="font-accent font-bold text-xl text-brand-dark mb-2">The Royal Manor Estates</h3>
+              <p class="text-sm text-brand-slate line-clamp-2 mb-4">A gated ultra-luxury plot-villa design with dynamic spatial modules and a private pool deck area.</p>
+            </div>
+            <div>
+              <div class="flex items-center justify-between border-t border-brand-border pt-4 mb-4 text-brand-slate text-xs font-semibold">
+                <span><i class="fa-solid fa-bed text-brand-orange mr-1.5"></i>4 Beds</span>
+                <span><i class="fa-solid fa-bath text-brand-orange mr-1.5"></i>5 Baths</span>
+                <span><i class="fa-solid fa-maximize text-brand-orange mr-1.5"></i>4,100 sqft</span>
+              </div>
+              <button onclick="openLeadModal('The Royal Manor Estates')" class="w-full bg-slate-50 hover:bg-brand-orange hover:text-white text-brand-dark border border-brand-border py-3 rounded-xl font-accent font-bold text-sm transition-all duration-300">
+                Get Callback Details
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid Item 5 -->
+        <div class="bg-white rounded-2xl overflow-hidden border border-brand-border shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1.5 flex flex-col h-full">
+          <div class="relative h-64 overflow-hidden bg-slate-100">
+            <img class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" 
+                 src="https://images.unsplash.com/photo-1512915922686-57c11dde9b6b?auto=format&fit=crop&w=600&q=80" 
+                 alt="Sea Breeze Premium Suite"
+                 onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22240%22 fill=%22%230F172A%22><rect width=%22300%22 height=%22240%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23F3811E%22 font-family=%22sans-serif%22 font-weight=%22bold%22 text-anchor=%22middle%22>Ocean Suite</text></svg>';">
+            <div class="absolute top-4 left-4 bg-teal-600 text-white font-accent font-bold text-[10px] uppercase tracking-wider px-2.5 py-1 rounded">
+              RERA Compliant
+            </div>
+            <div class="absolute bottom-4 left-4 bg-brand-dark/80 backdrop-blur-md text-white font-accent font-semibold text-xs px-2.5 py-1 rounded">
+              <i class="fa-solid fa-location-dot text-brand-orange mr-1.5"></i>Prabhadevi, Mumbai
+            </div>
+          </div>
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-brand-orange font-accent font-extrabold text-lg">₹2.75 Cr</span>
+                <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider bg-slate-50 px-2 py-1 rounded">Apartment</span>
+              </div>
+              <h3 class="font-accent font-bold text-xl text-brand-dark mb-2">Sea Breeze Premium Suite</h3>
+              <p class="text-sm text-brand-slate line-clamp-2 mb-4">Direct sea breezes meet you from high deck-balconies in this gorgeous high-rise apartment suite.</p>
+            </div>
+            <div>
+              <div class="flex items-center justify-between border-t border-brand-border pt-4 mb-4 text-brand-slate text-xs font-semibold">
+                <span><i class="fa-solid fa-bed text-brand-orange mr-1.5"></i>3 Beds</span>
+                <span><i class="fa-solid fa-bath text-brand-orange mr-1.5"></i>3 Baths</span>
+                <span><i class="fa-solid fa-maximize text-brand-orange mr-1.5"></i>1,980 sqft</span>
+              </div>
+              <button onclick="openLeadModal('Sea Breeze Premium Suite')" class="w-full bg-slate-50 hover:bg-brand-orange hover:text-white text-brand-dark border border-brand-border py-3 rounded-xl font-accent font-bold text-sm transition-all duration-300">
+                Get Callback Details
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid Item 6 -->
+        <div class="bg-white rounded-2xl overflow-hidden border border-brand-border shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1.5 flex flex-col h-full">
+          <div class="relative h-64 overflow-hidden bg-slate-100">
+            <img class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" 
+                 src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=600&q=80" 
+                 alt="The Crown Sky Penthouse"
+                 onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22240%22 fill=%22%231E293B%22><rect width=%22300%22 height=%22240%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23F3811E%22 font-family=%22sans-serif%22 font-weight=%22bold%22 text-anchor=%22middle%22>Sky Villa</text></svg>';">
+            <div class="absolute top-4 left-4 bg-teal-600 text-white font-accent font-bold text-[10px] uppercase tracking-wider px-2.5 py-1 rounded">
+              RERA Compliant
+            </div>
+            <div class="absolute bottom-4 left-4 bg-brand-dark/80 backdrop-blur-md text-white font-accent font-semibold text-xs px-2.5 py-1 rounded">
+              <i class="fa-solid fa-location-dot text-brand-orange mr-1.5"></i>Noida, Sector 150
+            </div>
+          </div>
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-brand-orange font-accent font-extrabold text-lg">₹4.20 Cr</span>
+                <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider bg-slate-50 px-2 py-1 rounded">Penthouse</span>
+              </div>
+              <h3 class="font-accent font-bold text-xl text-brand-dark mb-2">The Crown Sky Penthouse</h3>
+              <p class="text-sm text-brand-slate line-clamp-2 mb-4">Elevated premium sky-villa featuring an integrated wide open terrace patio and private splash pool.</p>
+            </div>
+            <div>
+              <div class="flex items-center justify-between border-t border-brand-border pt-4 mb-4 text-brand-slate text-xs font-semibold">
+                <span><i class="fa-solid fa-bed text-brand-orange mr-1.5"></i>4 Beds</span>
+                <span><i class="fa-solid fa-bath text-brand-orange mr-1.5"></i>5 Baths</span>
+                <span><i class="fa-solid fa-maximize text-brand-orange mr-1.5"></i>4,800 sqft</span>
+              </div>
+              <button onclick="openLeadModal('The Crown Sky Penthouse')" class="w-full bg-slate-50 hover:bg-brand-orange hover:text-white text-brand-dark border border-brand-border py-3 rounded-xl font-accent font-bold text-sm transition-all duration-300">
+                Get Callback Details
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ACHIEVEMENTS SECTION -->
+  <section id="achievements-section" class="py-16 sm:py-24 bg-gradient-to-br from-brand-slateDark to-brand-dark text-white relative overflow-hidden">
+    <div class="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="text-brand-orange font-accent font-bold text-xs uppercase tracking-wider mb-2 block">Our Performance</span>
+        <h2 class="font-accent text-3xl sm:text-4xl font-extrabold tracking-tight mb-4 text-white">Milestones That Define Our Journey</h2>
+        <p class="text-slate-300 text-sm sm:text-base leading-relaxed">Years of real estate leadership, full transaction safety, and strong customer trust across India.</p>
+      </div>
+
+      <!-- Stat Counters Grid -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+        <!-- Stat item 1 -->
+        <div class="p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all duration-300">
+          <div class="text-brand-orange text-4xl sm:text-5xl font-extrabold font-accent mb-2">₹4,200Cr+</div>
+          <div class="text-xs uppercase tracking-wider text-slate-400 font-bold">Transaction Value</div>
+        </div>
+        <!-- Stat item 2 -->
+        <div class="p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all duration-300">
+          <div class="text-brand-orange text-4xl sm:text-5xl font-extrabold font-accent mb-2">15,000+</div>
+          <div class="text-xs uppercase tracking-wider text-slate-400 font-bold">Happy Homeowners</div>
+        </div>
+        <!-- Stat item 3 -->
+        <div class="p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all duration-300">
+          <div class="text-brand-orange text-4xl sm:text-5xl font-extrabold font-accent mb-2">100%</div>
+          <div class="text-xs uppercase tracking-wider text-slate-400 font-bold">RERA Registered</div>
+        </div>
+        <!-- Stat item 4 -->
+        <div class="p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all duration-300">
+          <div class="text-brand-orange text-4xl sm:text-5xl font-extrabold font-accent mb-2">24/7</div>
+          <div class="text-xs uppercase tracking-wider text-slate-400 font-bold">Concierge Care</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY CHOOSE US / VALUE PILLARS -->
+  <section id="features-section" class="py-16 sm:py-24 bg-slate-50 border-t border-b border-brand-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Header -->
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="text-brand-orange font-accent font-bold text-xs uppercase tracking-wider mb-2 block">How We Work</span>
+        <h2 class="font-accent text-3xl sm:text-4xl font-extrabold text-brand-dark tracking-tight mb-4">Rethinking Indian Real Estate</h2>
+        <p class="text-brand-slate text-sm sm:text-base leading-relaxed">No confusing negotiations, no predatory sub-agents, and complete legal security.</p>
+      </div>
+
+      <!-- Features Matrix -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Feature 1 -->
+        <div class="bg-white p-8 rounded-2xl border border-brand-border shadow-sm hover:shadow-md transition-shadow duration-300">
+          <div class="w-12 h-12 rounded-xl bg-orange-100 text-brand-orange flex items-center justify-center text-xl mb-6">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+          <h3 class="font-accent font-bold text-lg text-brand-dark mb-3">100% Inspected</h3>
+          <p class="text-sm text-brand-slate leading-relaxed">Every developer partner and listing goes through strict legal title checks before going live.</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="bg-white p-8 rounded-2xl border border-brand-border shadow-sm hover:shadow-md transition-shadow duration-300">
+          <div class="w-12 h-12 rounded-xl bg-slate-100 text-brand-slate flex items-center justify-center text-xl mb-6">
+            <i class="fa-solid fa-percent"></i>
+          </div>
+          <h3 class="font-accent font-bold text-lg text-brand-dark mb-3">Direct Builder Prices</h3>
+          <p class="text-sm text-brand-slate leading-relaxed">Skip unnecessary third-party agency markups. Get exact quotes directly from property builders.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="bg-white p-8 rounded-2xl border border-brand-border shadow-sm hover:shadow-md transition-shadow duration-300">
+          <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center text-xl mb-6">
+            <i class="fa-solid fa-hands-holding-child"></i>
+          </div>
+          <h3 class="font-accent font-bold text-lg text-brand-dark mb-3">Escrow Guidance</h3>
+          <p class="text-sm text-brand-slate leading-relaxed">Our in-house team assists you from initial booking payments to stamp duty and key handovers.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- DIRECT CALL CONCIERGE BLOCK -->
+  <section class="py-16 sm:py-24 bg-brand-dark text-white relative overflow-hidden">
+    <div class="absolute inset-y-0 right-0 w-1/2 bg-[radial-gradient(circle_at_bottom_right,rgba(243,129,30,0.1),transparent_60%)] pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <div class="lg:col-span-6 space-y-6">
+          <span class="text-brand-orange font-accent font-bold text-xs uppercase tracking-wider block">Get Direct Support</span>
+          <h2 class="font-accent text-3xl sm:text-4xl font-extrabold tracking-tight">Speak to Our Lead Concierge</h2>
+          <p class="text-slate-300 text-sm sm:text-base leading-relaxed">Our tested service desk is ready to respond to your premium purchase requirements. Get complete details in under 15 minutes.</p>
+          
+          <div class="flex flex-col sm:flex-row gap-6 pt-4">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-xl text-brand-orange">
+                <i class="fa-solid fa-phone"></i>
+              </div>
+              <div>
+                <span class="text-xs text-slate-400 font-semibold block">Speak to concierge</span>
+                <span class="font-accent font-bold text-lg">+91 98765 43210</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center text-xl text-green-400">
+                <i class="fa-brands fa-whatsapp"></i>
+              </div>
+              <div>
+                <span class="text-xs text-slate-400 font-semibold block">Chat instantly</span>
+                <span class="font-accent font-bold text-lg">+91 98765 43211</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Direct Inquiry Form -->
+        <div class="lg:col-span-6 bg-white/5 border border-white/10 backdrop-blur-md rounded-3xl p-6 sm:p-8">
+          <form id="direct-contact-form" onsubmit="handleContactSubmit(event)" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="flex flex-col gap-1.5">
+                <label class="text-[10px] uppercase font-bold text-slate-400">Full Name</label>
+                <input type="text" required placeholder="Ex: Amit Sharma" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange transition-all">
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="text-[10px] uppercase font-bold text-slate-400">Contact Number</label>
+                <input type="tel" required placeholder="Ex: +91 99999 99999" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange transition-all">
+              </div>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label class="text-[10px] uppercase font-bold text-slate-400">Specify Requirements</label>
+              <textarea rows="3" required placeholder="Ex: Looking for an automated premium villa or apartment in Whitefield area within ₹1.5 Cr." class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange transition-all resize-none"></textarea>
+            </div>
+            <button type="submit" class="w-full bg-brand-orange hover:bg-brand-orangeDark text-white py-3.5 px-6 rounded-xl font-accent font-bold text-sm tracking-wide shadow-lg shadow-orange-500/20 transition-all duration-300">
+              Submit Concierge Request
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MODERN SIMPLE FOOTER -->
+  <footer class="bg-brand-dark text-slate-400 py-8 border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      
+      <!-- Brand Copy -->
+      <div class="flex items-center gap-3">
+        <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-orange text-white font-accent font-extrabold text-sm">Q</div>
+        <span class="font-accent font-extrabold text-lg text-white">QuickIndia <span class="font-light text-slate-300">Homes</span></span>
+      </div>
+
+      <p class="text-xs text-slate-500">&copy; 2026 QuickIndia Homes Private Limited. All Rights Reserved.</p>
+
+      <!-- Clean policy links -->
+      <div class="flex gap-6 text-xs text-slate-400">
+        <a href="#" class="hover:text-brand-orange transition-colors">Privacy Policy</a>
+        <a href="#" class="hover:text-brand-orange transition-colors">Terms of Service</a>
+        <a href="#" class="hover:text-brand-orange transition-colors">RERA Disclosures</a>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- CONTACT CONCIERGE DIALOG/MODAL -->
+  <div id="lead-modal" class="hidden fixed inset-0 bg-brand-dark/60 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-brand-border relative animate-[scaleIn_0.3s_ease-out]">
+      <button onclick="closeLeadModal()" class="absolute top-5 right-5 text-slate-400 hover:text-brand-dark transition-colors">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+      <div class="mb-6">
+        <span class="text-brand-orange font-accent font-bold text-xs uppercase tracking-wider block mb-1">Direct Callback</span>
+        <h3 id="modal-title" class="font-accent text-2xl font-extrabold text-brand-dark tracking-tight">Contact Concierge</h3>
+      </div>
+      <form id="lead-form" onsubmit="handleModalSubmit(event)" class="space-y-4">
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[10px] uppercase font-bold text-slate-400">Your Full Name</label>
+          <input type="text" required placeholder="Amit Sharma" class="w-full border border-brand-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange transition-all">
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[10px] uppercase font-bold text-slate-400">Mobile Number</label>
+          <input type="tel" required placeholder="+91 99999 99999" class="w-full border border-brand-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange transition-all">
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[10px] uppercase font-bold text-slate-400">Preferred Location</label>
+          <input type="text" placeholder="Ex: Bengaluru, Gurgaon" class="w-full border border-brand-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange transition-all">
+        </div>
+        <button type="submit" class="w-full bg-brand-orange hover:bg-brand-orangeDark text-white py-3.5 px-6 rounded-xl font-accent font-bold text-sm tracking-wide shadow-lg shadow-orange-500/20 transition-all duration-300">
+          Request Call Details
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE CORE JS -->
+  <script>
+    // Slider States
+    let currentSlide = 1;
+    const totalSlides = 3;
+    let autoRotateInterval;
+
+    // Slide Cycling Engine
+    function setSlide(slideIndex) {
+      currentSlide = slideIndex;
+      
+      // Toggle Slides visibility classes
+      for (let i = 1; i <= totalSlides; i++) {
+        const slide = document.getElementById(`slide-${i}`);
+        const dot = document.getElementById(`dot-${i}`);
+        
+        if (i === slideIndex) {
+          slide.classList.add('active');
+          dot.className = "w-8 h-2.5 rounded-full bg-brand-orange transition-all duration-300";
+        } else {
+          slide.classList.remove('active');
+          dot.className = "w-2.5 h-2.5 rounded-full bg-slate-300 hover:bg-brand-orange/50 transition-all duration-300";
+        }
+      }
+    }
+
+    // Prev/Next Navigation handlers
+    function prevSlide() {
+      let prevIndex = currentSlide - 1;
+      if (prevIndex < 1) prevIndex = totalSlides;
+      setSlide(prevIndex);
+      resetAutoRotation();
+    }
+
+    // Next Slide helper
+    function nextSlide() {
+      let nextIndex = currentSlide + 1;
+      if (nextIndex > totalSlides) nextIndex = 1;
+      setSlide(nextIndex);
+      resetAutoRotation();
+    }
+
+    // Start auto slider loop
+    function startAutoRotation() {
+      autoRotateInterval = setInterval(() => {
+        let nextIndex = currentSlide + 1;
+        if (nextIndex > totalSlides) nextIndex = 1;
+        setSlide(nextIndex);
+      }, 5000);
+    }
+
+    // Reset loop timer on manual user click
+    function resetAutoRotation() {
+      clearInterval(autoRotateInterval);
+      startAutoRotation();
+    }
+
+    // Toast Notification Creator
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `p-4 rounded-xl shadow-lg border text-sm font-semibold flex items-center gap-3 bg-white transform translate-y-2 opacity-0 transition-all duration-300 pointer-events-auto min-w-[280px] max-w-[340px] border-emerald-100 text-emerald-800`;
+      toast.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i> ${message}`;
+
+      container.appendChild(toast);
+      
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => {
+          toast.remove();
+        }, 300);
+      }, 3500);
+    }
+
+    // Toggle Mobile Drawer View
+    function toggleMobileMenu() {
+      const drawer = document.getElementById('mobile-drawer');
+      const icon = document.getElementById('mobile-menu-icon');
+      if (drawer.classList.contains('hidden')) {
+        drawer.classList.remove('hidden');
+        icon.className = 'fa-solid fa-xmark text-2xl';
+      } else {
+        drawer.classList.add('hidden');
+        icon.className = 'fa-solid fa-bars text-2xl';
+      }
+    }
+
+    // Modal Operations
+    function openLeadModal(titleContext) {
+      const modal = document.getElementById('lead-modal');
+      const title = document.getElementById('modal-title');
+      title.innerText = titleContext;
+      modal.classList.remove('hidden');
+    }
+
+    // Close Modal helper
+    function closeLeadModal() {
+      document.getElementById('lead-modal').classList.add('hidden');
+    }
+
+    function handleContactSubmit(event) {
+      event.preventDefault();
+      showToast('Concierge request received! An advisor will call you shortly.');
+      event.target.reset();
+    }
+
+    // Modal contact form submission
+    function handleModalSubmit(event) {
+      event.preventDefault();
+      closeLeadModal();
+      showToast('Details recorded. Your concierge specialist is assigned!');
+      event.target.reset();
+    }
+
+    // Start running functions on load
+    window.onload = function() {
+      startAutoRotation();
+    }
+  </script>
+</body>
+</html>
