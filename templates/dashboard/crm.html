@@ -132,13 +132,16 @@
         <div class="flex items-center gap-3 mb-4 bg-white/5 p-3 rounded-xl border border-white/5">
           <img class="w-10 h-10 rounded-full object-cover border-2 border-slate-700 shadow-inner" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&h=120&q=80" alt="Active user">
           <div class="truncate">
-            <h5 class="font-bold text-sm text-white truncate leading-tight">Ananya Iyer</h5>
+            <h5 class="font-bold text-sm text-white truncate leading-tight">
+                {{ request.user.get_full_name|default:request.user.username }}
+            </h5>
             <span class="text-[10px] font-bold text-brand-orange uppercase tracking-wider block mt-0.5">Senior Manager</span>
           </div>
         </div>
-        <a href="index.html" class="flex items-center justify-center gap-2 w-full py-3 bg-slate-800/50 hover:bg-red-950/40 hover:text-red-400 text-slate-400 text-xs font-bold rounded-xl transition-all border border-slate-700/40">
-          <i class="fa-solid fa-right-from-bracket text-sm"></i>
-          <span>Logout CRM</span>
+        <a href="{% url 'accounts:logout' %}"
+          class="flex items-center justify-center gap-2 w-full py-3 bg-slate-800/50 hover:bg-red-950/40 hover:text-red-400 text-slate-400 text-xs font-bold rounded-xl transition-all border border-slate-700/40">
+            <i class="fa-solid fa-right-from-bracket text-sm"></i>
+            <span>Logout CRM</span>
         </a>
       </div>
 

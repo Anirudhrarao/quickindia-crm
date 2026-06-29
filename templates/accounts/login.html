@@ -1,0 +1,232 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickIndia CRM - Partner Portal Login</title>
+  
+  <!-- Tailwind CSS CDN for pristine UI parity -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              orange: '#F3811E',
+              orangeDark: '#D96E14',
+              slate: '#4B6584',
+              slateDark: '#35495E',
+              dark: '#1E272E',
+              light: '#F9F9F9',
+              border: '#E5E9F0'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            accent: ['Outfit', 'sans-serif'],
+            hindi: ['Noto Serif Devanagari', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts matching Landing Page & CRM -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+Devanagari:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* Custom animations for loading state */
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 0.9; }
+    }
+    .animate-pulse-slow {
+      animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+<body class="h-full bg-[#F8FAFC] text-brand-dark antialiased overflow-hidden">
+
+  <!-- Toast Notification Area -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
+
+  <!-- MAIN VIEW CONTAINER -->
+  <div class="min-h-screen flex flex-col lg:flex-row overflow-hidden">
+    
+    <!-- LEFT SIDE: ELEVATED BRANDING PANEL (Hidden on Mobile) -->
+    <div class="hidden lg:flex lg:w-1/2 bg-[#11161B] relative flex-col justify-between p-12 overflow-hidden border-r border-slate-800">
+      
+      <!-- Mesh Glow Accents -->
+      <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-[radial-gradient(circle_at_top_left,rgba(243,129,30,0.1),transparent_60%)] pointer-events-none"></div>
+      <div class="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[radial-gradient(circle_at_bottom_right,rgba(75,101,132,0.1),transparent_60%)] pointer-events-none"></div>
+      
+      <!-- Top Brand Logo -->
+      <div class="flex items-center gap-3 relative z-10">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-orange to-amber-500 text-white font-accent font-extrabold text-xl flex items-center justify-center shadow-lg shadow-orange-500/20">
+          Q
+        </div>
+        <div class="flex flex-col">
+          <span class="font-accent font-extrabold text-lg text-white leading-tight">QuickIndia</span>
+          <span class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">CRM Partner Portal</span>
+        </div>
+      </div>
+
+      <!-- Mid Content / Tagline Lockup -->
+      <div class="space-y-8 relative z-10 max-w-lg my-auto">
+        <div class="space-y-4">
+          <!-- Premium Editorial Tagline -->
+          <div class="flex items-center gap-3 select-none">
+            <span class="font-hindi text-brand-orange text-lg font-bold tracking-wide">एक कदम अपने घर की ओर</span>
+          </div>
+          
+          <h1 class="font-accent text-5xl font-extrabold text-white tracking-tight leading-tight">
+            Managing India's<br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange via-amber-400 to-amber-500">
+              Premium Listings
+            </span>
+          </h1>
+        </div>
+
+        <p class="text-slate-400 leading-relaxed text-sm font-normal">
+          Log in with your administrator or advisory credentials to access the leads directory, monitor site-visit pipelines, and process client requests seamlessly.
+        </p>
+
+        <!-- Stats Overlay Card -->
+        <div class="p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex items-center justify-between gap-4">
+          <div>
+            <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">CRM Active Agents</span>
+            <strong class="text-xl text-white font-accent font-extrabold mt-1 block">42 Certified Advisors</strong>
+          </div>
+          <div class="h-10 w-[1px] bg-white/10"></div>
+          <div>
+            <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Monthly Conversions</span>
+            <strong class="text-xl text-emerald-400 font-accent font-extrabold mt-1 block">₹18.4 Cr Closed</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Policy Links -->
+      <div class="text-xs text-slate-500 relative z-10 flex justify-between">
+        <span>&copy; 2026 QuickIndia Homes Private Limited.</span>
+        <div class="flex gap-4">
+          <a href="#" class="hover:text-slate-300 transition-colors">Privacy Policy</a>
+          <a href="{% url 'landing:home' %}" class="hover:text-slate-300 transition-colors">Back to Site</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDE: FORM CONSOLE PANEL -->
+    <div class="flex-1 flex flex-col justify-center items-center p-6 sm:p-12 bg-white relative overflow-y-auto">
+      
+      <!-- Top Mobile Branding Header (Only visible on Mobile viewports) -->
+      <div class="lg:hidden absolute top-8 left-6 right-6 flex justify-between items-center w-full max-w-md mx-auto">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-brand-orange text-white font-accent font-extrabold text-lg flex items-center justify-center">Q</div>
+          <span class="font-accent font-extrabold text-lg text-brand-dark">QuickIndia <span class="font-light text-slate-500">Homes</span></span>
+        </div>
+        <a href="{% url 'landing:home' %}" class="p-2 text-slate-400 hover:text-brand-orange transition-all" title="Back to Public Site">
+          <i class="fa-solid fa-house text-lg"></i>
+        </a>
+      </div>
+
+      <!-- Center Card Form -->
+      <div class="w-full max-w-md space-y-8 my-auto">
+        <div>
+          <span class="text-xs font-accent font-extrabold uppercase tracking-[0.2em] text-slate-400 block mb-1">CRM Access</span>
+          <h2 class="font-accent text-3xl font-extrabold text-brand-dark tracking-tight">Partner Sign In</h2>
+          <p class="text-sm text-brand-slate font-medium">Please enter your verified work credentials below.</p>
+        </div>
+
+        <!-- Django Alert Messages Container -->
+        {% if messages %}
+          <div class="space-y-3">
+            {% for message in messages %}
+              <div class="p-4 rounded-xl border text-sm font-semibold flex items-center gap-3 {% if message.tags == 'success' %}bg-emerald-50 border-emerald-100 text-emerald-800{% else %}bg-red-50 border-red-100 text-red-800{% endif %}">
+                {% if message.tags == 'success' %}
+                  <i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i>
+                {% else %}
+                  <i class="fa-solid fa-triangle-exclamation text-red-500 text-lg"></i>
+                {% endif %}
+                <span>{{ message }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <!-- Interactive Form Element -->
+        <form id="crm-login-form" method="post" class="space-y-5">
+          {% csrf_token %}
+          
+          <!-- Username / Email ID Input -->
+          <div class="flex flex-col gap-1.5">
+            <label for="work-email" class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Username or Email</label>
+            <div class="relative">
+              <i class="fa-regular fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input id="work-email" type="text" name="username" value="{{ request.POST.username }}" required placeholder="Enter username or email" class="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/10 transition-all font-medium bg-white">
+            </div>
+          </div>
+
+          <!-- Password Input with Toggle -->
+          <div class="flex flex-col gap-1.5">
+            <div class="flex justify-between items-center">
+              <label for="work-password" class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Security Password</label>
+              <a href="#" class="text-[10px] font-bold text-brand-orange hover:text-brand-orangeDark uppercase tracking-wider transition-colors">Forgot Password?</a>
+            </div>
+            <div class="relative">
+              <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input id="work-password" type="password" name="password" required placeholder="••••••••" class="w-full pl-11 pr-11 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/10 transition-all font-medium bg-white">
+              <!-- Interactive Eye Toggle -->
+              <button type="button" onclick="togglePasswordInput()" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-brand-dark transition-colors">
+                <i id="password-eye-icon" class="fa-solid fa-eye-slash"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Remember Me & Policy terms -->
+          <div class="flex items-center justify-between py-1">
+            <label class="flex items-center gap-2 cursor-pointer select-none">
+              <input type="checkbox" checked class="w-4.5 h-4.5 accent-brand-orange rounded border-slate-300">
+              <span class="text-xs text-brand-slate font-medium">Keep me signed in on this machine</span>
+            </label>
+          </div>
+
+          <!-- Interactive Login CTA -->
+          <button id="submit-btn" type="submit" class="w-full bg-brand-dark hover:bg-brand-orange text-white py-3.5 px-6 rounded-xl font-accent font-bold text-sm tracking-wide shadow-lg shadow-slate-900/10 hover:shadow-orange-500/20 transition-all duration-300 flex items-center justify-center gap-2 min-h-[50px]">
+            <span>Authenticate Credentials</span>
+            <i class="fa-solid fa-arrow-right-to-bracket text-xs"></i>
+          </button>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- INTERACTIVE FUNCTIONALITY SCRIPTS -->
+  <script>
+    // Password visibility toggler
+    function togglePasswordInput() {
+      const input = document.getElementById('work-password');
+      const eyeIcon = document.getElementById('password-eye-icon');
+      
+      if (input.type === 'password') {
+        input.type = 'text';
+        eyeIcon.className = "fa-solid fa-eye";
+      } else {
+        input.type = 'password';
+        eyeIcon.className = "fa-solid fa-eye-slash";
+      }
+    }
+  </script>
+</body>
+</html>
