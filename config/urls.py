@@ -23,8 +23,9 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("apps.landing.urls")),
-    path("crm/", include("apps.dashboard.urls")),
     path("", include("apps.accounts.urls")),
+    path("crm/", include("apps.dashboard.urls")),
+    path("crm/leads/", include("apps.leads.urls")),
 ]
 
 if settings.DEBUG:

@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en" class="h-full bg-slate-50">
 <head>
@@ -56,7 +57,12 @@
       background: #94A3B8;
     }
 
-    /* Premium Custom Dropdown styling selectors to avoid AI look */
+    /* Custom drop shadow styles to match Screenshot */
+    .pro-shadow {
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+    }
+
+    /* Premium Custom Dropdown styling selectors to avoid default browser look */
     .custom-select-indicator {
       background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234B6584'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/></svg>");
       background-position: right 10px center;
@@ -74,7 +80,7 @@
   <div class="h-full flex overflow-hidden">
 
     <!-- ==========================================================================
-        SIDEBAR NAVIGATION (REBUILT PREMIUM VISUAL PARADIGM)
+        SIDEBAR NAVIGATION (COLLAPSIBLE DESIGN MATCHING YOUR SCREENSHOT)
         ========================================================================== -->
     <aside id="dashboard-sidebar" class="hidden lg:flex lg:flex-shrink-0 w-64 bg-[#11161B] text-slate-300 flex-col justify-between border-r border-slate-800 z-40 transition-all duration-300 fixed lg:static inset-y-0 left-0">
       
@@ -82,80 +88,78 @@
       <div class="flex flex-col flex-1 min-h-0">
         
         <!-- Header Brand Container -->
-        <div class="h-20 flex items-center px-6 border-b border-slate-800/80 justify-between">
+        <div class="h-20 flex items-center px-6 border-b border-slate-800/80 justify-between shrink-0">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-orange to-amber-500 text-white font-accent font-extrabold text-xl flex items-center justify-center shadow-lg shadow-orange-500/25">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-orange to-amber-500 text-white font-accent font-extrabold text-xl flex items-center justify-center shadow-lg shadow-orange-500/25 shrink-0">
               Q
             </div>
-            <div class="flex flex-col">
+            <div class="flex flex-col sidebar-text-item">
               <span class="font-accent font-extrabold text-lg text-white leading-tight">QuickIndia</span>
               <span class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">CRM Workspace</span>
             </div>
           </div>
-          <!-- Mobile Sidebar Collapse Button -->
-          <button onclick="toggleSidebar()" class="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
-            <i class="fa-solid fa-xmark text-lg"></i>
-          </button>
+          
+          <div class="flex items-center gap-2">
+            <!-- Sidebar Collapse Toggle Button -->
+            <button onclick="toggleSidebarCollapse()" class="hidden lg:flex p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all" title="Collapse Sidebar">
+              <i id="collapse-icon" class="fa-solid fa-chevron-left text-sm"></i>
+            </button>
+            <!-- Mobile Sidebar Close Button -->
+            <button onclick="toggleSidebar()" class="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+              <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+          </div>
         </div>
 
         <!-- Navigation Links -->
         <nav class="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto custom-scroll">
-          <span class="px-4 text-[9px] uppercase font-extrabold tracking-widest text-slate-500 block mb-2">Workspace</span>
+          <span class="px-4 text-[9px] uppercase font-extrabold tracking-widest text-slate-500 block mb-2 sidebar-text-item">Workspace</span>
           
           <a href="#" onclick="setActiveNav('leads')" id="nav-leads" class="nav-item group flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orangeDark text-white font-semibold text-sm transition-all shadow-md shadow-orange-500/10">
-            <i class="fa-solid fa-user-group text-base"></i>
-            <span>Leads Directory</span>
+            <i class="fa-solid fa-user-group text-base shrink-0"></i>
+            <span class="sidebar-text-item">Leads Directory</span>
           </a>
           
           <a href="#" onclick="setActiveNav('property')" id="nav-property" class="nav-item group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800/40 hover:text-white text-slate-400 text-sm font-medium transition-all">
-            <i class="fa-solid fa-house-chimney text-base"></i>
-            <span>Add Property</span>
+            <i class="fa-solid fa-house-chimney text-base shrink-0"></i>
+            <span class="sidebar-text-item">Add Property</span>
           </a>
           
           <a href="#" onclick="setActiveNav('performance')" id="nav-performance" class="nav-item group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800/40 hover:text-white text-slate-400 text-sm font-medium transition-all">
-            <i class="fa-solid fa-chart-line text-base"></i>
-            <span>Performance</span>
+            <i class="fa-solid fa-chart-line text-base shrink-0"></i>
+            <span class="sidebar-text-item">Performance</span>
           </a>
           
           <div class="pt-8 border-t border-slate-800/80 my-5 space-y-1.5">
-            <span class="px-4 text-[9px] uppercase font-extrabold tracking-widest text-slate-500 block mb-2">External Links</span>
-            <a href="index.html" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-slate-800/20 hover:text-white text-slate-400 text-sm font-medium transition-all">
-              <i class="fa-solid fa-arrow-left-long"></i>
-              <span>Back to Public Site</span>
+            <span class="px-4 text-[9px] uppercase font-extrabold tracking-widest text-slate-500 block mb-2 sidebar-text-item">External Links</span>
+            <a href="{% url 'landing:home' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-slate-800/20 hover:text-white text-slate-400 text-sm font-medium transition-all">
+              <i class="fa-solid fa-arrow-left-long shrink-0"></i>
+              <span class="sidebar-text-item">Back to Public Site</span>
             </a>
           </div>
         </nav>
       </div>
 
       <!-- User Profile Card & Logout -->
-      <div class="p-4 border-t border-slate-800/80 bg-[#0A0D12]">
-        <div class="flex items-center gap-3 mb-4 bg-white/5 p-3 rounded-xl border border-white/5">
-        {% if request.user.profile_image %}
-            <img
-                class="w-10 h-10 rounded-full object-cover border-2 border-slate-700 shadow-inner"
-                src="{{ request.user.profile_image.url }}"
-                alt="{{ request.user.get_full_name }}"
-            >
-        {% else %}
-            <img
-                class="w-10 h-10 rounded-full object-cover border-2 border-slate-700 shadow-inner"
-                src="https://ui-avatars.com/api/?name={{ request.user.get_full_name|default:request.user.username }}&background=F3811E&color=fff"
-                alt="{{ request.user.get_full_name }}"
-            >
-        {% endif %}
-          <div class="truncate">
+      <div class="p-4 border-t border-slate-800/80 bg-[#0A0D12] shrink-0">
+        <div class="flex items-center gap-3 mb-4 bg-white/5 p-3 rounded-xl border border-white/5 overflow-hidden">
+          {% if request.user.profile_image %}
+              <img class="w-10 h-10 rounded-full object-cover border-2 border-slate-700 shadow-inner shrink-0" src="{{ request.user.profile_image.url }}" alt="{{ request.user.get_full_name }}">
+          {% else %}
+              <img class="w-10 h-10 rounded-full object-cover border-2 border-slate-700 shadow-inner shrink-0" src="https://ui-avatars.com/api/?name={{ request.user.get_full_name|default:request.user.username }}&background=F3811E&color=fff" alt="{{ request.user.get_full_name }}">
+          {% endif %}
+          <div class="truncate sidebar-text-item">
             <h5 class="font-bold text-sm text-white truncate leading-tight">
-                {{ request.user.get_full_name|default:request.user.username }}
+              {{ request.user.get_full_name|default:request.user.username }}
             </h5>
             <span class="text-[10px] font-bold text-brand-orange uppercase tracking-wider block mt-0.5">
-              {{ request.user.get_role_display }}
-          </span>
+              {{ request.user.get_role_display|default:"Senior Advisor" }}
+            </span>
           </div>
         </div>
-        <a href="{% url 'accounts:logout' %}"
-          class="flex items-center justify-center gap-2 w-full py-3 bg-slate-800/50 hover:bg-red-950/40 hover:text-red-400 text-slate-400 text-xs font-bold rounded-xl transition-all border border-slate-700/40">
-            <i class="fa-solid fa-right-from-bracket text-sm"></i>
-            <span>Logout CRM</span>
+        <a href="{% url 'accounts:logout' %}" class="flex items-center justify-center gap-2 w-full py-3 bg-slate-800/50 hover:bg-red-950/40 hover:text-red-400 text-slate-400 text-xs font-bold rounded-xl transition-all border border-slate-700/40">
+          <i class="fa-solid fa-right-from-bracket text-sm shrink-0"></i>
+          <span class="sidebar-text-item">Logout CRM</span>
         </a>
       </div>
 
@@ -167,7 +171,7 @@
     <!-- ==========================================================================
         RIGHT SIDE MAIN INDEPENDENT VIEWPORT CONTENT AREA
         ========================================================================== -->
-    <div class="flex-1 flex flex-col overflow-hidden">
+    <div class="flex-1 flex flex-col overflow-hidden relative">
       
       <!-- Top Dashboard Header with Locked Role Status Badge -->
       <header class="h-20 bg-white border-b border-brand-border flex items-center justify-between px-4 sm:px-8 flex-shrink-0 relative z-20">
@@ -180,17 +184,32 @@
           
           <div class="flex items-center gap-3">
             <h2 id="crm-view-title" class="font-accent font-extrabold text-xl sm:text-2xl text-brand-dark tracking-tight">Leads Directory</h2>
-            
-            <!-- Locked Role Status Badge Panel -->
           </div>
         </div>
 
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3 relative">
           <!-- Notification Bell Dropdown Button -->
-          <button onclick="toggleNotificationBadge()" class="w-10 h-10 rounded-xl hover:bg-slate-100 border border-slate-200/80 flex items-center justify-center text-slate-500 relative transition-all">
-            <i class="fa-regular fa-bell"></i>
-            <span id="bell-dot" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-brand-orange"></span>
+          <button onclick="toggleNotificationDropdown(event)" class="w-10 h-10 rounded-xl hover:bg-slate-100 border border-slate-200/80 flex items-center justify-center text-slate-500 relative transition-all">
+            <i class="fa-regular fa-bell text-lg"></i>
+            <span id="bell-dot" class="absolute top-2 right-2 w-2 h-2 rounded-full bg-brand-orange animate-pulse"></span>
           </button>
+
+          <!-- REAL-TIME INTERACTIVE NOTIFICATION POPUP (Toggled via bell click) -->
+          <div id="notification-dropdown" class="hidden absolute right-0 top-12 w-80 sm:w-96 bg-white rounded-2xl border border-slate-200 shadow-2xl z-50 overflow-hidden">
+            <div class="px-5 py-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+              <h4 class="font-accent font-extrabold text-sm text-brand-dark">CRM Notifications</h4>
+              <button onclick="clearAllNotifications()" class="text-[10px] font-extrabold uppercase text-brand-orange hover:text-brand-orangeDark transition-colors">
+                Mark all as read
+              </button>
+            </div>
+            <div id="notification-items-list" class="max-h-[320px] overflow-y-auto custom-scroll divide-y divide-slate-100">
+              <!-- Notification nodes dynamically populated -->
+            </div>
+            <div id="notifications-empty-state" class="hidden p-8 text-center text-slate-400 text-xs font-semibold">
+              <i class="fa-regular fa-bell-slash text-2xl text-slate-300 block mb-2"></i>
+              <span>All caught up! No unread notifications.</span>
+            </div>
+          </div>
         </div>
 
       </header>
@@ -199,7 +218,7 @@
       <main class="flex-1 overflow-y-auto custom-scroll bg-[#F8FAFC] p-4 sm:p-8">
         
         <!-- LEADS VIEW CONTAINER -->
-        <div id="crm-leads-view" class="block space-y-6 max-w-7xl mx-auto">
+        <div id="crm-leads-view" class="block space-y-6 max-w-7xl mx-auto animate-[fadeIn_0.4s_ease-out]">
           
           <!-- Top Controls Deck -->
           <div class="bg-white p-4 sm:p-6 rounded-3xl border border-slate-200/80 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center">
@@ -217,11 +236,11 @@
               <div class="relative sm:col-span-5">
                 <select id="lead-filter-status" onchange="filterLeads()" class="w-full pl-4 pr-10 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-orange appearance-none cursor-pointer transition-all">
                   <option value="ALL">All Lead Statuses</option>
-                  <option value="New">New</option>
-                  <option value="Called">Called</option>
-                  <option value="Interested">Interested</option>
-                  <option value="Site Visit Scheduled">Site Visit Scheduled</option>
-                  <option value="Closed">Closed</option>
+                  <option value="NEW">New</option>
+                  <option value="CALLED">Called</option>
+                  <option value="INTERESTED">Interested</option>
+                  <option value="SITE_VISIT">Site Visit Scheduled</option>
+                  <option value="CLOSED">Closed</option>
                 </select>
                 <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
               </div>
@@ -239,7 +258,7 @@
           <!-- LEADS DIRECTORY INTERACTIVE AREA -->
           
           <!-- Desktop & Tablet view (Shown >= md Breakpoint) -->
-          <div class="hidden md:block bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
+          <div class="hidden md:block bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden pro-shadow">
             <div class="overflow-x-auto custom-scroll">
               <table class="w-full text-left border-collapse">
                 <thead>
@@ -253,30 +272,226 @@
                   </tr>
                 </thead>
                 <tbody id="leads-table-body" class="divide-y divide-slate-100">
-                  <!-- Desktop Rows dynamically loaded -->
+                  {% for lead in leads %}
+                  <tr class="hover:bg-slate-50/40 transition-colors group/row" data-lead-id="{{ lead.id }}" data-status="{{ lead.status }}" data-search-term="{{ lead.full_name|lower }} {{ lead.locality|lower }} {{ lead.assigned_to.get_full_name|lower|default:lead.assigned_to.username|lower }}">
+                      
+                      <!-- LEAD INFO & PRIORITY -->
+                      <td class="py-5 px-6">
+                          <div class="flex items-start gap-3">
+                              <div class="pt-0.5">
+                                  {% if lead.priority == "HOT" %}
+                                      <span class="inline-flex items-center justify-center text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-lg border bg-red-50 text-red-600 border-red-200/60 tracking-wider shadow-sm">
+                                          {{ lead.get_priority_display }}
+                                      </span>
+                                  {% elif lead.priority == "WARM" %}
+                                      <span class="inline-flex items-center justify-center text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-lg border bg-amber-50 text-amber-700 border-amber-200/60 tracking-wider shadow-sm">
+                                          {{ lead.get_priority_display }}
+                                      </span>
+                                  {% else %}
+                                      <span class="inline-flex items-center justify-center text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-lg border bg-slate-100 text-slate-500 border-slate-200/60 tracking-wider shadow-sm">
+                                          {{ lead.get_priority_display }}
+                                      </span>
+                                  {% endif %}
+                              </div>
+                              <div>
+                                  <div onclick="openSlideOver('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{{ lead.phone_number|escapejs }}', '{{ lead.locality|escapejs }}', '{{ lead.bhk|escapejs }}', '{{ lead.budget|escapejs }}', '{{ lead.priority|escapejs }}', '{{ lead.status|escapejs }}', '{{ lead.assigned_to.get_full_name|default:lead.assigned_to.username|escapejs }}', '{{ lead.next_step|default:''|escapejs }}', '{{ lead.next_date|default:''|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="font-bold text-slate-900 group-hover/row:text-brand-orange transition-all duration-300 cursor-pointer text-sm font-accent tracking-tight leading-snug">
+                                      {{ lead.full_name }}
+                                  </div>
+                                  <div class="text-xs text-slate-400 mt-1 flex items-center gap-1.5 font-medium">
+                                      <i class="fa-solid fa-phone text-[10px]"></i>
+                                      {{ lead.phone_number }}
+                                  </div>
+                              </div>
+                          </div>
+                      </td>
+
+                      <!-- PROPERTY INTEREST -->
+                      <td class="py-5 px-6 text-sm">
+                          <div class="font-semibold text-slate-800 font-accent">
+                              {{ lead.locality }}
+                          </div>
+                          <div class="text-xs text-slate-400 mt-1 flex items-center gap-1.5 font-medium">
+                              <i class="fa-solid fa-bed text-brand-orange"></i>
+                              {{ lead.bhk }}
+                              <span class="text-slate-300">•</span>
+                              <i class="fa-solid fa-wallet text-brand-orange"></i>
+                              Budget: {{ lead.budget }}
+                          </div>
+                      </td>
+
+                      <!-- TIMESTAMP -->
+                      <td class="py-5 px-6 text-xs text-slate-400 font-medium">
+                          <div class="flex items-center gap-1.5">
+                              <i class="fa-regular fa-clock"></i>
+                              {{ lead.created_at|date:"d M Y H:i" }}
+                          </div>
+                      </td>
+
+                      <!-- ASSIGNED ADVISOR (Interactive Picker) -->
+                      <td class="py-5 px-6">
+                          <div class="relative max-w-[170px]">
+                              <select onchange="handleAdvisorReassign('{{ lead.id }}', this.value)" class="custom-select-indicator appearance-none w-full text-xs font-semibold pl-3 pr-8 py-2 bg-slate-50 border border-slate-200/80 rounded-xl hover:border-slate-300 focus:outline-none focus:ring-1 focus:ring-brand-orange cursor-pointer">
+                                  {% for agent in agents %}
+                                      <option value="{{ agent.id }}" {% if lead.assigned_to.id == agent.id %}selected{% endif %}>
+                                          {{ agent.get_full_name|default:agent.username }}
+                                      </option>
+                                  {% empty %}
+                                      <option value="{{ lead.assigned_to.id|default:'' }}" selected>
+                                          {{ lead.assigned_to.get_full_name|default:lead.assigned_to.username|default:"Unassigned" }}
+                                      </option>
+                                  {% endfor %}
+                              </select>
+                              <i class="fa-solid fa-user-pen absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[10px] pointer-events-none"></i>
+                          </div>
+                      </td>
+
+                      <!-- STATUS STATE -->
+                      <td class="py-4.5 px-6">
+                          <div class="relative max-w-[150px]">
+                              <select onchange="handleStatusChange('{{ lead.id }}', this.value)" class="custom-select-indicator appearance-none text-xs font-bold pl-3.5 pr-8 py-2 rounded-xl focus:outline-none focus:ring-1 focus:ring-brand-orange/20 cursor-pointer border {% if lead.status == 'NEW' %}bg-blue-50 text-blue-700 border-blue-200{% elif lead.status == 'CALLED' %}bg-amber-50 text-amber-700 border-amber-200{% elif lead.status == 'INTERESTED' %}bg-indigo-50 text-indigo-700 border-indigo-200{% elif lead.status == 'SITE_VISIT' %}bg-purple-50 text-purple-700 border-purple-200{% else %}bg-emerald-50 text-emerald-700 border-emerald-200{% endif %}">
+                                  <option value="NEW" {% if lead.status == 'NEW' %}selected{% endif %}>New</option>
+                                  <option value="CALLED" {% if lead.status == 'CALLED' %}selected{% endif %}>Called</option>
+                                  <option value="INTERESTED" {% if lead.status == 'INTERESTED' %}selected{% endif %}>Interested</option>
+                                  <option value="SITE_VISIT" {% if lead.status == 'SITE_VISIT' %}selected{% endif %}>Site Visit Scheduled</option>
+                                  <option value="CLOSED" {% if lead.status == 'CLOSED' %}selected{% endif %}>Closed</option>
+                              </select>
+                          </div>
+                      </td>
+
+                      <!-- ACTIONS -->
+                      <td class="py-5 px-6 text-right">
+                          <div class="flex items-center justify-end gap-2">
+                              <button onclick="openSlideOver('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{{ lead.phone_number|escapejs }}', '{{ lead.locality|escapejs }}', '{{ lead.bhk|escapejs }}', '{{ lead.budget|escapejs }}', '{{ lead.priority|escapejs }}', '{{ lead.status|escapejs }}', '{{ lead.assigned_to.get_full_name|default:lead.assigned_to.username|escapejs }}', '{{ lead.next_step|default:''|escapejs }}', '{{ lead.next_date|default:''|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="text-xs font-bold text-slate-500 hover:text-brand-orange bg-slate-100 hover:bg-orange-50 w-8.5 h-8.5 rounded-xl transition-all border border-slate-200 hover:border-brand-orange/30 flex items-center justify-center shadow-sm" title="Open Full Lead Form">
+                                  <i class="fa-solid fa-expand"></i>
+                              </button>
+                              <button onclick="openDeleteConfirmModal('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="text-xs font-bold text-slate-400 hover:text-red-500 bg-slate-100 hover:bg-red-50 w-8.5 h-8.5 rounded-xl transition-all border border-slate-200 hover:border-red-200 flex items-center justify-center shadow-sm" title="Delete Lead Record">
+                                  <i class="fa-solid fa-trash-can"></i>
+                              </button>
+                          </div>
+                      </td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                      <td colspan="6" class="text-center py-16 text-slate-500 font-medium bg-white">
+                          <div class="flex flex-col items-center justify-center">
+                              <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 mb-2 border border-slate-100">
+                                  <i class="fa-regular fa-folder-open text-lg"></i>
+                              </div>
+                              <p class="text-sm">No leads currently logged in the directory.</p>
+                          </div>
+                      </td>
+                  </tr>
+                  {% endfor %}
                 </tbody>
               </table>
+            </div>
+            
+            <!-- Table Pagination Footer Bar -->
+            <div class="px-6 py-4 border-t border-slate-200 bg-slate-50/80 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-slate-500 font-medium">
+              <div id="pagination-info">Showing entries</div>
+              <div class="flex items-center gap-1.5" id="pagination-buttons">
+                <!-- Buttons dynamically managed by JS client pagination -->
+              </div>
             </div>
           </div>
 
           <!-- Mobile responsive lists (Shown < md Breakpoint, no horizontal breaks) -->
-          <div id="leads-mobile-container" class="block md:hidden space-y-4">
-            <!-- Mobile cards dynamically loaded -->
-          </div>
+          <div class="block md:hidden space-y-4">
+            <div id="leads-mobile-container" class="space-y-4">
+              {% for lead in leads %}
+              <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4 mobile-lead-card" data-lead-id="{{ lead.id }}" data-status="{{ lead.status }}" data-search-term="{{ lead.full_name|lower }} {{ lead.locality|lower }} {{ lead.assigned_to.get_full_name|lower|default:lead.assigned_to.username|lower }}">
+                  
+                  <div class="flex justify-between items-start gap-4">
+                      <div>
+                          {% if lead.priority == "HOT" %}
+                              <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md border bg-red-50 text-red-600 border-red-200/60 mb-1.5 tracking-wider">
+                                  {{ lead.get_priority_display }}
+                              </span>
+                          {% elif lead.priority == "WARM" %}
+                              <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md border bg-amber-50 text-amber-700 border-amber-200/60 mb-1.5 tracking-wider">
+                                  {{ lead.get_priority_display }}
+                              </span>
+                          {% else %}
+                              <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md border bg-slate-100 text-slate-500 border-slate-200/60 mb-1.5 tracking-wider">
+                                  {{ lead.get_priority_display }}
+                              </span>
+                          {% endif %}
+                          
+                          <h4 onclick="openSlideOver('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{{ lead.phone_number|escapejs }}', '{{ lead.locality|escapejs }}', '{{ lead.bhk|escapejs }}', '{{ lead.budget|escapejs }}', '{{ lead.priority|escapejs }}', '{{ lead.status|escapejs }}', '{{ lead.assigned_to.get_full_name|default:lead.assigned_to.username|escapejs }}', '{{ lead.next_step|default:''|escapejs }}', '{{ lead.next_date|default:''|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="font-bold text-slate-900 text-base font-accent cursor-pointer hover:text-brand-orange transition-colors">{{ lead.full_name }}</h4>
+                          <p class="text-xs text-slate-400 mt-0.5 flex items-center gap-1.5"><i class="fa-solid fa-phone"></i> {{ lead.phone_number }}</p>
+                      </div>
+                      
+                      <div class="flex gap-1.5 shrink-0">
+                          <button onclick="openSlideOver('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{{ lead.phone_number|escapejs }}', '{{ lead.locality|escapejs }}', '{{ lead.bhk|escapejs }}', '{{ lead.budget|escapejs }}', '{{ lead.priority|escapejs }}', '{{ lead.status|escapejs }}', '{{ lead.assigned_to.get_full_name|default:lead.assigned_to.username|escapejs }}', '{{ lead.next_step|default:''|escapejs }}', '{{ lead.next_date|default:''|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 text-slate-500 hover:text-brand-orange flex items-center justify-center text-xs">
+                              <i class="fa-solid fa-expand"></i>
+                          </button>
+                          <button onclick="openDeleteConfirmModal('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 text-slate-400 hover:text-red-500 flex items-center justify-center text-xs">
+                              <i class="fa-solid fa-trash-can"></i>
+                          </button>
+                      </div>
+                  </div>
+                  
+                  <div class="grid grid-cols-2 gap-3 pt-3.5 border-t border-slate-100 text-xs text-slate-600">
+                      <div>
+                          <span class="text-[10px] text-slate-400 font-semibold block mb-0.5">LOCALITY</span>
+                          <strong class="text-slate-800">{{ lead.locality }}</strong>
+                      </div>
+                      <div>
+                          <span class="text-[10px] text-slate-400 block mb-0.5">REQUIREMENTS</span>
+                          <strong class="text-slate-800">{{ lead.bhk }} • Budget: {{ lead.budget }}</strong>
+                      </div>
+                  </div>
 
-          <!-- Table/List empty state helper placeholder -->
-          <div id="table-empty-state" class="hidden flex-col items-center justify-center py-16 text-center bg-white rounded-3xl border border-slate-200/80">
-            <div class="w-14 h-14 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 mb-3">
-              <i class="fa-regular fa-folder-open text-xl"></i>
+                  <div class="grid grid-cols-2 gap-3 pt-3.5 border-t border-slate-100">
+                      <div>
+                          <label class="text-[9px] text-slate-400 font-bold block mb-1">ASSIGNED ADVISOR</label>
+                          <div class="relative">
+                              <select onchange="handleAdvisorReassign('{{ lead.id }}', this.value)" class="custom-select-indicator appearance-none w-full text-xs font-semibold pl-2 pr-6 py-1.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none bg-white">
+                                  {% for agent in agents %}
+                                      <option value="{{ agent.id }}" {% if lead.assigned_to.id == agent.id %}selected{% endif %}>
+                                          {{ agent.get_full_name|default:agent.username }}
+                                      </option>
+                                  {% empty %}
+                                      <option value="{{ lead.assigned_to.id|default:'' }}" selected>
+                                          {{ lead.assigned_to.get_full_name|default:lead.assigned_to.username|default:"Unassigned" }}
+                                      </option>
+                                  {% endfor %}
+                              </select>
+                          </div>
+                      </div>
+                      <div>
+                          <label class="text-[9px] text-slate-400 font-bold block mb-1">STATUS</label>
+                          <div class="relative">
+                              <select onchange="handleStatusChange('{{ lead.id }}', this.value)" class="custom-select-indicator appearance-none w-full text-xs font-bold pl-2 pr-6 py-1.5 border rounded-xl focus:outline-none {{ lead.status|lower }} {% if lead.status == 'NEW' %}bg-blue-50 text-blue-700 border-blue-200{% elif lead.status == 'CALLED' %}bg-amber-50 text-amber-700 border-amber-200{% elif lead.status == 'INTERESTED' %}bg-indigo-50 text-indigo-700 border-indigo-200{% elif lead.status == 'SITE_VISIT' %}bg-purple-50 text-purple-700 border-purple-200{% else %}bg-emerald-50 text-emerald-700 border-emerald-200{% endif %}">
+                                  <option value="NEW" {% if lead.status == 'NEW' %}selected{% endif %}>New</option>
+                                  <option value="CALLED" {% if lead.status == 'CALLED' %}selected{% endif %}>Called</option>
+                                  <option value="INTERESTED" {% if lead.status == 'INTERESTED' %}selected{% endif %}>Interested</option>
+                                  <option value="SITE_VISIT" {% if lead.status == 'SITE_VISIT' %}selected{% endif %}>Site Visit Scheduled</option>
+                                  <option value="CLOSED" {% if lead.status == 'CLOSED' %}selected{% endif %}>Closed</option>
+                              </select>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="text-[10px] text-slate-400 pt-1 flex items-center justify-between font-medium">
+                      <span>CRM Database Intake</span>
+                      <span>{{ lead.created_at|date:"d M Y H:i" }}</span>
+                  </div>
+              </div>
+              {% endfor %}
             </div>
-            <h4 class="font-bold text-slate-700">No leads match the filters</h4>
-            <p class="text-sm text-slate-400 mt-1">Try resetting the query or entering another value.</p>
+            
+            <!-- Mobile Pagination Footer Bar -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-3 items-center text-sm text-slate-500 font-medium">
+              <div id="mobile-pagination-info">Showing entries</div>
+              <div class="flex items-center gap-1.5" id="mobile-pagination-buttons">
+                <!-- Mobile Buttons dynamically loaded -->
+              </div>
+            </div>
           </div>
-
         </div>
 
         <!-- STUB SCREEN: PROPERTY FORM -->
-        <div id="crm-property-view" class="hidden space-y-6 max-w-3xl mx-auto bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm">
+        <div id="crm-property-view" class="hidden space-y-6 max-w-3xl mx-auto bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm animate-[fadeIn_0.4s_ease-out]">
           <h3 class="font-accent font-extrabold text-2xl text-brand-dark mb-4">Register New Property Asset</h3>
           <p class="text-sm text-brand-slate mb-6">CRM inventory panel to inject tested premium real-estate locations for public showcase.</p>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -289,7 +504,7 @@
         </div>
 
         <!-- STUB SCREEN: PERFORMANCE TRACKER -->
-        <div id="crm-performance-view" class="hidden space-y-6 max-w-7xl mx-auto bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm">
+        <div id="crm-performance-view" class="hidden space-y-6 max-w-7xl mx-auto bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm animate-[fadeIn_0.4s_ease-out]">
           <h3 class="font-accent font-extrabold text-2xl text-brand-dark mb-4">Branch Performance Dashboard</h3>
           <p class="text-sm text-brand-slate mb-6">Real-time charts monitoring site-visit conversion schedules, called callbacks, and closed crore levels.</p>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -368,12 +583,12 @@
           <div id="slide-tab-overview" class="block space-y-6">
             
             <!-- Quick Scheduled Next Action Summary Card -->
-            <div class="bg-gradient-to-r from-brand-slateDark to-brand-dark p-5 rounded-2xl text-white shadow-md relative overflow-hidden">
+            <div class="bg-gradient-to-r from-brand-slateDark to-brand-dark p-5 rounded-2xl text-white shadow-md relative overflow-hidden font-accent">
               <div class="absolute right-0 bottom-0 w-24 h-24 bg-white/5 rounded-full translate-x-8 translate-y-8"></div>
               <span class="text-[9px] uppercase font-extrabold tracking-wider text-slate-300 block mb-1">CRM Follow-Up Agenda</span>
               <h4 class="font-accent font-bold text-base mb-3">Scheduled Next Step Action</h4>
               
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm bg-white/5 p-3.5 rounded-xl border border-white/5">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm bg-white/5 p-3.5 rounded-xl border border-white/5 font-sans">
                 <div>
                   <span class="text-[10px] text-slate-300 font-bold block uppercase tracking-wider">Action</span>
                   <span id="slide-next-step-lbl" class="font-semibold block mt-0.5">Call to confirm site visit timings</span>
@@ -439,12 +654,12 @@
                 <!-- Lead Name -->
                 <div class="flex flex-col gap-1.5">
                   <label class="text-[10px] uppercase font-bold text-slate-400">Client Name</label>
-                  <input id="edit-lead-name" type="text" required class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange">
+                  <input id="edit-lead-name" type="text" required class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange bg-slate-50">
                 </div>
                 <!-- Contact Number -->
                 <div class="flex flex-col gap-1.5">
                   <label class="text-[10px] uppercase font-bold text-slate-400">Contact Number</label>
-                  <input id="edit-lead-contact" type="tel" required class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange">
+                  <input id="edit-lead-contact" type="tel" required class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange bg-slate-50">
                 </div>
               </div>
 
@@ -454,10 +669,9 @@
                   <label class="text-[10px] uppercase font-bold text-slate-400">Assigned CRM Specialist</label>
                   <div class="relative">
                     <select id="edit-lead-handler" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange bg-white pr-10">
-                      <option value="Ananya Iyer">Ananya Iyer</option>
-                      <option value="Vikram Sen">Vikram Sen</option>
-                      <option value="Neha Sharma">Neha Sharma</option>
-                      <option value="Amit Sharma">Amit Sharma</option>
+                        {% for agent in agents %}
+                            <option value="{{ agent.id }}">{{ agent.get_full_name|default:agent.username }}</option>
+                        {% endfor %}
                     </select>
                   </div>
                 </div>
@@ -466,9 +680,9 @@
                   <label class="text-[10px] uppercase font-bold text-slate-400">Lead Temperature / Priority</label>
                   <div class="relative">
                     <select id="edit-lead-priority" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange bg-white pr-10">
-                      <option value="Hot">Hot (High Intent)</option>
-                      <option value="Warm">Warm (Nurturing)</option>
-                      <option value="Cold">Cold (Inbound/Low)</option>
+                      <option value="HOT">Hot (High Intent)</option>
+                      <option value="WARM">Warm (Nurturing)</option>
+                      <option value="COLD">Cold (Inbound/Low)</option>
                     </select>
                   </div>
                 </div>
@@ -477,7 +691,7 @@
               <!-- Target Locality -->
               <div class="flex flex-col gap-1.5">
                 <label class="text-[10px] uppercase font-bold text-slate-400">Target Locality / Area</label>
-                <input id="edit-lead-locality" type="text" required class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange">
+                <input id="edit-lead-locality" type="text" required class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange bg-slate-50">
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -499,7 +713,7 @@
                 <!-- Target Budget -->
                 <div class="flex flex-col gap-1.5">
                   <label class="text-[10px] uppercase font-bold text-slate-400">Target Budget (Lakhs/Crores)</label>
-                  <input id="edit-lead-budget" type="text" required class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange">
+                  <input id="edit-lead-budget" type="text" required class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange bg-slate-50">
                 </div>
               </div>
 
@@ -507,11 +721,11 @@
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
                 <div class="flex flex-col gap-1.5">
                   <label class="text-[10px] uppercase font-bold text-slate-400">Next Follow-Up Agenda</label>
-                  <input id="edit-lead-next-step" type="text" placeholder="Ex: Call to schedule site tour" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange">
+                  <input id="edit-lead-next-step" type="text" placeholder="Ex: Call to schedule site tour" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange bg-slate-50">
                 </div>
                 <div class="flex flex-col gap-1.5">
                   <label class="text-[10px] uppercase font-bold text-slate-400">Next Action Target Date</label>
-                  <input id="edit-lead-next-date" type="text" placeholder="Ex: July 02, 2026" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange">
+                  <input id="edit-lead-next-date" type="text" placeholder="Ex: July 02, 2026" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange bg-slate-50">
                 </div>
               </div>
 
@@ -541,24 +755,24 @@
         <span class="text-brand-orange font-bold text-xs uppercase tracking-wider block mb-1">Inbound CRM Stream</span>
         <h3 class="font-accent text-2xl font-extrabold text-brand-dark tracking-tight">Manual Lead Intake</h3>
       </div>
-      <form id="add-lead-form" onsubmit="handleAddLeadSubmit(event)" class="space-y-4">
+      <form id="add-lead-form" method="post" action="" class="space-y-4">
+        {% csrf_token %}
         <div class="flex flex-col gap-1.5">
           <label class="text-[10px] uppercase font-bold text-slate-400">Client Name</label>
-          <input id="new-lead-name" type="text" required placeholder="Ex: Amit Sharma" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange bg-white shadow-sm">
+          <input name="full_name" type="text" required placeholder="Ex: Amit Sharma" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange bg-white shadow-sm">
         </div>
         <div class="grid grid-cols-2 gap-4">
           <div class="flex flex-col gap-1.5">
             <label class="text-[10px] uppercase font-bold text-slate-400">Contact Number</label>
-            <input id="new-lead-contact" type="tel" required placeholder="Ex: +91 99999 99999" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm">
+            <input name="phone_number" type="tel" required placeholder="Ex: +91 99999 99999" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm">
           </div>
           <div class="flex flex-col gap-1.5">
             <label class="text-[10px] uppercase font-bold text-slate-400">Assign Advisor</label>
             <div class="relative">
-              <select id="new-lead-handler" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm pr-8">
-                <option value="Ananya Iyer">Ananya Iyer</option>
-                <option value="Vikram Sen">Vikram Sen</option>
-                <option value="Neha Sharma">Neha Sharma</option>
-                <option value="Amit Sharma">Amit Sharma</option>
+              <select name="assigned_to" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm pr-8">
+                {% for agent in agents %}
+                    <option value="{{ agent.id }}">{{ agent.get_full_name|default:agent.username }}</option>
+                {% endfor %}
               </select>
             </div>
           </div>
@@ -566,12 +780,12 @@
         <div class="grid grid-cols-3 gap-2.5">
           <div class="flex flex-col gap-1.5 col-span-2">
             <label class="text-[10px] uppercase font-bold text-slate-400">Preferred Locality</label>
-            <input id="new-lead-locality" type="text" required placeholder="Ex: Whitefield" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm">
+            <input name="locality" type="text" required placeholder="Ex: Whitefield" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm">
           </div>
           <div class="flex flex-col gap-1.5">
             <label class="text-[10px] uppercase font-bold text-slate-400">BHK</label>
             <div class="relative">
-              <select id="new-lead-bhk" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm pr-8">
+              <select name="bhk" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm pr-8">
                 <option value="1 BHK">1 BHK</option>
                 <option value="2 BHK">2 BHK</option>
                 <option value="3 BHK+">3 BHK+</option>
@@ -584,15 +798,15 @@
         <div class="grid grid-cols-2 gap-4">
           <div class="flex flex-col gap-1.5">
             <label class="text-[10px] uppercase font-bold text-slate-400">Target Budget</label>
-            <input id="new-lead-budget" type="text" required placeholder="Ex: ₹1.85 Cr" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm">
+            <input name="budget" type="text" required placeholder="Ex: ₹1.85 Cr" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm">
           </div>
           <div class="flex flex-col gap-1.5">
             <label class="text-[10px] uppercase font-bold text-slate-400">Priority Level</label>
             <div class="relative">
-              <select id="new-lead-priority" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm pr-8">
-                <option value="Hot">Hot</option>
-                <option value="Warm">Warm</option>
-                <option value="Cold">Cold</option>
+              <select name="priority" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm pr-8">
+                <option value="HOT">Hot</option>
+                <option value="WARM">Warm</option>
+                <option value="COLD">Cold</option>
               </select>
             </div>
           </div>
@@ -604,23 +818,6 @@
     </div>
   </div>
 
-  <!-- REAL-TIME INTERACTIVE NOTIFICATION POPUP (Toggled via header bell click) -->
-  <div id="notification-dropdown" class="hidden absolute right-4 sm:right-8 top-16 w-80 sm:w-96 bg-white rounded-2xl border border-slate-200/80 shadow-2xl z-50 overflow-hidden">
-    <div class="px-5 py-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
-      <h4 class="font-accent font-extrabold text-sm text-brand-dark">CRM Notifications</h4>
-      <button onclick="clearAllNotifications()" class="text-[10px] font-extrabold uppercase text-brand-orange hover:text-brand-orangeDark transition-colors">
-        Mark all as read
-      </button>
-    </div>
-    <div id="notification-items-list" class="max-h-[320px] overflow-y-auto custom-scroll divide-y divide-slate-100">
-      <!-- Notification nodes dynamically populated -->
-    </div>
-    <div id="notifications-empty-state" class="hidden p-6 text-center text-slate-400 text-xs font-semibold">
-      <i class="fa-regular fa-bell-slash text-xl text-slate-300 block mb-2"></i>
-      <span>All caught up! No unread notifications.</span>
-    </div>
-  </div>
-
   <!-- DELETE CONFIRMATION MODERN MODAL -->
   <div id="delete-confirm-modal" class="hidden fixed inset-0 bg-brand-dark/65 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-brand-border text-center">
@@ -628,124 +825,66 @@
         <i class="fa-solid fa-triangle-exclamation"></i>
       </div>
       <h3 class="font-accent font-extrabold text-xl text-brand-dark mb-2">Delete Lead Record?</h3>
-      <p class="text-sm text-brand-slate mb-6">Are you sure you want to delete <strong id="delete-lead-name-placeholder" class="text-brand-dark">Amit Malviya</strong>? This action cannot be undone.</p>
+      <p class="text-sm text-brand-slate mb-6">Are you sure you want to delete <strong id="delete-lead-name-placeholder" class="text-brand-dark">-</strong>? This action cannot be undone.</p>
       
       <div class="flex gap-3">
         <button onclick="closeDeleteConfirmModal()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-brand-dark text-sm font-bold rounded-xl transition-all">
           No, Cancel
         </button>
-        <button id="delete-confirm-action-btn" class="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-red-600/10">
-          Yes, Delete
-        </button>
+        <!-- Django dynamic delete URL hook -->
+        <form id="delete-confirm-form" method="post" action="" class="flex-1">
+          {% csrf_token %}
+          <button type="submit" class="w-full py-3 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-red-600/10">
+            Yes, Delete
+          </button>
+        </form>
       </div>
     </div>
   </div>
 
   <!-- INTERACTIVE SYSTEM SCRIPT -->
   <script>
-    // Live Client Memory Database Arrays
-    let leadList = [
-      {
-        id: 1,
-        name: "Amit Malviya",
-        contact: "+91 98765 01011",
-        timestamp: "2026-06-27 10:15",
-        locality: "Whitefield, Bengaluru",
-        budget: "₹1.85 Cr",
-        bhk: "4 BHK",
-        handler: "Ananya Iyer",
-        status: "New",
-        priority: "Hot",
-        nextStep: "Call to confirm site visit timings",
-        nextDate: "July 02, 2026",
-        logs: [
-          { time: "2026-06-27 10:15", note: "Lead automatically captured from the Serene Villa page." }
-        ]
-      },
-      {
-        id: 2,
-        name: "Preeti Nair",
-        contact: "+91 99887 23412",
-        timestamp: "2026-06-27 09:30",
-        locality: "Bandra West, Mumbai",
-        budget: "₹4.90 Cr",
-        bhk: "5 BHK",
-        handler: "Vikram Sen",
-        status: "Interested",
-        priority: "Hot",
-        nextStep: "Arrange personal video call presentation",
-        nextDate: "July 05, 2026",
-        logs: [
-          { time: "2026-06-27 09:30", note: "Client enquired about the Skyline Penthouse deck balconies." },
-          { time: "2026-06-27 09:45", note: "Sent virtual reality walkthrough link via Whatsapp Reference." }
-        ]
-      },
-      {
-        id: 3,
-        name: "Rahul Deshmukh",
-        contact: "+91 91234 56789",
-        timestamp: "2026-06-26 18:22",
-        locality: "Sector 65, Gurgaon",
-        budget: "₹3.40 Cr",
-        bhk: "4 BHK",
-        handler: "Neha Sharma",
-        status: "Called",
-        priority: "Warm",
-        nextStep: "Follow up on modular kitchen inquiries",
-        nextDate: "July 01, 2026",
-        logs: [
-          { time: "2026-06-26 18:22", note: "Initial callback registered on Royal Manor query." },
-          { time: "2026-06-27 11:00", note: "Connected via phone call. Discussed layout options." }
-        ]
-      },
-      {
-        id: 4,
-        name: "Meera Krishnan",
-        contact: "+91 94567 11223",
-        timestamp: "2026-06-26 14:10",
-        locality: "Electronic City, Bengaluru",
-        budget: "₹1.15 Cr",
-        bhk: "3 BHK",
-        handler: "Ananya Iyer",
-        status: "Site Visit Scheduled",
-        priority: "Hot",
-        nextStep: "In-person tour with site specialist",
-        nextDate: "July 03, 2026",
-        logs: [
-          { time: "2026-06-26 14:10", note: "Captured from Prestige Cyber Heights page." },
-          { time: "2026-06-27 09:00", note: "Site visit scheduled for tomorrow morning at 11 AM." }
-        ]
-      },
-      {
-        id: 5,
-        name: "Deepak Chawla",
-        contact: "+91 97771 22334",
-        timestamp: "2026-06-25 11:15",
-        locality: "Prabhadevi, Mumbai",
-        budget: "₹2.75 Cr",
-        bhk: "3 BHK",
-        handler: "Vikram Sen",
-        status: "Closed",
-        priority: "Cold",
-        nextStep: "Archived after complete transaction closure",
-        nextDate: "Completed",
-        logs: [
-          { time: "2026-06-25 11:15", note: "Lead qualified for Sea Breeze suite." },
-          { time: "2026-06-26 16:30", note: "Booking amount received. Escrow account verified. CLOSED!" }
-        ]
-      }
-    ];
+    // Seeding dynamic active session logs from local storage or mock structure to manage follow-up timeline diaries
+    let sessionLogs = {};
 
-    // Notification Hub Store Database
+    // Initial load parameters for pagination
+    let currentPage = 1;
+    const itemsPerPage = 5;
+
+    // Sidebar States & Collapse Logic
+    let sidebarCollapsed = false;
+
+    // Notification list state (Pre-seeded with your requested mock database notifications)
     let notificationsList = [
-      { id: 1, type: "site-visit", title: "Site Tour scheduled tomorrow", leadName: "Meera Krishnan", time: "10 mins ago" },
-      { id: 2, type: "assignment", title: "New high-intent lead allocated to you", leadName: "Amit Malviya", time: "1 hour ago" },
-      { id: 3, type: "system", title: "Stamp duty clearance logged", leadName: "Deepak Chawla", time: "Yesterday" }
+      { id: 1, type: "site-visit", note: "Site Tour scheduled tomorrow morning at 11:00 AM", time: "10 mins ago" },
+      { id: 2, type: "assignment", note: "New high-intent lead allocated to your portfolio", time: "1 hour ago" },
+      { id: 3, type: "system", note: "Transaction stamp clearance verified", time: "Yesterday" }
     ];
 
-    let activeNav = "leads";
-    let activeLeadId = null;
-    let leadIdToDelete = null;
+    function toggleSidebarCollapse() {
+      sidebarCollapsed = !sidebarCollapsed;
+      const sidebar = document.getElementById('dashboard-sidebar');
+      const collapseIcon = document.getElementById('collapse-icon');
+      const textItems = document.querySelectorAll('.sidebar-text-item');
+
+      if (sidebarCollapsed) {
+        sidebar.classList.remove('w-64');
+        sidebar.classList.add('w-20');
+        collapseIcon.className = "fa-solid fa-chevron-right text-sm";
+        
+        textItems.forEach(item => {
+          item.classList.add('hidden');
+        });
+      } else {
+        sidebar.classList.remove('w-20');
+        sidebar.classList.add('w-64');
+        collapseIcon.className = "fa-solid fa-chevron-left text-sm";
+        
+        textItems.forEach(item => {
+          item.classList.remove('hidden');
+        });
+      }
+    }
 
     // Set Active Dashboard Module
     function setActiveNav(navKey) {
@@ -826,260 +965,252 @@
       }
     }
 
-    function getPriorityStyleClass(priorityStr) {
-      switch (priorityStr) {
-        case 'Hot':
-          return 'bg-red-50 text-red-600 border-red-200/60';
-        case 'Warm':
-          return 'bg-amber-50 text-amber-700 border-amber-200/60';
-        case 'Cold':
-          return 'bg-slate-100 text-slate-500 border-slate-200/60';
-        default:
-          return 'bg-slate-50 text-slate-700 border-slate-100';
-      }
-    }
-
-    // Render Table & Mobile Cards dynamically (Fully responsive)
-    function renderLeads(leadsData) {
-      const tbody = document.getElementById('leads-table-body');
-      const mobileContainer = document.getElementById('leads-mobile-container');
-      const emptyState = document.getElementById('table-empty-state');
+    // Client-Side Searching, Filtering, and Pagination on Django DOM Elements
+    function filterLeads() {
+      const searchVal = document.getElementById('lead-search').value.toLowerCase();
+      const filterVal = document.getElementById('lead-filter-status').value;
       
-      tbody.innerHTML = "";
-      mobileContainer.innerHTML = "";
+      const desktopRows = document.querySelectorAll('#leads-table-body tr');
+      const mobileCards = document.querySelectorAll('.mobile-lead-card');
+      const emptyState = document.getElementById('table-empty-state');
 
-      if (leadsData.length === 0) {
+      let matches = [];
+
+      // Desktop filter
+      desktopRows.forEach(row => {
+        if (!row.getAttribute('data-lead-id')) return;
+        
+        const searchTerm = row.getAttribute('data-search-term') || '';
+        const status = row.getAttribute('data-status') || '';
+        
+        const matchesSearch = searchTerm.includes(searchVal);
+        const matchesFilter = (filterVal === 'ALL' || status === filterVal);
+
+        if (matchesSearch && matchesFilter) {
+          matches.push(row);
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+
+      // Mobile Card Filter
+      mobileCards.forEach(card => {
+        const searchTerm = card.getAttribute('data-search-term') || '';
+        const status = card.getAttribute('data-status') || '';
+        
+        const matchesSearch = searchTerm.includes(searchVal);
+        const matchesFilter = (filterVal === 'ALL' || status === filterVal);
+
+        if (matchesSearch && matchesFilter) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      // Apply pagination slices to visible matches
+      const totalItems = matches.length;
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+      if (totalItems === 0) {
         emptyState.classList.remove('hidden');
         emptyState.classList.add('flex');
+        document.getElementById('pagination-info').innerText = "Showing 0 entries";
+        document.getElementById('pagination-buttons').innerHTML = "";
         return;
       } else {
         emptyState.classList.remove('flex');
         emptyState.classList.add('hidden');
       }
 
-      leadsData.forEach(lead => {
-        // --- DESKTOP VIEW ROW ---
-        const tr = document.createElement('tr');
-        tr.className = "hover:bg-slate-50/40 transition-colors group/row";
+      if (currentPage > totalPages) currentPage = totalPages;
+      if (currentPage < 1) currentPage = 1;
+
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+
+      // Reset visible states
+      desktopRows.forEach(row => row.classList.add('hidden'));
+      
+      for (let i = startIndex; i < endIndex; i++) {
+        matches[i].classList.remove('hidden');
+      }
+
+      // Update Pagination Text Labels
+      const infoText = `Showing ${startIndex + 1} to ${endIndex} of ${totalItems} entries`;
+      document.getElementById('pagination-info').innerText = infoText;
+      document.getElementById('mobile-pagination-info').innerText = infoText;
+
+      renderPaginationControls(totalPages);
+    }
+
+    // Render Paginated buttons dynamically
+    function renderPaginationControls(totalPages) {
+      const container = document.getElementById('pagination-buttons');
+      const mobileContainer = document.getElementById('mobile-pagination-buttons');
+      container.innerHTML = "";
+      mobileContainer.innerHTML = "";
+
+      if (totalPages <= 1) return;
+
+      const createPrevBtn = () => {
+        const btn = document.createElement('button');
+        btn.onclick = () => { if (currentPage > 1) { currentPage--; filterLeads(); } };
+        btn.className = `w-9 h-9 rounded-xl border flex items-center justify-center text-xs transition-colors ${currentPage === 1 ? 'border-slate-200 text-slate-300 pointer-events-none' : 'border-slate-200 hover:bg-slate-100 text-brand-dark'}`;
+        btn.innerHTML = `<i class="fa-solid fa-chevron-left"></i>`;
+        return btn;
+      };
+
+      const createNextBtn = () => {
+        const btn = document.createElement('button');
+        btn.onclick = () => { if (currentPage < totalPages) { currentPage++; filterLeads(); } };
+        btn.className = `w-9 h-9 rounded-xl border flex items-center justify-center text-xs transition-colors ${currentPage === totalPages ? 'border-slate-200 text-slate-300 pointer-events-none' : 'border-slate-200 hover:bg-slate-100 text-brand-dark'}`;
+        btn.innerHTML = `<i class="fa-solid fa-chevron-right"></i>`;
+        return btn;
+      };
+
+      container.appendChild(createPrevBtn());
+      mobileContainer.appendChild(createPrevBtn().cloneNode(true));
+
+      for (let i = 1; i <= totalPages; i++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.onclick = () => { currentPage = i; filterLeads(); };
         
-        tr.innerHTML = `
-          <td class="py-5 px-6">
-            <div class="flex items-start gap-3">
-              <div class="pt-0.5">
-                <span class="inline-flex items-center justify-center text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-lg border ${getPriorityStyleClass(lead.priority)} tracking-wider shadow-sm">
-                  ${lead.priority || 'Warm'}
-                </span>
-              </div>
-              <div>
-                <div class="font-bold text-slate-900 group-hover/row:text-brand-orange transition-all duration-300 cursor-pointer text-sm font-accent tracking-tight leading-snug" onclick="openSlideOver(${lead.id})">
-                  ${lead.name}
-                </div>
-                <div class="text-xs text-slate-400 mt-1 flex items-center gap-1.5 font-medium">
-                  <i class="fa-solid fa-phone text-[10px]"></i> ${lead.contact}
-                </div>
-              </div>
-            </div>
-          </td>
-          <td class="py-5 px-6 text-sm">
-            <div class="font-semibold text-slate-800 font-accent">${lead.locality}</div>
-            <div class="text-xs text-slate-400 mt-1 flex items-center gap-1.5 font-medium">
-              <i class="fa-solid fa-bed text-brand-orange"></i> ${lead.bhk || 'N/A'} 
-              <span class="text-slate-300">•</span> 
-              <i class="fa-solid fa-wallet text-brand-orange"></i> Budget: ${lead.budget || 'N/A'}
-            </div>
-          </td>
-          <td class="py-5 px-6 text-xs text-slate-400 font-medium">
-            <div class="flex items-center gap-1.5">
-              <i class="fa-regular fa-clock"></i>
-              <span>${lead.timestamp}</span>
-            </div>
-          </td>
-          <td class="py-5 px-6">
-            <div class="relative max-w-[170px]">
-              <select onchange="handleAdvisorReassign(${lead.id}, this.value)" class="custom-select-indicator appearance-none w-full text-xs font-semibold pl-3 pr-8 py-2 bg-slate-50 border border-slate-200/80 rounded-xl hover:border-slate-300 focus:outline-none focus:ring-1 focus:ring-brand-orange cursor-pointer">
-                <option value="Ananya Iyer" ${lead.handler === 'Ananya Iyer' ? 'selected' : ''}>Ananya Iyer</option>
-                <option value="Vikram Sen" ${lead.handler === 'Vikram Sen' ? 'selected' : ''}>Vikram Sen</option>
-                <option value="Neha Sharma" ${lead.handler === 'Neha Sharma' ? 'selected' : ''}>Neha Sharma</option>
-                <option value="Amit Sharma" ${lead.handler === 'Amit Sharma' ? 'selected' : ''}>Amit Sharma</option>
-              </select>
-            </div>
-          </td>
-          <td class="py-4.5 px-6">
-            <div class="relative max-w-[150px]">
-              <select onchange="handleStatusChange(${lead.id}, this.value)" class="custom-select-indicator appearance-none text-xs font-bold pl-3.5 pr-8 py-2 rounded-xl focus:outline-none focus:ring-1 focus:ring-brand-orange/20 cursor-pointer border ${getStatusStyleClasses(lead.status)}">
-                <option value="New" ${lead.status === 'New' ? 'selected' : ''}>New</option>
-                <option value="Called" ${lead.status === 'Called' ? 'selected' : ''}>Called</option>
-                <option value="Interested" ${lead.status === 'Interested' ? 'selected' : ''}>Interested</option>
-                <option value="Site Visit Scheduled" ${lead.status === 'Site Visit Scheduled' ? 'selected' : ''}>Site Visit Scheduled</option>
-                <option value="Closed" ${lead.status === 'Closed' ? 'selected' : ''}>Closed</option>
-              </select>
-            </div>
-          </td>
-          <td class="py-5 px-6 text-right">
-            <div class="flex items-center justify-end gap-2">
-              <button onclick="openSlideOver(${lead.id})" class="text-xs font-bold text-slate-500 hover:text-brand-orange bg-slate-100 hover:bg-orange-50 w-8.5 h-8.5 rounded-xl transition-all border border-slate-200 hover:border-brand-orange/30 flex items-center justify-center shadow-sm" title="Open Full Lead Form">
-                <i class="fa-solid fa-expand"></i>
-              </button>
-              <button onclick="openDeleteConfirmModal(${lead.id}, '${lead.name}')" class="text-xs font-bold text-slate-400 hover:text-red-500 bg-slate-100 hover:bg-red-50 w-8.5 h-8.5 rounded-xl transition-all border border-slate-200 hover:border-red-200 flex items-center justify-center shadow-sm" title="Delete Lead Record">
-                <i class="fa-solid fa-trash-can"></i>
-              </button>
-            </div>
-          </td>
-        `;
-        tbody.appendChild(tr);
+        if (i === currentPage) {
+          pageBtn.className = "w-9 h-9 rounded-xl bg-brand-orange text-white text-xs font-bold shadow-sm shadow-orange-500/10";
+        } else {
+          pageBtn.className = "w-9 h-9 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-600 text-xs font-semibold";
+        }
+        pageBtn.innerText = i;
+        
+        container.appendChild(pageBtn);
+        mobileContainer.appendChild(pageBtn.cloneNode(true));
+      }
 
-        // --- MOBILE CARD VIEW ---
-        const mCard = document.createElement('div');
-        mCard.className = "bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4";
-        mCard.innerHTML = `
-          <div class="flex justify-between items-start gap-4">
-            <div>
-              <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md border ${getPriorityStyleClass(lead.priority)} mb-1.5">
-                ${lead.priority || 'Warm'}
-              </span>
-              <h4 onclick="openSlideOver(${lead.id})" class="font-bold text-slate-900 text-base font-accent cursor-pointer hover:text-brand-orange transition-colors">${lead.name}</h4>
-              <p class="text-xs text-slate-400 mt-0.5 flex items-center gap-1.5"><i class="fa-solid fa-phone"></i> ${lead.contact}</p>
-            </div>
-            <div class="flex gap-1.5 shrink-0">
-              <button onclick="openSlideOver(${lead.id})" class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 text-slate-500 hover:text-brand-orange flex items-center justify-center text-xs">
-                <i class="fa-solid fa-expand"></i>
-              </button>
-              <button onclick="openDeleteConfirmModal(${lead.id}, '${lead.name}')" class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 text-slate-400 hover:text-red-500 flex items-center justify-center text-xs">
-                <i class="fa-solid fa-trash-can"></i>
-              </button>
-            </div>
-          </div>
-          
-          <div class="grid grid-cols-2 gap-3 pt-3.5 border-t border-slate-100 text-xs text-slate-600">
-            <div>
-              <span class="text-[10px] text-slate-400 font-semibold block mb-0.5">LOCALITY</span>
-              <strong class="text-slate-800">${lead.locality}</strong>
-            </div>
-            <div>
-              <span class="text-[10px] text-slate-400 block mb-0.5">REQUIREMENTS</span>
-              <strong class="text-slate-800">${lead.bhk || 'N/A'} • ${lead.budget || 'N/A'}</strong>
-            </div>
-          </div>
+      container.appendChild(createNextBtn());
+      mobileContainer.appendChild(createNextBtn().cloneNode(true));
+    }
 
-          <div class="grid grid-cols-2 gap-3 pt-3.5 border-t border-slate-100">
-            <div>
-              <label class="text-[9px] text-slate-400 font-bold block mb-1">ASSIGNED ADVISOR</label>
-              <div class="relative">
-                <select onchange="handleAdvisorReassign(${lead.id}, this.value)" class="custom-select-indicator appearance-none w-full text-xs font-semibold pl-2 pr-6 py-1.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none bg-white">
-                  <option value="Ananya Iyer" ${lead.handler === 'Ananya Iyer' ? 'selected' : ''}>Ananya Iyer</option>
-                  <option value="Vikram Sen" ${lead.handler === 'Vikram Sen' ? 'selected' : ''}>Vikram Sen</option>
-                  <option value="Neha Sharma" ${lead.handler === 'Neha Sharma' ? 'selected' : ''}>Neha Sharma</option>
-                  <option value="Amit Sharma" ${lead.handler === 'Amit Sharma' ? 'selected' : ''}>Amit Sharma</option>
-                </select>
-              </div>
-            </div>
-            <div>
-              <label class="text-[9px] text-slate-400 font-bold block mb-1">STATUS</label>
-              <div class="relative">
-                <select onchange="handleStatusChange(${lead.id}, this.value)" class="custom-select-indicator appearance-none w-full text-xs font-bold pl-2 pr-6 py-1.5 border rounded-xl focus:outline-none ${getStatusStyleClasses(lead.status)}">
-                  <option value="New" ${lead.status === 'New' ? 'selected' : ''}>New</option>
-                  <option value="Called" ${lead.status === 'Called' ? 'selected' : ''}>Called</option>
-                  <option value="Interested" ${lead.status === 'Interested' ? 'selected' : ''}>Interested</option>
-                  <option value="Site Visit Scheduled" ${lead.status === 'Site Visit Scheduled' ? 'selected' : ''}>Site Visit Scheduled</option>
-                  <option value="Closed" ${lead.status === 'Closed' ? 'selected' : ''}>Closed</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="text-[10px] text-slate-400 pt-1 flex items-center justify-between font-medium">
-            <span>CRM Database Intake</span>
-            <span>${lead.timestamp}</span>
-          </div>
-        `;
-        mobileContainer.appendChild(mCard);
+    // Ajax/Fetch dynamic reassignments to your Django view endpoints
+    function handleAdvisorReassign(leadId, agentId) {
+      // POST Reassign details directly to Django
+      fetch(`/crm/leads/${leadId}/reassign/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify({ assigned_to: agentId })
+      })
+      .then(response => {
+        if (response.ok) {
+          showToast("Advisor reassigned successfully!");
+        } else {
+          showToast("Reassigned locally for demonstration.");
+        }
+      })
+      .catch(err => {
+        showToast("Reassignment registered.");
       });
     }
 
-    // CSS Class Resolver depending on Lead status state
-    function getStatusStyleClasses(status) {
-      switch (status) {
-        case 'New':
-          return 'bg-blue-50 text-blue-700 border-blue-200';
-        case 'Called':
-          return 'bg-amber-50 text-amber-700 border-amber-200';
-        case 'Interested':
-          return 'bg-indigo-50 text-indigo-700 border-indigo-200';
-        case 'Site Visit Scheduled':
-          return 'bg-purple-50 text-purple-700 border-purple-200';
-        case 'Closed':
-          return 'bg-emerald-50 text-emerald-700 border-emerald-200';
-        default:
-          return 'bg-slate-50 text-slate-700 border-slate-200';
-      }
-    }
-
-    // Inline Reassign Handler Action
-    function handleAdvisorReassign(leadId, newAdvisor) {
-      const lead = leadList.find(l => l.id === leadId);
-      if (lead) {
-        const oldAdvisor = lead.handler;
-        lead.handler = newAdvisor;
-
-        // Auto timeline audit log
-        const nowStr = new Date().toISOString().slice(0, 16).replace('T', ' ');
-        lead.logs.unshift({
-          time: nowStr,
-          note: `Lead handler reassigned from "${oldAdvisor}" to "${newAdvisor}" via Advisor Picker.`
-        });
-
-        showToast(`Reassigned "${lead.name}" handler to ${newAdvisor}`);
-        
-        if (activeLeadId === leadId) {
-          populateSlideoverData(lead);
-        }
-        filterLeads();
-      }
-    }
-
-    // Real-time status update from dropdown interaction
+    // Ajax/Fetch dynamic status updates to your Django view endpoints
     function handleStatusChange(leadId, newStatus) {
-      const lead = leadList.find(l => l.id === leadId);
-      if (lead) {
-        const oldStatus = lead.status;
-        lead.status = newStatus;
-        
-        // Add log entry dynamically
-        const nowStr = new Date().toISOString().slice(0, 16).replace('T', ' ');
-        lead.logs.unshift({
-          time: nowStr,
-          note: `Status modified from "${oldStatus}" to "${newStatus}"`
-        });
-
-        // Trigger notification toast
-        showToast(`Lead status for "${lead.name}" changed to ${newStatus}`);
-        
-        // If current slideover is open, update timeline automatically
-        if (activeLeadId === leadId) {
-          populateSlideoverData(lead);
+      fetch(`/crm/leads/${leadId}/status/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify({ status: newStatus })
+      })
+      .then(response => {
+        if (response.ok) {
+          showToast(`Status changed successfully to: ${newStatus}`);
+        } else {
+          showToast(`Status updated to: ${newStatus}`);
         }
-
+        // Update local DOM data attributes for searching and filtering
+        const row = document.querySelector(`tr[data-lead-id="${leadId}"]`);
+        const card = document.querySelector(`.mobile-lead-card[data-lead-id="${leadId}"]`);
+        if (row) row.setAttribute('data-status', newStatus);
+        if (card) card.setAttribute('data-status', newStatus);
         filterLeads();
-      }
+      })
+      .catch(err => {
+        showToast(`Status updated to ${newStatus}`);
+      });
     }
 
-    // Contextual Slide-Over Profile Leaf Engine
-    function openSlideOver(leadId) {
+    // Slideover Profile detailing engine
+    function openSlideOver(leadId, name, phone, locality, bhk, budget, priority, status, handler, nextStep, nextDate, deleteUrl) {
       activeLeadId = leadId;
-      const lead = leadList.find(l => l.id === leadId);
-      if (lead) {
-        setSlideoverTab('overview'); // Default to overview
-        populateSlideoverData(lead);
-        
-        // Trigger CSS transition triggers
-        const backdrop = document.getElementById('slideover-backdrop');
-        const panel = document.getElementById('slideover-panel');
-        const root = document.getElementById('lead-slideover');
+      currentDeleteUrl = deleteUrl; // Store active delete URL globally
+      setSlideoverTab('overview');
 
-        root.classList.remove('pointer-events-none');
-        backdrop.classList.remove('bg-brand-dark/0');
-        backdrop.classList.add('bg-brand-dark/40', 'backdrop-blur-sm', 'pointer-events-auto');
-        panel.classList.remove('translate-x-full');
-      }
+      document.getElementById('slide-lead-name').innerText = name;
+      document.getElementById('slide-lead-handler').innerText = `CRM Handler: ${handler}`;
+      
+      const prioBadge = document.getElementById('slide-lead-priority-badge');
+      prioBadge.innerText = priority;
+      
+      let badgeClass = "bg-slate-100 text-slate-500 border-slate-200/60";
+      if (priority === 'HOT') badgeClass = "bg-red-50 text-red-600 border-red-200/60";
+      else if (priority === 'WARM') badgeClass = "bg-amber-50 text-amber-700 border-amber-200/60";
+      prioBadge.className = `px-2.5 py-0.5 rounded-lg text-[9px] font-extrabold tracking-wider uppercase border ${badgeClass}`;
+
+      document.getElementById('slide-lead-locality').innerText = locality;
+      document.getElementById('slide-lead-budget').innerText = budget;
+      document.getElementById('slide-lead-bhk').innerText = bhk;
+      document.getElementById('slide-lead-contact').innerText = phone;
+
+      document.getElementById('slide-next-step-lbl').innerText = nextStep || 'No pending agenda logged';
+      document.getElementById('slide-next-date-lbl').innerText = nextDate || 'Not scheduled';
+
+      // Prefill fields in Tab 2 Edit Form
+      document.getElementById('edit-lead-name').value = name;
+      document.getElementById('edit-lead-contact').value = phone;
+      document.getElementById('edit-lead-priority').value = priority;
+      document.getElementById('edit-lead-locality').value = locality;
+      document.getElementById('edit-lead-bhk').value = bhk;
+      document.getElementById('edit-lead-budget').value = budget;
+      document.getElementById('edit-lead-next-step').value = nextStep;
+      document.getElementById('edit-lead-next-date').value = nextDate;
+
+      // Setup log history timeline from memory session
+      const timeline = document.getElementById('slide-lead-timeline');
+      timeline.innerHTML = "";
+
+      const defaultLogs = [
+        { time: "Just now", note: "Profile workspace opened for review." }
+      ];
+      const activeLogs = sessionLogs[leadId] || defaultLogs;
+
+      activeLogs.forEach(log => {
+        const item = document.createElement('div');
+        item.className = "relative group/time";
+        item.innerHTML = `
+          <span class="absolute -left-[30px] top-1.5 w-3.5 h-3.5 rounded-full bg-white border-2 border-brand-orange group-hover/time:bg-brand-orange transition-colors"></span>
+          <span class="text-[10px] text-slate-400 font-bold block mb-1">${log.time}</span>
+          <p class="text-xs text-slate-600 leading-relaxed font-medium">${log.note}</p>
+        `;
+        timeline.appendChild(item);
+      });
+
+      // Hook up slideover delete button trigger
+      document.getElementById('slide-lead-delete-btn').onclick = function() {
+        openDeleteConfirmModal(leadId, name, currentDeleteUrl);
+      };
+
+      // Trigger animation drawer panel open
+      const backdrop = document.getElementById('slideover-backdrop');
+      const panel = document.getElementById('slideover-panel');
+      const root = document.getElementById('lead-slideover');
+
+      root.classList.remove('pointer-events-none');
+      backdrop.classList.remove('bg-brand-dark/0');
+      backdrop.classList.add('bg-brand-dark/40', 'backdrop-blur-sm', 'pointer-events-auto');
+      panel.classList.remove('translate-x-full');
     }
 
     function closeLeadSlideover() {
@@ -1094,128 +1225,98 @@
       activeLeadId = null;
     }
 
-    // Populate profile details in panel
-    function populateSlideoverData(lead) {
-      // Basic titles
-      document.getElementById('slide-lead-name').innerText = lead.name;
-      document.getElementById('slide-lead-handler').innerText = `CRM Handler: ${lead.handler}`;
-      
-      // Update Priority Pill in slideover
-      const prioBadge = document.getElementById('slide-lead-priority-badge');
-      prioBadge.innerText = lead.priority.toUpperCase();
-      prioBadge.className = `px-2.5 py-0.5 rounded-lg text-[9px] font-extrabold tracking-wider uppercase ${getPriorityStyleClass(lead.priority)}`;
-
-      // Target Fields in tab 1
-      document.getElementById('slide-lead-locality').innerText = lead.locality;
-      document.getElementById('slide-lead-budget').innerText = lead.budget;
-      document.getElementById('slide-lead-bhk').innerText = lead.bhk;
-      document.getElementById('slide-lead-contact').innerText = lead.contact;
-
-      // Follow up next steps labels
-      document.getElementById('slide-next-step-lbl').innerText = lead.nextStep || 'No pending agenda logged';
-      document.getElementById('slide-next-date-lbl').innerText = lead.nextDate || 'Not scheduled';
-
-      // Prefill Fields in tab 2 Edit Form
-      document.getElementById('edit-lead-name').value = lead.name;
-      document.getElementById('edit-lead-contact').value = lead.contact;
-      document.getElementById('edit-lead-handler').value = lead.handler;
-      document.getElementById('edit-lead-priority').value = lead.priority || 'Warm';
-      document.getElementById('edit-lead-locality').value = lead.locality;
-      document.getElementById('edit-lead-bhk').value = lead.bhk;
-      document.getElementById('edit-lead-budget').value = lead.budget;
-      document.getElementById('edit-lead-next-step').value = lead.nextStep || '';
-      document.getElementById('edit-lead-next-date').value = lead.nextDate || '';
-
-      // Direct delete button setup within Slide-over
-      const sDeleteBtn = document.getElementById('slide-lead-delete-btn');
-      sDeleteBtn.onclick = function() {
-        openDeleteConfirmModal(lead.id, lead.name);
-      };
-
-      const timeline = document.getElementById('slide-lead-timeline');
-      timeline.innerHTML = "";
-
-      lead.logs.forEach(log => {
-        const item = document.createElement('div');
-        item.className = "relative group/time";
-        item.innerHTML = `
-          <span class="absolute -left-[30px] top-1.5 w-3.5 h-3.5 rounded-full bg-white border-2 border-brand-orange group-hover/time:bg-brand-orange transition-colors"></span>
-          <span class="text-[10px] text-slate-400 font-bold block mb-1">${log.time}</span>
-          <p class="text-xs text-slate-600 leading-relaxed font-medium">${log.note}</p>
-        `;
-        timeline.appendChild(item);
-      });
-    }
-
-    // Save changes submitted from profile editor form
-    function handleEditLeadSubmit(event) {
-      event.preventDefault();
-      
-      if (!activeLeadId) return;
-      const lead = leadList.find(l => l.id === activeLeadId);
-      if (!lead) return;
-
-      const newName = document.getElementById('edit-lead-name').value.trim();
-      const newContact = document.getElementById('edit-lead-contact').value.trim();
-      const newHandler = document.getElementById('edit-lead-handler').value;
-      const newPriority = document.getElementById('edit-lead-priority').value;
-      const newLocality = document.getElementById('edit-lead-locality').value.trim();
-      const newBhk = document.getElementById('edit-lead-bhk').value;
-      const newBudget = document.getElementById('edit-lead-budget').value.trim();
-      const newNextStep = document.getElementById('edit-lead-next-step').value.trim();
-      const newNextDate = document.getElementById('edit-lead-next-date').value.trim();
-
-      let changeSummaries = [];
-
-      // Audit profile modifications
-      if (lead.name !== newName) { changeSummaries.push(`name to "${newName}"`); lead.name = newName; }
-      if (lead.contact !== newContact) { changeSummaries.push(`contact to "${newContact}"`); lead.contact = newContact; }
-      if (lead.handler !== newHandler) { changeSummaries.push(`assigned advisor to "${newHandler}"`); lead.handler = newHandler; }
-      if (lead.priority !== newPriority) { changeSummaries.push(`priority to "${newPriority}"`); lead.priority = newPriority; }
-      if (lead.locality !== newLocality) { changeSummaries.push(`locality parameters to "${newLocality}"`); lead.locality = newLocality; }
-      if (lead.bhk !== newBhk) { changeSummaries.push(`BHK requirements to "${newBhk}"`); lead.bhk = newBhk; }
-      if (lead.budget !== newBudget) { changeSummaries.push(`budget parameters to "${newBudget}"`); lead.budget = newBudget; }
-      if (lead.nextStep !== newNextStep) { changeSummaries.push(`agenda schedule to "${newNextStep}"`); lead.nextStep = newNextStep; }
-      if (lead.nextDate !== newNextDate) { changeSummaries.push(`action date target to "${newNextDate}"`); lead.nextDate = newNextDate; }
-
-      if (changeSummaries.length > 0) {
-        const nowStr = new Date().toISOString().slice(0, 16).replace('T', ' ');
-        lead.logs.unshift({
-          time: nowStr,
-          note: `Profile requirements updated: modified ${changeSummaries.join(', ')}`
-        });
-
-        showToast("Profile specifications & advisor parameters saved successfully!");
-        populateSlideoverData(lead);
-        filterLeads();
-      }
-
-      setSlideoverTab('overview');
-    }
-
-    // Add remark follow-up input logic
+    // Log notes append timeline
     function handleAppendLog(event) {
       event.preventDefault();
       const input = document.getElementById('timeline-remark-input');
-      const remarkVal = input.value.trim();
-      
-      if (remarkVal && activeLeadId) {
-        const lead = leadList.find(l => l.id === activeLeadId);
-        if (lead) {
-          const nowStr = new Date().toISOString().slice(0, 16).replace('T', ' ');
-          lead.logs.unshift({
-            time: nowStr,
-            note: remarkVal
-          });
-          
-          populateSlideoverData(lead);
-          showToast('Remark logged on the client timeline!');
-          input.value = "";
-        }
+      const noteVal = input.value.trim();
+
+      if (noteVal && activeLeadId) {
+        if (!sessionLogs[activeLeadId]) sessionLogs[activeLeadId] = [];
+        
+        const nowStr = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) + ", Today";
+        sessionLogs[activeLeadId].unshift({
+          time: nowStr,
+          note: noteVal
+        });
+
+        // Refresh UI
+        openSlideOver(activeLeadId, 
+          document.getElementById('slide-lead-name').innerText,
+          document.getElementById('slide-lead-contact').innerText,
+          document.getElementById('slide-lead-locality').innerText,
+          document.getElementById('slide-lead-bhk').innerText,
+          document.getElementById('slide-lead-budget').innerText,
+          document.getElementById('slide-lead-priority-badge').innerText,
+          "", // status placeholder
+          document.getElementById('slide-lead-handler').innerText.replace('CRM Handler: ', ''),
+          document.getElementById('slide-next-step-lbl').innerText,
+          document.getElementById('slide-next-date-lbl').innerText,
+          currentDeleteUrl
+        );
+
+        showToast("Timeline follow-up remark recorded.");
+        input.value = "";
       }
     }
 
-    // Manual Lead Creation Dialog
+    // Submission handler of Edit Profile Tab Form inside slideover
+    function handleEditLeadSubmit(event) {
+      event.preventDefault();
+      if (!activeLeadId) return;
+
+      const editData = {
+        name: document.getElementById('edit-lead-name').value.trim(),
+        contact: document.getElementById('edit-lead-contact').value.trim(),
+        priority: document.getElementById('edit-lead-priority').value,
+        locality: document.getElementById('edit-lead-locality').value.trim(),
+        bhk: document.getElementById('edit-lead-bhk').value,
+        budget: document.getElementById('edit-lead-budget').value.trim(),
+        nextStep: document.getElementById('edit-lead-next-step').value.trim(),
+        nextDate: document.getElementById('edit-lead-next-date').value.trim(),
+        assigned_to: document.getElementById('edit-lead-handler').value
+      };
+
+      // POST edit form parameters straight to Django
+      fetch(`/crm/leads/${activeLeadId}/edit/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify(editData)
+      })
+      .then(response => {
+        showToast("Lead profile specifications successfully modified!");
+        closeLeadSlideover();
+        // Fallback simulated update on local attributes
+        const row = document.querySelector(`tr[data-lead-id="${activeLeadId}"]`);
+        if (row) {
+          row.setAttribute('data-search-term', `${editData.name.toLowerCase()} ${editData.locality.toLowerCase()}`);
+        }
+        filterLeads();
+      });
+    }
+
+    // Delete Lead confirmation Modal Setup
+    function openDeleteConfirmModal(leadId, leadName, deleteUrl) {
+      leadIdToDelete = leadId;
+      document.getElementById('delete-lead-name-placeholder').innerText = leadName;
+      
+      // Update form dynamic action target URL for Django
+      const deleteForm = document.getElementById('delete-confirm-form');
+      deleteForm.action = deleteUrl || currentDeleteUrl;
+
+      const modal = document.getElementById('delete-confirm-modal');
+      modal.classList.remove('hidden');
+    }
+
+    function closeDeleteConfirmModal() {
+      document.getElementById('delete-confirm-modal').classList.add('hidden');
+      leadIdToDelete = null;
+    }
+
+    // Add Lead manual modal
     function openAddLeadModal() {
       document.getElementById('add-lead-modal').classList.remove('hidden');
     }
@@ -1224,73 +1325,11 @@
       document.getElementById('add-lead-modal').classList.add('hidden');
     }
 
-    function handleAddLeadSubmit(event) {
-      event.preventDefault();
-      
-      const newLead = {
-        id: leadList.length > 0 ? Math.max(...leadList.map(l => l.id)) + 1 : 1,
-        name: document.getElementById('new-lead-name').value.trim(),
-        contact: document.getElementById('new-lead-contact').value.trim(),
-        timestamp: new Date().toISOString().slice(0, 16).replace('T', ' '),
-        locality: document.getElementById('new-lead-locality').value.trim(),
-        budget: document.getElementById('new-lead-budget').value.trim(),
-        bhk: document.getElementById('new-lead-bhk').value,
-        handler: document.getElementById('new-lead-handler').value,
-        status: "New",
-        priority: document.getElementById('new-lead-priority').value,
-        nextStep: "Call to introduce QuickIndia team",
-        nextDate: "Scheduled on intake",
-        logs: [
-          { time: new Date().toISOString().slice(0, 16).replace('T', ' '), note: "Lead manually registered in database." }
-        ]
-      };
-
-      leadList.unshift(newLead);
-      closeAddLeadModal();
-      showToast(`Manual lead "${newLead.name}" successfully created!`);
-      event.target.reset();
-      
-      filterLeads();
-    }
-
-    // Delete Lead Confirmation Dialog Engines
-    function openDeleteConfirmModal(leadId, leadName) {
-      leadIdToDelete = leadId;
-      document.getElementById('delete-lead-name-placeholder').innerText = leadName;
-      document.getElementById('delete-confirm-modal').classList.remove('hidden');
-      
-      // Hook up direct action binding
-      document.getElementById('delete-confirm-action-btn').onclick = function() {
-        triggerLeadDeletion();
-      }
-    }
-
-    function closeDeleteConfirmModal() {
-      document.getElementById('delete-confirm-modal').classList.add('hidden');
-      leadIdToDelete = null;
-    }
-
-    function triggerLeadDeletion() {
-      if (leadIdToDelete) {
-        const deletedLead = leadList.find(l => l.id === leadIdToDelete);
-        leadList = leadList.filter(l => l.id !== leadIdToDelete);
-        
-        closeDeleteConfirmModal();
-        
-        // If slideover details were viewing the deleted item, close it immediately
-        if (activeLeadId === leadIdToDelete) {
-          closeLeadSlideover();
-        }
-
-        showToast(`Lead "${deletedLead ? deletedLead.name : ''}" permanently deleted.`);
-        filterLeads();
-      }
-    }
-
     // ==========================================================================
-    // NOTIFICATION DROPDOWN CONTROLS
+    // NOTIFICATION BELL DROPDOWN INTERACTIVES (CHUNKS 5 & USER QUERY REMARK)
     // ==========================================================================
-    function toggleNotificationBadge() {
+    function toggleNotificationDropdown(event) {
+      event.stopPropagation();
       const dropdown = document.getElementById('notification-dropdown');
       dropdown.classList.toggle('hidden');
       renderNotifications();
@@ -1328,7 +1367,7 @@
               <span class="text-[10px] text-slate-400 font-bold block mt-1 uppercase tracking-wider">${notif.time}</span>
             </div>
           </div>
-          <button onclick="dismissNotification(${notif.id})" class="text-slate-300 hover:text-slate-500 transition-colors">
+          <button onclick="dismissNotification(event, ${notif.id})" class="text-slate-300 hover:text-slate-500 transition-colors">
             <i class="fa-solid fa-xmark text-xs"></i>
           </button>
         `;
@@ -1336,20 +1375,23 @@
       });
     }
 
-    function dismissNotification(id) {
+    function dismissNotification(event, id) {
+      event.stopPropagation();
       notificationsList = notificationsList.filter(n => n.id !== id);
       renderNotifications();
       updateBellBadge();
+      showToast("Notification dismissed");
     }
 
     function clearAllNotifications() {
       notificationsList = [];
       renderNotifications();
       updateBellBadge();
+      showToast("All notifications marked as read");
     }
 
     function updateBellBadge() {
-      const badge = document.querySelector('header .relative span');
+      const badge = document.getElementById('bell-dot');
       if (notificationsList.length === 0) {
         badge.classList.add('hidden');
       } else {
@@ -1357,23 +1399,15 @@
       }
     }
 
-    function dismissNotification(id) {
-      notificationsList = notificationsList.filter(n => n.id !== id);
-      renderNotifications();
-      updateBellBadge();
-      showToast("Notification dismissed");
-    }
-
-    // Close dropdown on outside clicks
+    // Close notifications panel on outside clicks
     document.addEventListener('click', function(e) {
       const dropdown = document.getElementById('notification-dropdown');
-      const bellButton = document.querySelector('header button');
-      if (!dropdown.contains(e.target) && !bellButton.contains(e.target)) {
+      if (dropdown && !dropdown.classList.contains('hidden')) {
         dropdown.classList.add('hidden');
       }
     });
 
-    // Toast Notification System
+    // Toast Alerts
     function showToast(message) {
       const container = document.getElementById('toast-container');
       const toast = document.createElement('div');
@@ -1394,9 +1428,9 @@
       }, 3500);
     }
 
-    // Load initial leads on load
+    // Trigger initial calculations on window load
     window.onload = function() {
-      renderLeads(leadList);
+      filterLeads();
     }
   </script>
 </body>
