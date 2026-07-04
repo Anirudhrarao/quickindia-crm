@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import View
 from django.http import JsonResponse
+from apps.accounts.models import User
 
 from apps.leads.models import Lead, LeadLog
 from apps.leads.forms import LeadForm, LeadUpdateForm
@@ -208,6 +209,53 @@ class LeadStatusUpdateView(View):
             }
         )
 
+class LeadAssignView(View):
+    """
+    Assign lead to another employee.
+    """
+
+    def post(self, request, pk):
+        lead = get_object_or_404(
+            Lead,
+            pk=pk,
+        )
+
+        employee_id = request.POST.get("assigned_to")
+
+        if not employee_id:
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Employee is required.",
+                },
+                status=400,
+            )
+
+        employee = get_object_or_404(
+            User,
+            pk=employee_id,
+        )
+
+        old_employee = (
+            lead.assigned_to.get_full_name()
+            if lead.assigned_to
+            else "Unassigned"
+        )
+
+        if lead.assigned_to != employee:
+            lead.assigned_to = employee
+            lead.save(update_fields=["assigned_to"])
+            LeadLog.objects.create(
+                lead=lead,
+                created_by=request.user,
+                message=f"Lead reassigned from '{old_employee}' to '{employee.get_full_name()}'.",
+            )
+        return JsonResponse(
+            {
+                "success": True,
+                "message": "Lead reassigned successfully.",
+            }
+        )
     
 class AddLeadLogView(View):
     """

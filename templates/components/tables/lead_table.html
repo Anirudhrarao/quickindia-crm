@@ -77,9 +77,9 @@
               <td class="py-5 px-6">
                   <div class="relative max-w-[170px]">
                       <select onchange="handleAdvisorReassign('{{ lead.id }}', this.value)" class="custom-select-indicator appearance-none w-full text-xs font-semibold pl-3 pr-8 py-2 bg-slate-50 border border-slate-200/80 rounded-xl hover:border-slate-300 focus:outline-none focus:ring-1 focus:ring-brand-orange cursor-pointer">
-                          {% for agent in agents %}
-                              <option value="{{ agent.id }}" {% if lead.assigned_to.id == agent.id %}selected{% endif %}>
-                                  {{ agent.get_full_name|default:agent.username }}
+                          {% for employee in employees %}
+                              <option value="{{ employee.id }}" {% if lead.assigned_to.id == employee.id %}selected{% endif %}>
+                                  {{ employee.get_full_name|default:employee.username }}
                               </option>
                           {% empty %}
                               <option value="{{ lead.assigned_to.id|default:'' }}" selected>
@@ -227,9 +227,9 @@
                   <label class="text-[9px] text-slate-400 font-bold block mb-1">ASSIGNED ADVISOR</label>
                   <div class="relative">
                       <select onchange="handleAdvisorReassign('{{ lead.id }}', this.value)" class="custom-select-indicator appearance-none w-full text-xs font-semibold pl-2 pr-6 py-1.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none bg-white">
-                          {% for agent in agents %}
-                              <option value="{{ agent.id }}" {% if lead.assigned_to.id == agent.id %}selected{% endif %}>
-                                  {{ agent.get_full_name|default:agent.username }}
+                          {% for employee in employees %}
+                              <option value="{{ employee.id }}" {% if lead.assigned_to.id == employee.id %}selected{% endif %}>
+                                  {{ employee.get_full_name|default:employee.username }}
                               </option>
                           {% empty %}
                               <option value="{{ lead.assigned_to.id|default:'' }}" selected>

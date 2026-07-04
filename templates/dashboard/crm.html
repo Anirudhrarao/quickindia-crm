@@ -346,26 +346,30 @@
     mobileContainer.appendChild(createNextBtn().cloneNode(true));
   }
 
-  // advisor reassignments fetch engine targeting Django views
+  // Advisor reassignment
   function handleAdvisorReassign(leadId, agentId) {
-    fetch(`/crm/leads/${leadId}/reassign/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": "{{ csrf_token }}"
-      },
-      body: JSON.stringify({ assigned_to: agentId })
-    })
-    .then(response => {
-      if (response.ok) {
-        showToast("Advisor reassigned successfully!");
-      } else {
-        showToast("Assignment modified successfully.");
-      }
-    })
-    .catch(err => {
-      showToast("Advisor profile changes registered.");
-    });
+      const formData = new FormData();
+      formData.append("assigned_to", agentId);
+      fetch(`/crm/leads/${leadId}/assign/`, {
+          method: "POST",
+          headers: {
+              "X-CSRFToken": "{{ csrf_token }}"
+          },
+          body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.success) {
+              showToast(data.message);
+          } else {
+              showToast("Unable to assign employee.");
+              console.log(data.errors);
+          }
+      })
+      .catch(error => {
+          console.error(error);
+          showToast("Something went wrong.");
+      });
   }
 
     // Status state changing fetch engine targeting Django views
