@@ -1,0 +1,255 @@
+<!-- ==========================================================================
+    LEADS DIRECTORY INTERACTIVE VIEW (DESKTOP & MOBILE INTEGRATION)
+    ========================================================================== -->
+<div id="crm-leads-view" class="block space-y-6 max-w-7xl mx-auto animate-[fadeIn_0.4s_ease-out]">
+
+  <!-- Desktop & Tablet View (Hidden on mobile < md breakpoint) -->
+  <div class="hidden md:block bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden pro-shadow">
+    <div class="overflow-x-auto custom-scroll">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-slate-50/80 border-b border-slate-200">
+            <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Lead Info & Priority</th>
+            <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Property Interest</th>
+            <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Timestamp</th>
+            <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Assigned Advisor</th>
+            <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Status State</th>
+            <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="leads-table-body" class="divide-y divide-slate-100">
+          {% for lead in leads %}
+          <tr class="hover:bg-slate-50/40 transition-colors group/row" data-lead-id="{{ lead.id }}" data-status="{{ lead.status }}" data-search-term="{{ lead.full_name|lower }} {{ lead.locality|lower }} {{ lead.assigned_to.get_full_name|lower|default:lead.assigned_to.username|lower }}">
+              
+              <!-- Lead Profile & Priority Temperature Badge -->
+              <td class="py-5 px-6">
+                  <div class="flex items-start gap-3">
+                      <div class="pt-0.5">
+                          {% if lead.priority == "HOT" %}
+                              <span class="inline-flex items-center justify-center text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-lg border bg-red-50 text-red-600 border-red-200/60 tracking-wider shadow-sm">
+                                  {{ lead.get_priority_display }}
+                              </span>
+                          {% elif lead.priority == "WARM" %}
+                              <span class="inline-flex items-center justify-center text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-lg border bg-amber-50 text-amber-700 border-amber-200/60 tracking-wider shadow-sm">
+                                  {{ lead.get_priority_display }}
+                              </span>
+                          {% else %}
+                              <span class="inline-flex items-center justify-center text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-lg border bg-slate-100 text-slate-500 border-slate-200/60 tracking-wider shadow-sm">
+                                  {{ lead.get_priority_display }}
+                              </span>
+                          {% endif %}
+                      </div>
+                      <div>
+                          <div onclick="openSlideOver('{{ lead.id }}') " class="font-bold text-slate-900 group-hover/row:text-brand-orange transition-all duration-300 cursor-pointer text-sm font-accent tracking-tight leading-snug">
+                              {{ lead.full_name }}
+                          </div>
+                          <div class="text-xs text-slate-400 mt-1 flex items-center gap-1.5 font-medium">
+                              <i class="fa-solid fa-phone text-[10px]"></i>
+                              {{ lead.phone_number }}
+                          </div>
+                      </div>
+                  </div>
+              </td>
+
+              <!-- Real Estate Requirements -->
+              <td class="py-5 px-6 text-sm">
+                  <div class="font-semibold text-slate-800 font-accent">
+                      {{ lead.locality }}
+                  </div>
+                  <div class="text-xs text-slate-400 mt-1 flex items-center gap-1.5 font-medium">
+                      <i class="fa-solid fa-bed text-brand-orange"></i>
+                      {{ lead.bhk }}
+                      <span class="text-slate-300">•</span>
+                      <i class="fa-solid fa-wallet text-brand-orange"></i>
+                      Budget: {{ lead.budget }}
+                  </div>
+              </td>
+
+              <!-- CRM Ingestion Timestamp -->
+              <td class="py-5 px-6 text-xs text-slate-400 font-medium">
+                  <div class="flex items-center gap-1.5">
+                      <i class="fa-regular fa-clock"></i>
+                      {{ lead.created_at|date:"d M Y H:i" }}
+                  </div>
+              </td>
+
+              <!-- Interactive Advisor Assignment -->
+              <td class="py-5 px-6">
+                  <div class="relative max-w-[170px]">
+                      <select onchange="handleAdvisorReassign('{{ lead.id }}', this.value)" class="custom-select-indicator appearance-none w-full text-xs font-semibold pl-3 pr-8 py-2 bg-slate-50 border border-slate-200/80 rounded-xl hover:border-slate-300 focus:outline-none focus:ring-1 focus:ring-brand-orange cursor-pointer">
+                          {% for agent in agents %}
+                              <option value="{{ agent.id }}" {% if lead.assigned_to.id == agent.id %}selected{% endif %}>
+                                  {{ agent.get_full_name|default:agent.username }}
+                              </option>
+                          {% empty %}
+                              <option value="{{ lead.assigned_to.id|default:'' }}" selected>
+                                  {{ lead.assigned_to.get_full_name|default:lead.assigned_to.username|default:"Unassigned" }}
+                              </option>
+                          {% endfor %}
+                      </select>
+                      <i class="fa-solid fa-user-pen absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[10px] pointer-events-none"></i>
+                  </div>
+              </td>
+
+              <!-- Core Lead Status Stages -->
+              <td class="py-4.5 px-6">
+                  <div class="relative max-w-[150px]">
+                      <select onchange="handleStatusChange('{{ lead.id }}', this.value)" class="custom-select-indicator appearance-none text-xs font-bold pl-3.5 pr-8 py-2 rounded-xl focus:outline-none focus:ring-1 focus:ring-brand-orange/20 cursor-pointer border {% if lead.status == 'NEW' %}bg-blue-50 text-blue-700 border-blue-200{% elif lead.status == 'CALLED' %}bg-amber-50 text-amber-700 border-amber-200{% elif lead.status == 'INTERESTED' %}bg-indigo-50 text-indigo-700 border-indigo-200{% elif lead.status == 'SITE_VISIT' %}bg-purple-50 text-purple-700 border-purple-200{% else %}bg-emerald-50 text-emerald-700 border-emerald-200{% endif %}">
+                          <option value="NEW" {% if lead.status == 'NEW' %}selected{% endif %}>New</option>
+                          <option value="CALLED" {% if lead.status == 'CALLED' %}selected{% endif %}>Called</option>
+                          <option value="INTERESTED" {% if lead.status == 'INTERESTED' %}selected{% endif %}>Interested</option>
+                          <option value="SITE_VISIT" {% if lead.status == 'SITE_VISIT' %}selected{% endif %}>Site Visit Scheduled</option>
+                          <option value="CLOSED" {% if lead.status == 'CLOSED' %}selected{% endif %}>Closed</option>
+                      </select>
+                  </div>
+              </td>
+
+              <!-- Action Operations -->
+              <td class="py-5 px-6 text-right">
+                  <div class="flex items-center justify-end gap-2">
+                      <button onclick="openSlideOver('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{{ lead.phone_number|escapejs }}', '{{ lead.locality|escapejs }}', '{{ lead.bhk|escapejs }}', '{{ lead.budget|escapejs }}', '{{ lead.priority|escapejs }}', '{{ lead.status|escapejs }}', '{{ lead.assigned_to.get_full_name|default:lead.assigned_to.username|escapejs }}', '{{ lead.next_step|default:''|escapejs }}', '{{ lead.next_date|default:''|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="text-xs font-bold text-slate-500 hover:text-brand-orange bg-slate-100 hover:bg-orange-50 w-8.5 h-8.5 rounded-xl transition-all border border-slate-200 hover:border-brand-orange/30 flex items-center justify-center shadow-sm" title="Open Full Lead Form">
+                          <i class="fa-solid fa-expand"></i>
+                      </button>
+                      <button onclick="openDeleteConfirmModal('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="text-xs font-bold text-slate-400 hover:text-red-500 bg-slate-100 hover:bg-red-50 w-8.5 h-8.5 rounded-xl transition-all border border-slate-200 hover:border-red-200 flex items-center justify-center shadow-sm" title="Delete Lead Record">
+                          <i class="fa-solid fa-trash-can"></i>
+                      </button>
+                  </div>
+              </td>
+          </tr>
+          {% empty %}
+          <!-- Empty State fallback inside Table structure -->
+          <tr id="table-empty-fallback-row">
+              <td colspan="6" class="text-center py-16 text-slate-500 font-medium bg-white">
+                  <div class="flex flex-col items-center justify-center">
+                      <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 mb-2 border border-slate-100">
+                          <i class="fa-regular fa-folder-open text-lg"></i>
+                      </div>
+                      <p class="text-sm">No leads currently logged in the directory.</p>
+                  </div>
+              </td>
+          </tr>
+          {% endfor %}
+          
+          <!-- Unified script-targeted zero matches container -->
+          <tr id="table-empty-state" class="hidden">
+              <td colspan="6" class="text-center py-16 text-slate-500 font-medium bg-white">
+                  <div class="flex flex-col items-center justify-center">
+                      <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 mb-2 border border-slate-100">
+                          <i class="fa-regular fa-folder-open text-lg"></i>
+                      </div>
+                      <p class="text-sm">No matching search query entries found.</p>
+                  </div>
+              </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Table Pagination Footer Deck -->
+    <div class="px-6 py-4 border-t border-slate-200 bg-slate-50/80 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-slate-500 font-medium">
+      <div id="pagination-info">Showing entries</div>
+      <div class="flex items-center gap-1.5" id="pagination-buttons">
+        <!-- Buttons dynamically managed by JS client pagination -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Responsive Card Deck (Visible on small screens < md breakpoint) -->
+  <div class="block md:hidden space-y-4">
+    <div id="leads-mobile-container" class="space-y-4">
+      {% for lead in leads %}
+      <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4 mobile-lead-card" data-lead-id="{{ lead.id }}" data-status="{{ lead.status }}" data-search-term="{{ lead.full_name|lower }} {{ lead.locality|lower }} {{ lead.assigned_to.get_full_name|lower|default:lead.assigned_to.username|lower }}">
+          
+          <div class="flex justify-between items-start gap-4">
+              <div>
+                  {% if lead.priority == "HOT" %}
+                      <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md border bg-red-50 text-red-600 border-red-200/60 mb-1.5 tracking-wider">
+                          {{ lead.get_priority_display }}
+                      </span>
+                  {% elif lead.priority == "WARM" %}
+                      <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md border bg-amber-50 text-amber-700 border-amber-200/60 mb-1.5 tracking-wider">
+                          {{ lead.get_priority_display }}
+                      </span>
+                  {% else %}
+                      <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md border bg-slate-100 text-slate-500 border-slate-200/60 mb-1.5 tracking-wider">
+                          {{ lead.get_priority_display }}
+                      </span>
+                  {% endif %}
+                  
+                  <h4 onclick="openSlideOver('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{{ lead.phone_number|escapejs }}', '{{ lead.locality|escapejs }}', '{{ lead.bhk|escapejs }}', '{{ lead.budget|escapejs }}', '{{ lead.priority|escapejs }}', '{{ lead.status|escapejs }}', '{{ lead.assigned_to.get_full_name|default:lead.assigned_to.username|escapejs }}', '{{ lead.next_step|default:''|escapejs }}', '{{ lead.next_date|default:''|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="font-bold text-slate-900 text-base font-accent cursor-pointer hover:text-brand-orange transition-colors">
+                      {{ lead.full_name }}
+                  </h4>
+                  <p class="text-xs text-slate-400 mt-0.5 flex items-center gap-1.5">
+                      <i class="fa-solid fa-phone"></i> {{ lead.phone_number }}
+                  </p>
+              </div>
+              
+              <div class="flex gap-1.5 shrink-0">
+                  <button onclick="openSlideOver('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{{ lead.phone_number|escapejs }}', '{{ lead.locality|escapejs }}', '{{ lead.bhk|escapejs }}', '{{ lead.budget|escapejs }}', '{{ lead.priority|escapejs }}', '{{ lead.status|escapejs }}', '{{ lead.assigned_to.get_full_name|default:lead.assigned_to.username|escapejs }}', '{{ lead.next_step|default:''|escapejs }}', '{{ lead.next_date|default:''|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 text-slate-500 hover:text-brand-orange flex items-center justify-center text-xs">
+                      <i class="fa-solid fa-expand"></i>
+                  </button>
+                  <button onclick="openDeleteConfirmModal('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 text-slate-400 hover:text-red-500 flex items-center justify-center text-xs">
+                      <i class="fa-solid fa-trash-can"></i>
+                  </button>
+              </div>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-3 pt-3.5 border-t border-slate-100 text-xs text-slate-600">
+              <div>
+                  <span class="text-[10px] text-slate-400 font-semibold block mb-0.5">LOCALITY</span>
+                  <strong class="text-slate-800">{{ lead.locality }}</strong>
+              </div>
+              <div>
+                  <span class="text-[10px] text-slate-400 block mb-0.5">REQUIREMENTS</span>
+                  <strong class="text-slate-800">{{ lead.bhk }} • Budget: {{ lead.budget }}</strong>
+              </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 pt-3.5 border-t border-slate-100">
+              <div>
+                  <label class="text-[9px] text-slate-400 font-bold block mb-1">ASSIGNED ADVISOR</label>
+                  <div class="relative">
+                      <select onchange="handleAdvisorReassign('{{ lead.id }}', this.value)" class="custom-select-indicator appearance-none w-full text-xs font-semibold pl-2 pr-6 py-1.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none bg-white">
+                          {% for agent in agents %}
+                              <option value="{{ agent.id }}" {% if lead.assigned_to.id == agent.id %}selected{% endif %}>
+                                  {{ agent.get_full_name|default:agent.username }}
+                              </option>
+                          {% empty %}
+                              <option value="{{ lead.assigned_to.id|default:'' }}" selected>
+                                  {{ lead.assigned_to.get_full_name|default:lead.assigned_to.username|default:"Unassigned" }}
+                              </option>
+                          {% endfor %}
+                      </select>
+                  </div>
+              </div>
+              <div>
+                  <label class="text-[9px] text-slate-400 font-bold block mb-1">STATUS</label>
+                  <div class="relative">
+                      <select onchange="handleStatusChange('{{ lead.id }}', this.value)" class="custom-select-indicator appearance-none w-full text-xs font-bold pl-2 pr-6 py-1.5 border rounded-xl focus:outline-none {{ lead.status|lower }} {% if lead.status == 'NEW' %}bg-blue-50 text-blue-700 border-blue-200{% elif lead.status == 'CALLED' %}bg-amber-50 text-amber-700 border-amber-200{% elif lead.status == 'INTERESTED' %}bg-indigo-50 text-indigo-700 border-indigo-200{% elif lead.status == 'SITE_VISIT' %}bg-purple-50 text-purple-700 border-purple-200{% else %}bg-emerald-50 text-emerald-700 border-emerald-200{% endif %}">
+                          <option value="NEW" {% if lead.status == 'NEW' %}selected{% endif %}>New</option>
+                          <option value="CALLED" {% if lead.status == 'CALLED' %}selected{% endif %}>Called</option>
+                          <option value="INTERESTED" {% if lead.status == 'INTERESTED' %}selected{% endif %}>Interested</option>
+                          <option value="SITE_VISIT" {% if lead.status == 'SITE_VISIT' %}selected{% endif %}>Site Visit Scheduled</option>
+                          <option value="CLOSED" {% if lead.status == 'CLOSED' %}selected{% endif %}>Closed</option>
+                      </select>
+                  </div>
+              </div>
+          </div>
+          <div class="text-[10px] text-slate-400 pt-1 flex items-center justify-between font-medium">
+              <span>CRM Database Intake</span>
+              <span>{{ lead.created_at|date:"d M Y H:i" }}</span>
+          </div>
+      </div>
+      {% endfor %}
+    </div>
+    
+    <!-- Mobile Pagination Footer Bar -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-3 items-center text-sm text-slate-500 font-medium mt-4">
+      <div id="mobile-pagination-info">Showing entries</div>
+      <div class="flex items-center gap-1.5" id="mobile-pagination-buttons">
+        <!-- Mobile Buttons dynamically loaded -->
+      </div>
+    </div>
+  </div>
+
+</div>

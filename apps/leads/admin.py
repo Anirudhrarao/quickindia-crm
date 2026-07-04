@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Lead
+from .models import Lead, LeadLog
 
 
 @admin.register(Lead)
@@ -110,37 +110,37 @@ class LeadAdmin(admin.ModelAdmin):
     )
 
 
-# @admin.register(LeadLog)
-# class LeadLogAdmin(admin.ModelAdmin):
-#     """
-#     Admin configuration for LeadLog model.
-#     """
+@admin.register(LeadLog)
+class LeadLogAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for LeadLog model.
+    """
 
-#     list_display = (
-#         "lead",
-#         "created_by",
-#         "created_at",
-#     )
+    list_display = (
+        "lead",
+        "created_by",
+        "created_at",
+    )
 
-#     search_fields = (
-#         "lead__full_name",
-#         "message",
-#     )
+    search_fields = (
+        "lead__full_name",
+        "message",
+    )
 
-#     autocomplete_fields = (
-#         "lead",
-#         "created_by",
-#     )
+    autocomplete_fields = (
+        "lead",
+        "created_by",
+    )
     
-#     list_select_related = (
-#         "lead",
-#         "created_by",
-#     )
+    list_select_related = (
+        "lead",
+        "created_by",
+    )
 
-#     readonly_fields = (
-#         "created_at",
-#     )
+    readonly_fields = (
+        "created_at",
+    )
 
-#     ordering = ("-created_at",)
+    ordering = ("-created_at",)
 
     

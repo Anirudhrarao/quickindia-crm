@@ -1,0 +1,33 @@
+<!-- ==========================================================================
+    DELETE CONFIRMATION MODERN MODAL
+    ========================================================================== -->
+<div id="delete-confirm-modal" class="hidden fixed inset-0 bg-brand-dark/65 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
+  <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-brand-border text-center">
+    
+    <!-- Warning Icon -->
+    <div class="w-14 h-14 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-2xl mx-auto mb-4">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+    </div>
+    
+    <!-- Modal Header & Body -->
+    <h3 class="font-accent font-extrabold text-xl text-brand-dark mb-2">Delete Lead Record?</h3>
+    <p class="text-sm text-brand-slate mb-6">Are you sure you want to delete <strong id="delete-lead-name-placeholder" class="text-brand-dark">-</strong>? This action cannot be undone.</p>
+    
+    <!-- Action Controls -->
+    <div class="flex gap-3">
+      <!-- Cancel action -->
+      <button onclick="closeDeleteConfirmModal()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-brand-dark text-sm font-bold rounded-xl transition-all">
+        No, Cancel
+      </button>
+      
+      <!-- Django dynamic delete form targeting action URLs -->
+      <form id="delete-confirm-form" method="post" action="" class="flex-1">
+        {% csrf_token %}
+        <button type="submit" class="w-full py-3 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-red-600/10">
+          Yes, Delete
+        </button>
+      </form>
+    </div>
+
+  </div>
+</div>

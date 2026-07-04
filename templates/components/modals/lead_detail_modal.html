@@ -1,0 +1,232 @@
+<!-- ==========================================================================
+    CONTEXTUAL SLIDE-OVER DETAIL LEAF (EXPANDED DUAL WORKSPACE)
+    ========================================================================== -->
+<div id="lead-slideover" class="fixed inset-0 z-50 overflow-hidden pointer-events-none" aria-labelledby="slideover-title" role="dialog" aria-modal="true">
+  
+  <!-- Backdrop panel -->
+  <div id="slideover-backdrop" onclick="closeLeadSlideover()" class="absolute inset-0 bg-brand-dark/0 transition-all duration-500 ease-in-out pointer-events-auto"></div>
+
+  <div class="absolute inset-y-0 right-0 max-w-full flex pl-4 sm:pl-10">
+    
+    <!-- Expanded Slide-over panel structure -->
+    <div id="slideover-panel" class="w-screen max-w-2xl bg-white translate-x-full transition-transform duration-500 ease-in-out pointer-events-auto border-l border-brand-border shadow-2xl flex flex-col h-full">
+      
+      <!-- Slide-over Header -->
+      <div class="px-6 py-5 border-b border-slate-200 bg-slate-50/60 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-orange-100 flex items-center justify-center text-brand-orange text-xl shadow-inner">
+            <i class="fa-solid fa-address-card"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2.5">
+              <h3 id="slide-lead-name" class="font-accent font-extrabold text-xl text-brand-dark leading-tight">Lead Name</h3>
+              <span id="slide-lead-priority-badge" class="px-2 py-0.5 rounded-lg text-[9px] font-extrabold tracking-wider uppercase bg-red-100 text-red-700">HOT</span>
+            </div>
+            <span id="slide-lead-handler" class="text-xs text-brand-slate block mt-0.5">CRM Handler: Amit Sharma</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <!-- Delete inside Slide-Over -->
+          <button id="slide-lead-delete-btn" class="p-2.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors" title="Delete Lead">
+            <i class="fa-solid fa-trash-can text-base"></i>
+          </button>
+          <button onclick="closeLeadSlideover()" class="p-2.5 text-slate-400 hover:text-brand-dark hover:bg-slate-200/50 rounded-xl transition-colors">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Custom Slide-over Work Tabs -->
+      <div class="flex border-b border-slate-200 bg-white">
+        <button onclick="setSlideoverTab('overview')" id="tab-btn-overview" class="flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-brand-orange text-brand-orange transition-all">
+          <i class="fa-solid fa-chart-simple mr-1.5"></i> Overview & Logs
+        </button>
+        <button onclick="setSlideoverTab('edit')" id="tab-btn-edit" class="flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-brand-dark transition-all">
+          <i class="fa-solid fa-user-pen mr-1.5"></i> Edit Profile & Reassign
+        </button>
+      </div>
+
+      <!-- Scrollable content sections based on active tab -->
+      <div class="flex-1 overflow-y-auto custom-scroll px-6 py-6 bg-slate-50/50">
+        
+        <!-- TAB 1: OVERVIEW & TIMELINE -->
+        <div id="slide-tab-overview" class="block space-y-6">
+          
+          <!-- Quick Scheduled Next Action Summary Card -->
+          <div class="bg-gradient-to-r from-brand-slateDark to-brand-dark p-5 rounded-2xl text-white shadow-md relative overflow-hidden font-accent">
+            <div class="absolute right-0 bottom-0 w-24 h-24 bg-white/5 rounded-full translate-x-8 translate-y-8"></div>
+            <span class="text-[9px] uppercase font-extrabold tracking-wider text-slate-300 block mb-1">CRM Follow-Up Agenda</span>
+            <h4 class="font-accent font-bold text-base mb-3">Scheduled Next Step Action</h4>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm bg-white/5 p-3.5 rounded-xl border border-white/5 font-sans">
+              <div>
+                <span class="text-[10px] text-slate-300 font-bold block uppercase tracking-wider">Action</span>
+                <span id="slide-next-step-lbl" class="font-semibold block mt-0.5">Call to confirm site visit timings</span>
+              </div>
+              <div>
+                <span class="text-[10px] text-slate-300 font-bold block uppercase tracking-wider">Target Date</span>
+                <span id="slide-next-date-lbl" class="font-semibold block mt-0.5">July 02, 2026</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Indian Property Preferences Grid -->
+          <div class="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm space-y-4">
+            <h4 class="text-xs uppercase font-extrabold text-slate-400 tracking-wider">Inquiry Specifications</h4>
+            
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <span class="text-[10px] text-slate-400 uppercase font-bold block mb-1">Target Locality</span>
+                <strong id="slide-lead-locality" class="text-sm text-brand-dark block font-semibold">-</strong>
+              </div>
+              <div>
+                <span class="text-[10px] text-slate-400 uppercase font-bold block mb-1">Target Budget</span>
+                <strong id="slide-lead-budget" class="text-sm text-brand-dark block font-semibold">-</strong>
+              </div>
+              <div>
+                <span class="text-[10px] text-slate-400 uppercase font-bold block mb-1">Config Target</span>
+                <strong id="slide-lead-bhk" class="text-sm text-brand-dark block font-semibold">-</strong>
+              </div>
+              <div>
+                <span class="text-[10px] text-slate-400 uppercase font-bold block mb-1">Contact Reference</span>
+                <strong id="slide-lead-contact" class="text-sm text-brand-dark block font-semibold">-</strong>
+              </div>
+            </div>
+          </div>
+
+        <!-- Append Timeline Logs -->
+        <div class="space-y-3 pt-2">
+            <label class="text-xs uppercase font-extrabold text-slate-400 tracking-wider block">
+                Log Client Intervention Notes
+            </label>
+            <form id="lead-log-form" class="flex flex-col sm:flex-row gap-3">
+                {% csrf_token %}
+                <input
+                    id="lead-log-message"
+                    name="message"
+                    type="text"
+                    required
+                    placeholder="Ex: Met with client, interested in 4BHK units near IT park..."
+                    class="flex-1 border border-slate-200 rounded-2xl px-5 py-3 text-sm bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all"
+                >
+                <button
+                    type="submit"
+                    class="shrink-0 bg-slate-800 hover:bg-slate-900 text-white font-bold px-7 py-3 rounded-2xl shadow-lg transition-all duration-200">
+                    Log Note
+                </button>
+            </form>
+        </div>
+
+          <!-- Timeline Logs tracker -->
+          <div class="space-y-4 pt-2">
+            <h4 class="text-xs uppercase font-extrabold text-slate-400 tracking-wider">Follow-Up Action Logs</h4>
+            
+            <div id="slide-lead-timeline" class="relative pl-6 border-l-2 border-slate-200 space-y-6 ml-3">
+              <!-- Timeline node entries get appended here dynamically -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- TAB 2: EDIT PROFILE & HANDLER ASSIGNMENT -->
+        <div id="slide-tab-edit" class="hidden">
+          <form onsubmit="handleEditLeadSubmit(event)" class="space-y-5 bg-white border border-slate-200/80 p-6 rounded-2xl shadow-sm">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- Lead Name -->
+              <div class="flex flex-col gap-1.5">
+                <label class="text-[10px] uppercase font-bold text-slate-400">Client Name</label>
+                <input id="edit-lead-name" type="text" required class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange bg-slate-50">
+              </div>
+              <!-- Contact Number -->
+              <div class="flex flex-col gap-1.5">
+                <label class="text-[10px] uppercase font-bold text-slate-400">Contact Number</label>
+                <input id="edit-lead-contact" type="tel" required class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange bg-slate-50">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- Assigned Advisor Select -->
+              <div class="flex flex-col gap-1.5">
+                <label class="text-[10px] uppercase font-bold text-slate-400">
+                    Assigned CRM Specialist
+                </label>
+                <div
+                    class="w-full border border-slate-200 rounded-xl px-4 py-2.5 bg-slate-50 flex items-center justify-between">
+                    <span
+                        id="edit-lead-handler"
+                        class="text-sm font-semibold text-brand-dark">
+                        
+                    </span>
+                    <i class="fa-solid fa-user-tie text-brand-orange"></i>
+                </div>
+            </div>
+              <!-- Priority Status -->
+              <div class="flex flex-col gap-1.5">
+                <label class="text-[10px] uppercase font-bold text-slate-400">Lead Temperature / Priority</label>
+                <div class="relative">
+                  <select id="edit-lead-priority" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange bg-white pr-10">
+                    <option value="HOT">Hot (High Intent)</option>
+                    <option value="WARM">Warm (Nurturing)</option>
+                    <option value="COLD">Cold (Inbound/Low)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Target Locality -->
+            <div class="flex flex-col gap-1.5">
+              <label class="text-[10px] uppercase font-bold text-slate-400">Target Locality / Area</label>
+              <input id="edit-lead-locality" type="text" required class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange bg-slate-50">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- Config -->
+              <div class="flex flex-col gap-1.5">
+                <label class="text-[10px] uppercase font-bold text-slate-400">BHK Configuration Target</label>
+                <div class="relative">
+                  <select id="edit-lead-bhk" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange bg-white pr-10">
+                    <option value="1 BHK">1 BHK</option>
+                    <option value="2 BHK">2 BHK</option>
+                    <option value="3 BHK">3 BHK</option>
+                    <option value="3 BHK+">3 BHK+</option>
+                    <option value="4 BHK">4 BHK</option>
+                    <option value="5 BHK">5 BHK</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Target Budget -->
+              <div class="flex flex-col gap-1.5">
+                <label class="text-[10px] uppercase font-bold text-slate-400">Target Budget (Lakhs/Crores)</label>
+                <input id="edit-lead-budget" type="text" required class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange bg-slate-50">
+              </div>
+            </div>
+
+            <!-- Next Action parameters -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+              <div class="flex flex-col gap-1.5">
+                <label class="text-[10px] uppercase font-bold text-slate-400">Next Follow-Up Agenda</label>
+                <input id="edit-lead-next-step" type="text" placeholder="Ex: Call to schedule site tour" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange bg-slate-50">
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="text-[10px] uppercase font-bold text-slate-400">Next Action Target Date</label>
+                <input id="edit-lead-next-date" type="text" placeholder="Ex: July 02, 2026" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange bg-slate-50">
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="pt-4">
+              <button type="submit" class="w-full bg-brand-orange hover:bg-brand-orangeDark text-white py-3.5 rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition-all">
+                Save Changes & Log Audit
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

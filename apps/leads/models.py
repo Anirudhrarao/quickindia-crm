@@ -74,3 +74,34 @@ class Lead(models.Model):
 
     def __str__(self):
         return self.full_name
+    
+
+class LeadLog(models.Model):
+    """
+    Stores the activity timeline of a lead.
+    """
+
+    lead = models.ForeignKey(
+        Lead,
+        on_delete=models.CASCADE,
+        related_name="logs",
+    )
+
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+
+    message = models.TextField()
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.lead.full_name} - {self.created_at:%d %b %Y}"

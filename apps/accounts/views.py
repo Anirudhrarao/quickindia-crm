@@ -10,7 +10,7 @@ def login_view(request):
     """
 
     if request.user.is_authenticated:
-        return redirect("dashboard:crm")
+        return redirect("dashboard:home")
     
     form = LoginForm()
 
@@ -30,7 +30,7 @@ def login_view(request):
             if user:
                 login(request, user)
                 messages.success(request, "Welcome back!")
-                return redirect("dashboard:crm")
+                return redirect("dashboard:home")
             
             messages.error(request, "Invalid username or password.")
     

@@ -1,919 +1,169 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-50">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuickIndia Homes - CRM Workspace</title>
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              orange: '#F3811E',
-              orangeDark: '#D96E14',
-              slate: '#4B6584',
-              slateDark: '#35495E',
-              dark: '#1E272E',
-              light: '#F9F9F9',
-              border: '#E5E9F0'
-            }
-          },
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            accent: ['Outfit', 'sans-serif']
-          }
-        }
-      }
-    }
-  </script>
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% block title %}QuickIndia CRM - Partner Portal Dashboard{% endblock %}
 
-  <style>
-    /* Custom Scrollbar for Dashboard Panels */
-    .custom-scroll::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    .custom-scroll::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .custom-scroll::-webkit-scrollbar-thumb {
-      background: #CBD5E1;
-      border-radius: 4px;
-    }
-    .custom-scroll::-webkit-scrollbar-thumb:hover {
-      background: #94A3B8;
-    }
+{% block html_class %}h-full bg-slate-50{% endblock %}
+{% block body_class %}h-full text-brand-dark font-sans antialiased overflow-hidden{% endblock %}
 
-    /* Custom drop shadow styles to match Screenshot */
-    .pro-shadow {
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
-    }
+{% block content %}
+<!-- Main layout grid wrapping sidebar, header consoles, and tables -->
+<div class="h-full flex overflow-hidden">
 
-    /* Premium Custom Dropdown styling selectors to avoid default browser look */
-    .custom-select-indicator {
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234B6584'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/></svg>");
-      background-position: right 10px center;
-      background-repeat: no-repeat;
-      background-size: 14px;
-    }
-  </style>
-</head>
-<body class="h-full text-brand-dark font-sans antialiased overflow-hidden">
+  <!-- COLLAPSIBLE ASIDE COLUMN -->
+  {% include "components/sidebar.html" %}
 
-  <!-- Floating Toast Notifications -->
-  <div id="toast-container" class="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
+  <!-- VIEWPORT WRAPPER COLUMN -->
+  <div class="flex-1 flex flex-col overflow-hidden relative">
 
-  <!-- MAIN DASHBOARD CONTAINER -->
-  <div class="h-full flex overflow-hidden">
+    <!-- DASHBOARD NAVBAR HEADER -->
+    {% include "components/navbar.html" %}
 
-    <!-- ==========================================================================
-        SIDEBAR NAVIGATION (COLLAPSIBLE DESIGN MATCHING YOUR SCREENSHOT)
-        ========================================================================== -->
-    <aside id="dashboard-sidebar" class="hidden lg:flex lg:flex-shrink-0 w-64 bg-[#11161B] text-slate-300 flex-col justify-between border-r border-slate-800 z-40 transition-all duration-300 fixed lg:static inset-y-0 left-0">
+    <!-- SCROLLABLE CORE CONTENT CONTAINER -->
+    <div class="p-4 sm:p-8 flex-1 overflow-y-auto custom-scroll bg-[#F8FAFC]">
       
-      <!-- Brand & Header Links -->
-      <div class="flex flex-col flex-1 min-h-0">
-        
-        <!-- Header Brand Container -->
-        <div class="h-20 flex items-center px-6 border-b border-slate-800/80 justify-between shrink-0">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-orange to-amber-500 text-white font-accent font-extrabold text-xl flex items-center justify-center shadow-lg shadow-orange-500/25 shrink-0">
-              Q
-            </div>
-            <div class="flex flex-col sidebar-text-item">
-              <span class="font-accent font-extrabold text-lg text-white leading-tight">QuickIndia</span>
-              <span class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">CRM Workspace</span>
-            </div>
-          </div>
-          
-          <div class="flex items-center gap-2">
-            <!-- Sidebar Collapse Toggle Button -->
-            <button onclick="toggleSidebarCollapse()" class="hidden lg:flex p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all" title="Collapse Sidebar">
-              <i id="collapse-icon" class="fa-solid fa-chevron-left text-sm"></i>
-            </button>
-            <!-- Mobile Sidebar Close Button -->
-            <button onclick="toggleSidebar()" class="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
-              <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-          </div>
-        </div>
+      <!-- PAGE CRUMBS AND HEADING CONTEXT -->
+      {% include "components/page_header.html" %}
 
-        <!-- Navigation Links -->
-        <nav class="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto custom-scroll">
-          <span class="px-4 text-[9px] uppercase font-extrabold tracking-widest text-slate-500 block mb-2 sidebar-text-item">Workspace</span>
-          
-          <a href="#" onclick="setActiveNav('leads')" id="nav-leads" class="nav-item group flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orangeDark text-white font-semibold text-sm transition-all shadow-md shadow-orange-500/10">
-            <i class="fa-solid fa-user-group text-base shrink-0"></i>
-            <span class="sidebar-text-item">Leads Directory</span>
-          </a>
-          
-          <a href="#" onclick="setActiveNav('property')" id="nav-property" class="nav-item group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800/40 hover:text-white text-slate-400 text-sm font-medium transition-all">
-            <i class="fa-solid fa-house-chimney text-base shrink-0"></i>
-            <span class="sidebar-text-item">Add Property</span>
-          </a>
-          
-          <a href="#" onclick="setActiveNav('performance')" id="nav-performance" class="nav-item group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800/40 hover:text-white text-slate-400 text-sm font-medium transition-all">
-            <i class="fa-solid fa-chart-line text-base shrink-0"></i>
-            <span class="sidebar-text-item">Performance</span>
-          </a>
-          
-          <div class="pt-8 border-t border-slate-800/80 my-5 space-y-1.5">
-            <span class="px-4 text-[9px] uppercase font-extrabold tracking-widest text-slate-500 block mb-2 sidebar-text-item">External Links</span>
-            <a href="{% url 'landing:home' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-slate-800/20 hover:text-white text-slate-400 text-sm font-medium transition-all">
-              <i class="fa-solid fa-arrow-left-long shrink-0"></i>
-              <span class="sidebar-text-item">Back to Public Site</span>
-            </a>
-          </div>
-        </nav>
+      <!-- SEARCH FILTERS DECK -->
+      {% include "components/search_filter.html" %}
+
+      <!-- DYNAMIC TABULAR VIEWPORT -->
+      {% include "components/tables/lead_table.html" %}
+
+      <!-- MOCK MODULE: ADDS DRAFT PROPERTY STUB -->
+      <div id="crm-property-view" class="hidden space-y-6 max-w-3xl mx-auto bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm animate-[fadeIn_0.4s_ease-out]">
+        <h3 class="font-accent font-extrabold text-2xl text-brand-dark mb-4">Register New Property Asset</h3>
+        <p class="text-sm text-brand-slate mb-6">CRM inventory panel to inject tested premium real-estate locations for public showcase.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <input type="text" placeholder="Property Title" class="p-3 border border-slate-200 rounded-xl text-sm focus:outline-none">
+          <input type="text" placeholder="Price (e.g. ₹1.5 Cr)" class="p-3 border border-slate-200 rounded-xl text-sm focus:outline-none">
+          <input type="text" placeholder="Locality" class="p-3 border border-slate-200 rounded-xl text-sm focus:outline-none">
+          <input type="text" placeholder="BHK Config" class="p-3 border border-slate-200 rounded-xl text-sm focus:outline-none">
+        </div>
+        <button onclick="showToast('Mock Property Draft Saved!')" class="mt-6 bg-brand-orange text-white px-6 py-3 rounded-xl font-bold text-sm">Save Property Draft</button>
       </div>
 
-      <!-- User Profile Card & Logout -->
-      <div class="p-4 border-t border-slate-800/80 bg-[#0A0D12] shrink-0">
-        <div class="flex items-center gap-3 mb-4 bg-white/5 p-3 rounded-xl border border-white/5 overflow-hidden">
-          {% if request.user.profile_image %}
-              <img class="w-10 h-10 rounded-full object-cover border-2 border-slate-700 shadow-inner shrink-0" src="{{ request.user.profile_image.url }}" alt="{{ request.user.get_full_name }}">
-          {% else %}
-              <img class="w-10 h-10 rounded-full object-cover border-2 border-slate-700 shadow-inner shrink-0" src="https://ui-avatars.com/api/?name={{ request.user.get_full_name|default:request.user.username }}&background=F3811E&color=fff" alt="{{ request.user.get_full_name }}">
-          {% endif %}
-          <div class="truncate sidebar-text-item">
-            <h5 class="font-bold text-sm text-white truncate leading-tight">
-              {{ request.user.get_full_name|default:request.user.username }}
-            </h5>
-            <span class="text-[10px] font-bold text-brand-orange uppercase tracking-wider block mt-0.5">
-              {{ request.user.get_role_display|default:"Senior Advisor" }}
-            </span>
+      <!-- MOCK MODULE: BRANCH PERFORMANCE STUB -->
+      <div id="crm-performance-view" class="hidden space-y-6 max-w-7xl mx-auto bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm animate-[fadeIn_0.4s_ease-out]">
+        <h3 class="font-accent font-extrabold text-2xl text-brand-dark mb-4">Branch Performance Dashboard</h3>
+        <p class="text-sm text-brand-slate mb-6">Real-time charts monitoring site-visit conversion schedules, called callbacks, and closed crore levels.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center">
+            <span class="text-xs uppercase font-bold text-slate-400 block mb-1">Inbound Leads</span>
+            <strong class="text-3xl text-brand-orange font-accent font-extrabold">1,480</strong>
+          </div>
+          <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center">
+            <span class="text-xs uppercase font-bold text-slate-400 block mb-1">Site Visits scheduled</span>
+            <strong class="text-3xl text-teal-600 font-accent font-extrabold">244</strong>
+          </div>
+          <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center">
+            <span class="text-xs uppercase font-bold text-slate-400 block mb-1">Closed Deals (Month)</span>
+            <strong class="text-3xl text-brand-slateDark font-accent font-extrabold">₹18.4 Cr</strong>
           </div>
         </div>
-        <a href="{% url 'accounts:logout' %}" class="flex items-center justify-center gap-2 w-full py-3 bg-slate-800/50 hover:bg-red-950/40 hover:text-red-400 text-slate-400 text-xs font-bold rounded-xl transition-all border border-slate-700/40">
-          <i class="fa-solid fa-right-from-bracket text-sm shrink-0"></i>
-          <span class="sidebar-text-item">Logout CRM</span>
-        </a>
       </div>
 
-    </aside>
+      <!-- CRM DASHBOARD SUB FOOTER -->
+      {% include "components/footer.html" %}
 
-    <!-- Backdrop for Mobile Sidebar menu -->
-    <div id="sidebar-backdrop" onclick="toggleSidebar()" class="hidden fixed inset-0 bg-brand-dark/40 backdrop-blur-sm z-30 lg:hidden"></div>
-
-    <!-- ==========================================================================
-        RIGHT SIDE MAIN INDEPENDENT VIEWPORT CONTENT AREA
-        ========================================================================== -->
-    <div class="flex-1 flex flex-col overflow-hidden relative">
-      
-      <!-- Top Dashboard Header with Locked Role Status Badge -->
-      <header class="h-20 bg-white border-b border-brand-border flex items-center justify-between px-4 sm:px-8 flex-shrink-0 relative z-20">
-        
-        <div class="flex items-center gap-4">
-          <!-- Mobile Sidebar Toggle Icon -->
-          <button onclick="toggleSidebar()" class="lg:hidden p-2 hover:bg-slate-100 rounded-lg text-brand-dark transition-colors">
-            <i class="fa-solid fa-bars text-xl"></i>
-          </button>
-          
-          <div class="flex items-center gap-3">
-            <h2 id="crm-view-title" class="font-accent font-extrabold text-xl sm:text-2xl text-brand-dark tracking-tight">Leads Directory</h2>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-3 relative">
-          <!-- Notification Bell Dropdown Button -->
-          <button onclick="toggleNotificationDropdown(event)" class="w-10 h-10 rounded-xl hover:bg-slate-100 border border-slate-200/80 flex items-center justify-center text-slate-500 relative transition-all">
-            <i class="fa-regular fa-bell text-lg"></i>
-            <span id="bell-dot" class="absolute top-2 right-2 w-2 h-2 rounded-full bg-brand-orange animate-pulse"></span>
-          </button>
-
-          <!-- REAL-TIME INTERACTIVE NOTIFICATION POPUP (Toggled via bell click) -->
-          <div id="notification-dropdown" class="hidden absolute right-0 top-12 w-80 sm:w-96 bg-white rounded-2xl border border-slate-200 shadow-2xl z-50 overflow-hidden">
-            <div class="px-5 py-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
-              <h4 class="font-accent font-extrabold text-sm text-brand-dark">CRM Notifications</h4>
-              <button onclick="clearAllNotifications()" class="text-[10px] font-extrabold uppercase text-brand-orange hover:text-brand-orangeDark transition-colors">
-                Mark all as read
-              </button>
-            </div>
-            <div id="notification-items-list" class="max-h-[320px] overflow-y-auto custom-scroll divide-y divide-slate-100">
-              <!-- Notification nodes dynamically populated -->
-            </div>
-            <div id="notifications-empty-state" class="hidden p-8 text-center text-slate-400 text-xs font-semibold">
-              <i class="fa-regular fa-bell-slash text-2xl text-slate-300 block mb-2"></i>
-              <span>All caught up! No unread notifications.</span>
-            </div>
-          </div>
-        </div>
-
-      </header>
-
-      <!-- Dashboard Body Area Scrollable Content viewport -->
-      <main class="flex-1 overflow-y-auto custom-scroll bg-[#F8FAFC] p-4 sm:p-8">
-        
-        <!-- LEADS VIEW CONTAINER -->
-        <div id="crm-leads-view" class="block space-y-6 max-w-7xl mx-auto animate-[fadeIn_0.4s_ease-out]">
-          
-          <!-- Top Controls Deck -->
-          <div class="bg-white p-4 sm:p-6 rounded-3xl border border-slate-200/80 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center">
-            
-            <!-- Filters & Search block -->
-            <div class="flex-1 grid grid-cols-1 sm:grid-cols-12 gap-3">
-              
-              <!-- Search query input -->
-              <div class="relative sm:col-span-7">
-                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input id="lead-search" oninput="filterLeads()" type="text" placeholder="Search by name, area, advisor..." class="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange transition-all">
-              </div>
-
-              <!-- Filter status selector -->
-              <div class="relative sm:col-span-5">
-                <select id="lead-filter-status" onchange="filterLeads()" class="w-full pl-4 pr-10 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-orange appearance-none cursor-pointer transition-all">
-                  <option value="ALL">All Lead Statuses</option>
-                  <option value="NEW">New</option>
-                  <option value="CALLED">Called</option>
-                  <option value="INTERESTED">Interested</option>
-                  <option value="SITE_VISIT">Site Visit Scheduled</option>
-                  <option value="CLOSED">Closed</option>
-                </select>
-                <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
-              </div>
-
-            </div>
-
-            <!-- Manually Trigger Adding Lead button -->
-            <button onclick="openAddLeadModal()" class="py-3 px-6 rounded-xl bg-brand-orange hover:bg-brand-orangeDark text-white font-accent font-bold text-sm shadow-md hover:shadow-lg flex items-center justify-center gap-2 transition-all shrink-0">
-              <i class="fa-solid fa-plus text-xs"></i>
-              <span>Add Lead Manually</span>
-            </button>
-
-          </div>
-
-          <!-- LEADS DIRECTORY INTERACTIVE AREA -->
-          
-          <!-- Desktop & Tablet view (Shown >= md Breakpoint) -->
-          <div class="hidden md:block bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden pro-shadow">
-            <div class="overflow-x-auto custom-scroll">
-              <table class="w-full text-left border-collapse">
-                <thead>
-                  <tr class="bg-slate-50/80 border-b border-slate-200">
-                    <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Lead Info & Priority</th>
-                    <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Property Interest</th>
-                    <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Timestamp</th>
-                    <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Assigned Advisor</th>
-                    <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Status State</th>
-                    <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="leads-table-body" class="divide-y divide-slate-100">
-                  {% for lead in leads %}
-                  <tr class="hover:bg-slate-50/40 transition-colors group/row" data-lead-id="{{ lead.id }}" data-status="{{ lead.status }}" data-search-term="{{ lead.full_name|lower }} {{ lead.locality|lower }} {{ lead.assigned_to.get_full_name|lower|default:lead.assigned_to.username|lower }}">
-                      
-                      <!-- LEAD INFO & PRIORITY -->
-                      <td class="py-5 px-6">
-                          <div class="flex items-start gap-3">
-                              <div class="pt-0.5">
-                                  {% if lead.priority == "HOT" %}
-                                      <span class="inline-flex items-center justify-center text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-lg border bg-red-50 text-red-600 border-red-200/60 tracking-wider shadow-sm">
-                                          {{ lead.get_priority_display }}
-                                      </span>
-                                  {% elif lead.priority == "WARM" %}
-                                      <span class="inline-flex items-center justify-center text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-lg border bg-amber-50 text-amber-700 border-amber-200/60 tracking-wider shadow-sm">
-                                          {{ lead.get_priority_display }}
-                                      </span>
-                                  {% else %}
-                                      <span class="inline-flex items-center justify-center text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-lg border bg-slate-100 text-slate-500 border-slate-200/60 tracking-wider shadow-sm">
-                                          {{ lead.get_priority_display }}
-                                      </span>
-                                  {% endif %}
-                              </div>
-                              <div>
-                                  <div onclick="openSlideOver('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{{ lead.phone_number|escapejs }}', '{{ lead.locality|escapejs }}', '{{ lead.bhk|escapejs }}', '{{ lead.budget|escapejs }}', '{{ lead.priority|escapejs }}', '{{ lead.status|escapejs }}', '{{ lead.assigned_to.get_full_name|default:lead.assigned_to.username|escapejs }}', '{{ lead.next_step|default:''|escapejs }}', '{{ lead.next_date|default:''|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="font-bold text-slate-900 group-hover/row:text-brand-orange transition-all duration-300 cursor-pointer text-sm font-accent tracking-tight leading-snug">
-                                      {{ lead.full_name }}
-                                  </div>
-                                  <div class="text-xs text-slate-400 mt-1 flex items-center gap-1.5 font-medium">
-                                      <i class="fa-solid fa-phone text-[10px]"></i>
-                                      {{ lead.phone_number }}
-                                  </div>
-                              </div>
-                          </div>
-                      </td>
-
-                      <!-- PROPERTY INTEREST -->
-                      <td class="py-5 px-6 text-sm">
-                          <div class="font-semibold text-slate-800 font-accent">
-                              {{ lead.locality }}
-                          </div>
-                          <div class="text-xs text-slate-400 mt-1 flex items-center gap-1.5 font-medium">
-                              <i class="fa-solid fa-bed text-brand-orange"></i>
-                              {{ lead.bhk }}
-                              <span class="text-slate-300">•</span>
-                              <i class="fa-solid fa-wallet text-brand-orange"></i>
-                              Budget: {{ lead.budget }}
-                          </div>
-                      </td>
-
-                      <!-- TIMESTAMP -->
-                      <td class="py-5 px-6 text-xs text-slate-400 font-medium">
-                          <div class="flex items-center gap-1.5">
-                              <i class="fa-regular fa-clock"></i>
-                              {{ lead.created_at|date:"d M Y H:i" }}
-                          </div>
-                      </td>
-
-                      <!-- ASSIGNED ADVISOR (Interactive Picker) -->
-                      <td class="py-5 px-6">
-                          <div class="relative max-w-[170px]">
-                              <select onchange="handleAdvisorReassign('{{ lead.id }}', this.value)" class="custom-select-indicator appearance-none w-full text-xs font-semibold pl-3 pr-8 py-2 bg-slate-50 border border-slate-200/80 rounded-xl hover:border-slate-300 focus:outline-none focus:ring-1 focus:ring-brand-orange cursor-pointer">
-                                  {% for agent in agents %}
-                                      <option value="{{ agent.id }}" {% if lead.assigned_to.id == agent.id %}selected{% endif %}>
-                                          {{ agent.get_full_name|default:agent.username }}
-                                      </option>
-                                  {% empty %}
-                                      <option value="{{ lead.assigned_to.id|default:'' }}" selected>
-                                          {{ lead.assigned_to.get_full_name|default:lead.assigned_to.username|default:"Unassigned" }}
-                                      </option>
-                                  {% endfor %}
-                              </select>
-                              <i class="fa-solid fa-user-pen absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[10px] pointer-events-none"></i>
-                          </div>
-                      </td>
-
-                      <!-- STATUS STATE -->
-                      <td class="py-4.5 px-6">
-                          <div class="relative max-w-[150px]">
-                              <select onchange="handleStatusChange('{{ lead.id }}', this.value)" class="custom-select-indicator appearance-none text-xs font-bold pl-3.5 pr-8 py-2 rounded-xl focus:outline-none focus:ring-1 focus:ring-brand-orange/20 cursor-pointer border {% if lead.status == 'NEW' %}bg-blue-50 text-blue-700 border-blue-200{% elif lead.status == 'CALLED' %}bg-amber-50 text-amber-700 border-amber-200{% elif lead.status == 'INTERESTED' %}bg-indigo-50 text-indigo-700 border-indigo-200{% elif lead.status == 'SITE_VISIT' %}bg-purple-50 text-purple-700 border-purple-200{% else %}bg-emerald-50 text-emerald-700 border-emerald-200{% endif %}">
-                                  <option value="NEW" {% if lead.status == 'NEW' %}selected{% endif %}>New</option>
-                                  <option value="CALLED" {% if lead.status == 'CALLED' %}selected{% endif %}>Called</option>
-                                  <option value="INTERESTED" {% if lead.status == 'INTERESTED' %}selected{% endif %}>Interested</option>
-                                  <option value="SITE_VISIT" {% if lead.status == 'SITE_VISIT' %}selected{% endif %}>Site Visit Scheduled</option>
-                                  <option value="CLOSED" {% if lead.status == 'CLOSED' %}selected{% endif %}>Closed</option>
-                              </select>
-                          </div>
-                      </td>
-
-                      <!-- ACTIONS -->
-                      <td class="py-5 px-6 text-right">
-                          <div class="flex items-center justify-end gap-2">
-                              <button onclick="openSlideOver('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{{ lead.phone_number|escapejs }}', '{{ lead.locality|escapejs }}', '{{ lead.bhk|escapejs }}', '{{ lead.budget|escapejs }}', '{{ lead.priority|escapejs }}', '{{ lead.status|escapejs }}', '{{ lead.assigned_to.get_full_name|default:lead.assigned_to.username|escapejs }}', '{{ lead.next_step|default:''|escapejs }}', '{{ lead.next_date|default:''|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="text-xs font-bold text-slate-500 hover:text-brand-orange bg-slate-100 hover:bg-orange-50 w-8.5 h-8.5 rounded-xl transition-all border border-slate-200 hover:border-brand-orange/30 flex items-center justify-center shadow-sm" title="Open Full Lead Form">
-                                  <i class="fa-solid fa-expand"></i>
-                              </button>
-                              <button onclick="openDeleteConfirmModal('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="text-xs font-bold text-slate-400 hover:text-red-500 bg-slate-100 hover:bg-red-50 w-8.5 h-8.5 rounded-xl transition-all border border-slate-200 hover:border-red-200 flex items-center justify-center shadow-sm" title="Delete Lead Record">
-                                  <i class="fa-solid fa-trash-can"></i>
-                              </button>
-                          </div>
-                      </td>
-                  </tr>
-                  {% empty %}
-                  <tr>
-                      <td colspan="6" class="text-center py-16 text-slate-500 font-medium bg-white">
-                          <div class="flex flex-col items-center justify-center">
-                              <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 mb-2 border border-slate-100">
-                                  <i class="fa-regular fa-folder-open text-lg"></i>
-                              </div>
-                              <p class="text-sm">No leads currently logged in the directory.</p>
-                          </div>
-                      </td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-            
-            <!-- Table Pagination Footer Bar -->
-            <div class="px-6 py-4 border-t border-slate-200 bg-slate-50/80 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-slate-500 font-medium">
-              <div id="pagination-info">Showing entries</div>
-              <div class="flex items-center gap-1.5" id="pagination-buttons">
-                <!-- Buttons dynamically managed by JS client pagination -->
-              </div>
-            </div>
-          </div>
-
-          <!-- Mobile responsive lists (Shown < md Breakpoint, no horizontal breaks) -->
-          <div class="block md:hidden space-y-4">
-            <div id="leads-mobile-container" class="space-y-4">
-              {% for lead in leads %}
-              <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4 mobile-lead-card" data-lead-id="{{ lead.id }}" data-status="{{ lead.status }}" data-search-term="{{ lead.full_name|lower }} {{ lead.locality|lower }} {{ lead.assigned_to.get_full_name|lower|default:lead.assigned_to.username|lower }}">
-                  
-                  <div class="flex justify-between items-start gap-4">
-                      <div>
-                          {% if lead.priority == "HOT" %}
-                              <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md border bg-red-50 text-red-600 border-red-200/60 mb-1.5 tracking-wider">
-                                  {{ lead.get_priority_display }}
-                              </span>
-                          {% elif lead.priority == "WARM" %}
-                              <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md border bg-amber-50 text-amber-700 border-amber-200/60 mb-1.5 tracking-wider">
-                                  {{ lead.get_priority_display }}
-                              </span>
-                          {% else %}
-                              <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md border bg-slate-100 text-slate-500 border-slate-200/60 mb-1.5 tracking-wider">
-                                  {{ lead.get_priority_display }}
-                              </span>
-                          {% endif %}
-                          
-                          <h4 onclick="openSlideOver('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{{ lead.phone_number|escapejs }}', '{{ lead.locality|escapejs }}', '{{ lead.bhk|escapejs }}', '{{ lead.budget|escapejs }}', '{{ lead.priority|escapejs }}', '{{ lead.status|escapejs }}', '{{ lead.assigned_to.get_full_name|default:lead.assigned_to.username|escapejs }}', '{{ lead.next_step|default:''|escapejs }}', '{{ lead.next_date|default:''|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="font-bold text-slate-900 text-base font-accent cursor-pointer hover:text-brand-orange transition-colors">{{ lead.full_name }}</h4>
-                          <p class="text-xs text-slate-400 mt-0.5 flex items-center gap-1.5"><i class="fa-solid fa-phone"></i> {{ lead.phone_number }}</p>
-                      </div>
-                      
-                      <div class="flex gap-1.5 shrink-0">
-                          <button onclick="openSlideOver('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{{ lead.phone_number|escapejs }}', '{{ lead.locality|escapejs }}', '{{ lead.bhk|escapejs }}', '{{ lead.budget|escapejs }}', '{{ lead.priority|escapejs }}', '{{ lead.status|escapejs }}', '{{ lead.assigned_to.get_full_name|default:lead.assigned_to.username|escapejs }}', '{{ lead.next_step|default:''|escapejs }}', '{{ lead.next_date|default:''|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 text-slate-500 hover:text-brand-orange flex items-center justify-center text-xs">
-                              <i class="fa-solid fa-expand"></i>
-                          </button>
-                          <button onclick="openDeleteConfirmModal('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 text-slate-400 hover:text-red-500 flex items-center justify-center text-xs">
-                              <i class="fa-solid fa-trash-can"></i>
-                          </button>
-                      </div>
-                  </div>
-                  
-                  <div class="grid grid-cols-2 gap-3 pt-3.5 border-t border-slate-100 text-xs text-slate-600">
-                      <div>
-                          <span class="text-[10px] text-slate-400 font-semibold block mb-0.5">LOCALITY</span>
-                          <strong class="text-slate-800">{{ lead.locality }}</strong>
-                      </div>
-                      <div>
-                          <span class="text-[10px] text-slate-400 block mb-0.5">REQUIREMENTS</span>
-                          <strong class="text-slate-800">{{ lead.bhk }} • Budget: {{ lead.budget }}</strong>
-                      </div>
-                  </div>
-
-                  <div class="grid grid-cols-2 gap-3 pt-3.5 border-t border-slate-100">
-                      <div>
-                          <label class="text-[9px] text-slate-400 font-bold block mb-1">ASSIGNED ADVISOR</label>
-                          <div class="relative">
-                              <select onchange="handleAdvisorReassign('{{ lead.id }}', this.value)" class="custom-select-indicator appearance-none w-full text-xs font-semibold pl-2 pr-6 py-1.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none bg-white">
-                                  {% for agent in agents %}
-                                      <option value="{{ agent.id }}" {% if lead.assigned_to.id == agent.id %}selected{% endif %}>
-                                          {{ agent.get_full_name|default:agent.username }}
-                                      </option>
-                                  {% empty %}
-                                      <option value="{{ lead.assigned_to.id|default:'' }}" selected>
-                                          {{ lead.assigned_to.get_full_name|default:lead.assigned_to.username|default:"Unassigned" }}
-                                      </option>
-                                  {% endfor %}
-                              </select>
-                          </div>
-                      </div>
-                      <div>
-                          <label class="text-[9px] text-slate-400 font-bold block mb-1">STATUS</label>
-                          <div class="relative">
-                              <select onchange="handleStatusChange('{{ lead.id }}', this.value)" class="custom-select-indicator appearance-none w-full text-xs font-bold pl-2 pr-6 py-1.5 border rounded-xl focus:outline-none {{ lead.status|lower }} {% if lead.status == 'NEW' %}bg-blue-50 text-blue-700 border-blue-200{% elif lead.status == 'CALLED' %}bg-amber-50 text-amber-700 border-amber-200{% elif lead.status == 'INTERESTED' %}bg-indigo-50 text-indigo-700 border-indigo-200{% elif lead.status == 'SITE_VISIT' %}bg-purple-50 text-purple-700 border-purple-200{% else %}bg-emerald-50 text-emerald-700 border-emerald-200{% endif %}">
-                                  <option value="NEW" {% if lead.status == 'NEW' %}selected{% endif %}>New</option>
-                                  <option value="CALLED" {% if lead.status == 'CALLED' %}selected{% endif %}>Called</option>
-                                  <option value="INTERESTED" {% if lead.status == 'INTERESTED' %}selected{% endif %}>Interested</option>
-                                  <option value="SITE_VISIT" {% if lead.status == 'SITE_VISIT' %}selected{% endif %}>Site Visit Scheduled</option>
-                                  <option value="CLOSED" {% if lead.status == 'CLOSED' %}selected{% endif %}>Closed</option>
-                              </select>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="text-[10px] text-slate-400 pt-1 flex items-center justify-between font-medium">
-                      <span>CRM Database Intake</span>
-                      <span>{{ lead.created_at|date:"d M Y H:i" }}</span>
-                  </div>
-              </div>
-              {% endfor %}
-            </div>
-            
-            <!-- Mobile Pagination Footer Bar -->
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-3 items-center text-sm text-slate-500 font-medium">
-              <div id="mobile-pagination-info">Showing entries</div>
-              <div class="flex items-center gap-1.5" id="mobile-pagination-buttons">
-                <!-- Mobile Buttons dynamically loaded -->
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- STUB SCREEN: PROPERTY FORM -->
-        <div id="crm-property-view" class="hidden space-y-6 max-w-3xl mx-auto bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm animate-[fadeIn_0.4s_ease-out]">
-          <h3 class="font-accent font-extrabold text-2xl text-brand-dark mb-4">Register New Property Asset</h3>
-          <p class="text-sm text-brand-slate mb-6">CRM inventory panel to inject tested premium real-estate locations for public showcase.</p>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <input type="text" placeholder="Property Title" class="p-3 border border-slate-200 rounded-xl text-sm focus:outline-none">
-            <input type="text" placeholder="Price (e.g. ₹1.5 Cr)" class="p-3 border border-slate-200 rounded-xl text-sm focus:outline-none">
-            <input type="text" placeholder="Locality" class="p-3 border border-slate-200 rounded-xl text-sm focus:outline-none">
-            <input type="text" placeholder="BHK Config" class="p-3 border border-slate-200 rounded-xl text-sm focus:outline-none">
-          </div>
-          <button onclick="showToast('Mock Property Draft Saved!')" class="mt-6 bg-brand-orange text-white px-6 py-3 rounded-xl font-bold text-sm">Save Property Draft</button>
-        </div>
-
-        <!-- STUB SCREEN: PERFORMANCE TRACKER -->
-        <div id="crm-performance-view" class="hidden space-y-6 max-w-7xl mx-auto bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm animate-[fadeIn_0.4s_ease-out]">
-          <h3 class="font-accent font-extrabold text-2xl text-brand-dark mb-4">Branch Performance Dashboard</h3>
-          <p class="text-sm text-brand-slate mb-6">Real-time charts monitoring site-visit conversion schedules, called callbacks, and closed crore levels.</p>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center">
-              <span class="text-xs uppercase font-bold text-slate-400 block mb-1">Inbound Leads</span>
-              <strong class="text-3xl text-brand-orange font-accent font-extrabold">1,480</strong>
-            </div>
-            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center">
-              <span class="text-xs uppercase font-bold text-slate-400 block mb-1">Site Visits scheduled</span>
-              <strong class="text-3xl text-teal-600 font-accent font-extrabold">244</strong>
-            </div>
-            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center">
-              <span class="text-xs uppercase font-bold text-slate-400 block mb-1">Closed Deals (Month)</span>
-              <strong class="text-3xl text-brand-slateDark font-accent font-extrabold">₹18.4 Cr</strong>
-            </div>
-          </div>
-        </div>
-
-      </main>
     </div>
 
   </div>
 
-  <!-- ==========================================================================
-      CONTEXTUAL SLIDE-OVER DETAIL LEAF (EXPANDED DUAL WORKSPACE)
-      ========================================================================== -->
-  <div id="lead-slideover" class="fixed inset-0 z-50 overflow-hidden pointer-events-none" aria-labelledby="slideover-title" role="dialog" aria-modal="true">
+</div>
+
+<!-- PORTAL DIALOG AND MODAL POPUPS -->
+{% include "components/modals/add_lead_modal.html" %}
+{% include "components/modals/lead_detail_modal.html" %}
+{% include "components/modals/delete_modal.html" %}
+{% endblock %}
+
+{% block extra_js %}
+<!-- PORTAL INTERACTIVE SYSTEM ENGINE -->
+<script>
+  // Dynamic follow-up logs database in-memory state
+  let sessionLogs = {};
+
+  // Global delete, edit, and pagination states
+  let activeLeadId = null;
+  let currentDeleteUrl = "";
+  let currentPage = 1;
+  const itemsPerPage = 5;
+
+  // Sidebar States & Collapse Logic
+  let sidebarCollapsed = false;
+
+  // Live workspace notifications list (Mock state data structure matching design specifications)
+  let notificationsList = [
+    { id: 1, type: "site-visit", note: "Site Tour scheduled tomorrow morning at 11:00 AM", time: "10 mins ago" },
+    { id: 2, type: "assignment", note: "New high-intent lead allocated to your portfolio", time: "1 hour ago" },
+    { id: 3, type: "system", note: "Transaction stamp clearance verified", time: "Yesterday" }
+  ];
+
+  function toggleSidebarCollapse() {
+    sidebarCollapsed = !sidebarCollapsed;
+    const sidebar = document.getElementById('dashboard-sidebar');
+    const collapseIcon = document.getElementById('collapse-icon');
+    const textItems = document.querySelectorAll('.sidebar-text-item');
+
+    if (sidebarCollapsed) {
+      sidebar.classList.remove('w-64');
+      sidebar.classList.add('w-20');
+      collapseIcon.className = "fa-solid fa-chevron-right text-sm";
+      
+      textItems.forEach(item => {
+        item.classList.add('hidden');
+      });
+    } else {
+      sidebar.classList.remove('w-20');
+      sidebar.classList.add('w-64');
+      collapseIcon.className = "fa-solid fa-chevron-left text-sm";
+      
+      textItems.forEach(item => {
+        item.classList.remove('hidden');
+      });
+    }
+  }
+
+  // Active workspace tab view coordinator (Toggles Lead table vs Mock Property views vs Charts views)
+  function setActiveNav(navKey) {
+    const views = {
+      leads: document.getElementById('crm-leads-view'),
+      property: document.getElementById('crm-property-view'),
+      performance: document.getElementById('crm-performance-view')
+    };
+
+    const titleNode = document.getElementById('crm-view-title');
+    const crumbsNode = document.getElementById('breadcrumbs-active-tab');
     
-    <!-- Backdrop panel -->
-    <div id="slideover-backdrop" onclick="closeLeadSlideover()" class="absolute inset-0 bg-brand-dark/0 transition-all duration-500 ease-in-out pointer-events-auto"></div>
-
-    <div class="absolute inset-y-0 right-0 max-w-full flex pl-4 sm:pl-10">
-      
-      <!-- Expanded Slide-over panel structure -->
-      <div id="slideover-panel" class="w-screen max-w-2xl bg-white translate-x-full transition-transform duration-500 ease-in-out pointer-events-auto border-l border-brand-border shadow-2xl flex flex-col h-full">
-        
-        <!-- Slide-over Header -->
-        <div class="px-6 py-5 border-b border-slate-200 bg-slate-50/60 flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="w-11 h-11 rounded-2xl bg-orange-100 flex items-center justify-center text-brand-orange text-xl shadow-inner">
-              <i class="fa-solid fa-address-card"></i>
-            </div>
-            <div>
-              <div class="flex items-center gap-2.5">
-                <h3 id="slide-lead-name" class="font-accent font-extrabold text-xl text-brand-dark leading-tight">Lead Name</h3>
-                <span id="slide-lead-priority-badge" class="px-2 py-0.5 rounded-lg text-[9px] font-extrabold tracking-wider uppercase bg-red-100 text-red-700">HOT</span>
-              </div>
-              <span id="slide-lead-handler" class="text-xs text-brand-slate block mt-0.5">CRM Handler: Amit Sharma</span>
-            </div>
-          </div>
-          <div class="flex items-center gap-2">
-            <!-- Delete inside Slide-Over -->
-            <button id="slide-lead-delete-btn" class="p-2.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors" title="Delete Lead">
-              <i class="fa-solid fa-trash-can text-base"></i>
-            </button>
-            <button onclick="closeLeadSlideover()" class="p-2.5 text-slate-400 hover:text-brand-dark hover:bg-slate-200/50 rounded-xl transition-colors">
-              <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- Custom Slide-over Work Tabs -->
-        <div class="flex border-b border-slate-200 bg-white">
-          <button onclick="setSlideoverTab('overview')" id="tab-btn-overview" class="flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-brand-orange text-brand-orange transition-all">
-            <i class="fa-solid fa-chart-simple mr-1.5"></i> Overview & Logs
-          </button>
-          <button onclick="setSlideoverTab('edit')" id="tab-btn-edit" class="flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-brand-dark transition-all">
-            <i class="fa-solid fa-user-pen mr-1.5"></i> Edit Profile & Reassign
-          </button>
-        </div>
-
-        <!-- Scrollable content sections based on tabs -->
-        <div class="flex-1 overflow-y-auto custom-scroll px-6 py-6 bg-slate-50/50">
-          
-          <!-- TAB 1: OVERVIEW & TIMELINE -->
-          <div id="slide-tab-overview" class="block space-y-6">
-            
-            <!-- Quick Scheduled Next Action Summary Card -->
-            <div class="bg-gradient-to-r from-brand-slateDark to-brand-dark p-5 rounded-2xl text-white shadow-md relative overflow-hidden font-accent">
-              <div class="absolute right-0 bottom-0 w-24 h-24 bg-white/5 rounded-full translate-x-8 translate-y-8"></div>
-              <span class="text-[9px] uppercase font-extrabold tracking-wider text-slate-300 block mb-1">CRM Follow-Up Agenda</span>
-              <h4 class="font-accent font-bold text-base mb-3">Scheduled Next Step Action</h4>
-              
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm bg-white/5 p-3.5 rounded-xl border border-white/5 font-sans">
-                <div>
-                  <span class="text-[10px] text-slate-300 font-bold block uppercase tracking-wider">Action</span>
-                  <span id="slide-next-step-lbl" class="font-semibold block mt-0.5">Call to confirm site visit timings</span>
-                </div>
-                <div>
-                  <span class="text-[10px] text-slate-300 font-bold block uppercase tracking-wider">Target Date</span>
-                  <span id="slide-next-date-lbl" class="font-semibold block mt-0.5">July 02, 2026</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Indian Property Preferences Grid -->
-            <div class="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm space-y-4">
-              <h4 class="text-xs uppercase font-extrabold text-slate-400 tracking-wider">Inquiry Specifications</h4>
-              
-              <div class="grid grid-cols-2 gap-4">
-                <div>
-                  <span class="text-[10px] text-slate-400 uppercase font-bold block mb-1">Target Locality</span>
-                  <strong id="slide-lead-locality" class="text-sm text-brand-dark block font-semibold">-</strong>
-                </div>
-                <div>
-                  <span class="text-[10px] text-slate-400 uppercase font-bold block mb-1">Target Budget</span>
-                  <strong id="slide-lead-budget" class="text-sm text-brand-dark block font-semibold">-</strong>
-                </div>
-                <div>
-                  <span class="text-[10px] text-slate-400 uppercase font-bold block mb-1">Config Target</span>
-                  <strong id="slide-lead-bhk" class="text-sm text-brand-dark block font-semibold">-</strong>
-                </div>
-                <div>
-                  <span class="text-[10px] text-slate-400 uppercase font-bold block mb-1">Contact Reference</span>
-                  <strong id="slide-lead-contact" class="text-sm text-brand-dark block font-semibold">-</strong>
-                </div>
-              </div>
-            </div>
-
-            <!-- Append Timeline logs remark form -->
-            <div class="space-y-3 pt-2">
-              <label class="text-xs uppercase font-extrabold text-slate-400 tracking-wider block">Log Client Intervention Notes</label>
-              <form onsubmit="handleAppendLog(event)" class="flex gap-2.5">
-                <input id="timeline-remark-input" type="text" required placeholder="Ex: Met with client, interested in 4BHK units near IT park..." class="flex-1 py-3 px-4 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-orange shadow-sm bg-white">
-                <button type="submit" class="bg-brand-dark hover:bg-brand-orange text-white font-bold text-sm px-6 py-3 rounded-xl transition-colors shrink-0 shadow-md">
-                  Log Note
-                </button>
-              </form>
-            </div>
-
-            <!-- Timeline Logs tracker -->
-            <div class="space-y-4 pt-2">
-              <h4 class="text-xs uppercase font-extrabold text-slate-400 tracking-wider">Follow-Up Action Logs</h4>
-              
-              <div id="slide-lead-timeline" class="relative pl-6 border-l-2 border-slate-200 space-y-6 ml-3">
-                <!-- Timeline node entries get appended here dynamically -->
-              </div>
-            </div>
-
-          </div>
-
-          <!-- TAB 2: EDIT PROFILE & HANDLER ASSIGNMENT -->
-          <div id="slide-tab-edit" class="hidden">
-            <form onsubmit="handleEditLeadSubmit(event)" class="space-y-5 bg-white border border-slate-200/80 p-6 rounded-2xl shadow-sm">
-              
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <!-- Lead Name -->
-                <div class="flex flex-col gap-1.5">
-                  <label class="text-[10px] uppercase font-bold text-slate-400">Client Name</label>
-                  <input id="edit-lead-name" type="text" required class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange bg-slate-50">
-                </div>
-                <!-- Contact Number -->
-                <div class="flex flex-col gap-1.5">
-                  <label class="text-[10px] uppercase font-bold text-slate-400">Contact Number</label>
-                  <input id="edit-lead-contact" type="tel" required class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange bg-slate-50">
-                </div>
-              </div>
-
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <!-- Assigned Advisor Select -->
-                <div class="flex flex-col gap-1.5">
-                  <label class="text-[10px] uppercase font-bold text-slate-400">Assigned CRM Specialist</label>
-                  <div class="relative">
-                    <select id="edit-lead-handler" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange bg-white pr-10">
-                        {% for agent in agents %}
-                            <option value="{{ agent.id }}">{{ agent.get_full_name|default:agent.username }}</option>
-                        {% endfor %}
-                    </select>
-                  </div>
-                </div>
-                <!-- Priority Status -->
-                <div class="flex flex-col gap-1.5">
-                  <label class="text-[10px] uppercase font-bold text-slate-400">Lead Temperature / Priority</label>
-                  <div class="relative">
-                    <select id="edit-lead-priority" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange bg-white pr-10">
-                      <option value="HOT">Hot (High Intent)</option>
-                      <option value="WARM">Warm (Nurturing)</option>
-                      <option value="COLD">Cold (Inbound/Low)</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Target Locality -->
-              <div class="flex flex-col gap-1.5">
-                <label class="text-[10px] uppercase font-bold text-slate-400">Target Locality / Area</label>
-                <input id="edit-lead-locality" type="text" required class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange bg-slate-50">
-              </div>
-
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <!-- Config -->
-                <div class="flex flex-col gap-1.5">
-                  <label class="text-[10px] uppercase font-bold text-slate-400">BHK Configuration Target</label>
-                  <div class="relative">
-                    <select id="edit-lead-bhk" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange bg-white pr-10">
-                      <option value="1 BHK">1 BHK</option>
-                      <option value="2 BHK">2 BHK</option>
-                      <option value="3 BHK">3 BHK</option>
-                      <option value="3 BHK+">3 BHK+</option>
-                      <option value="4 BHK">4 BHK</option>
-                      <option value="5 BHK">5 BHK</option>
-                    </select>
-                  </div>
-                </div>
-
-                <!-- Target Budget -->
-                <div class="flex flex-col gap-1.5">
-                  <label class="text-[10px] uppercase font-bold text-slate-400">Target Budget (Lakhs/Crores)</label>
-                  <input id="edit-lead-budget" type="text" required class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange bg-slate-50">
-                </div>
-              </div>
-
-              <!-- Next Action parameters -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
-                <div class="flex flex-col gap-1.5">
-                  <label class="text-[10px] uppercase font-bold text-slate-400">Next Follow-Up Agenda</label>
-                  <input id="edit-lead-next-step" type="text" placeholder="Ex: Call to schedule site tour" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange bg-slate-50">
-                </div>
-                <div class="flex flex-col gap-1.5">
-                  <label class="text-[10px] uppercase font-bold text-slate-400">Next Action Target Date</label>
-                  <input id="edit-lead-next-date" type="text" placeholder="Ex: July 02, 2026" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-orange bg-slate-50">
-                </div>
-              </div>
-
-              <!-- Submit Button -->
-              <div class="pt-4">
-                <button type="submit" class="w-full bg-brand-orange hover:bg-brand-orangeDark text-white py-3.5 rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition-all">
-                  Save Changes & Log Audit
-                </button>
-              </div>
-
-            </form>
-          </div>
-
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- ADD LEAD MANUALLY DIALOG/MODAL -->
-  <div id="add-lead-modal" class="hidden fixed inset-0 bg-brand-dark/60 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-brand-border relative animate-[scaleIn_0.3s_ease-out]">
-      <button onclick="closeAddLeadModal()" class="absolute top-5 right-5 text-slate-400 hover:text-brand-dark transition-colors">
-        <i class="fa-solid fa-xmark text-lg"></i>
-      </button>
-      <div class="mb-6">
-        <span class="text-brand-orange font-bold text-xs uppercase tracking-wider block mb-1">Inbound CRM Stream</span>
-        <h3 class="font-accent text-2xl font-extrabold text-brand-dark tracking-tight">Manual Lead Intake</h3>
-      </div>
-      <form id="add-lead-form" method="post" action="" class="space-y-4">
-        {% csrf_token %}
-        <div class="flex flex-col gap-1.5">
-          <label class="text-[10px] uppercase font-bold text-slate-400">Client Name</label>
-          <input name="full_name" type="text" required placeholder="Ex: Amit Sharma" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange bg-white shadow-sm">
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-          <div class="flex flex-col gap-1.5">
-            <label class="text-[10px] uppercase font-bold text-slate-400">Contact Number</label>
-            <input name="phone_number" type="tel" required placeholder="Ex: +91 99999 99999" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm">
-          </div>
-          <div class="flex flex-col gap-1.5">
-            <label class="text-[10px] uppercase font-bold text-slate-400">Assign Advisor</label>
-            <div class="relative">
-              <select name="assigned_to" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm pr-8">
-                {% for agent in agents %}
-                    <option value="{{ agent.id }}">{{ agent.get_full_name|default:agent.username }}</option>
-                {% endfor %}
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="grid grid-cols-3 gap-2.5">
-          <div class="flex flex-col gap-1.5 col-span-2">
-            <label class="text-[10px] uppercase font-bold text-slate-400">Preferred Locality</label>
-            <input name="locality" type="text" required placeholder="Ex: Whitefield" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm">
-          </div>
-          <div class="flex flex-col gap-1.5">
-            <label class="text-[10px] uppercase font-bold text-slate-400">BHK</label>
-            <div class="relative">
-              <select name="bhk" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm pr-8">
-                <option value="1 BHK">1 BHK</option>
-                <option value="2 BHK">2 BHK</option>
-                <option value="3 BHK+">3 BHK+</option>
-                <option value="4 BHK">4 BHK</option>
-                <option value="5 BHK">5 BHK</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-          <div class="flex flex-col gap-1.5">
-            <label class="text-[10px] uppercase font-bold text-slate-400">Target Budget</label>
-            <input name="budget" type="text" required placeholder="Ex: ₹1.85 Cr" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm">
-          </div>
-          <div class="flex flex-col gap-1.5">
-            <label class="text-[10px] uppercase font-bold text-slate-400">Priority Level</label>
-            <div class="relative">
-              <select name="priority" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm pr-8">
-                <option value="HOT">Hot</option>
-                <option value="WARM">Warm</option>
-                <option value="COLD">Cold</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <button type="submit" class="w-full bg-brand-orange hover:bg-brand-orangeDark text-white py-3.5 px-6 rounded-xl font-accent font-bold text-sm tracking-wide shadow-lg shadow-orange-500/20 transition-all duration-300">
-          Inject Into Lead Board
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- DELETE CONFIRMATION MODERN MODAL -->
-  <div id="delete-confirm-modal" class="hidden fixed inset-0 bg-brand-dark/65 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-brand-border text-center">
-      <div class="w-14 h-14 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-2xl mx-auto mb-4">
-        <i class="fa-solid fa-triangle-exclamation"></i>
-      </div>
-      <h3 class="font-accent font-extrabold text-xl text-brand-dark mb-2">Delete Lead Record?</h3>
-      <p class="text-sm text-brand-slate mb-6">Are you sure you want to delete <strong id="delete-lead-name-placeholder" class="text-brand-dark">-</strong>? This action cannot be undone.</p>
-      
-      <div class="flex gap-3">
-        <button onclick="closeDeleteConfirmModal()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-brand-dark text-sm font-bold rounded-xl transition-all">
-          No, Cancel
-        </button>
-        <!-- Django dynamic delete URL hook -->
-        <form id="delete-confirm-form" method="post" action="" class="flex-1">
-          {% csrf_token %}
-          <button type="submit" class="w-full py-3 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-red-600/10">
-            Yes, Delete
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- INTERACTIVE SYSTEM SCRIPT -->
-  <script>
-    // Seeding dynamic active session logs from local storage or mock structure to manage follow-up timeline diaries
-    let sessionLogs = {};
-
-    // Initial load parameters for pagination
-    let currentPage = 1;
-    const itemsPerPage = 5;
-
-    // Sidebar States & Collapse Logic
-    let sidebarCollapsed = false;
-
-    // Notification list state (Pre-seeded with your requested mock database notifications)
-    let notificationsList = [
-      { id: 1, type: "site-visit", note: "Site Tour scheduled tomorrow morning at 11:00 AM", time: "10 mins ago" },
-      { id: 2, type: "assignment", note: "New high-intent lead allocated to your portfolio", time: "1 hour ago" },
-      { id: 3, type: "system", note: "Transaction stamp clearance verified", time: "Yesterday" }
-    ];
-
-    function toggleSidebarCollapse() {
-      sidebarCollapsed = !sidebarCollapsed;
-      const sidebar = document.getElementById('dashboard-sidebar');
-      const collapseIcon = document.getElementById('collapse-icon');
-      const textItems = document.querySelectorAll('.sidebar-text-item');
-
-      if (sidebarCollapsed) {
-        sidebar.classList.remove('w-64');
-        sidebar.classList.add('w-20');
-        collapseIcon.className = "fa-solid fa-chevron-right text-sm";
-        
-        textItems.forEach(item => {
-          item.classList.add('hidden');
-        });
-      } else {
-        sidebar.classList.remove('w-20');
-        sidebar.classList.add('w-64');
-        collapseIcon.className = "fa-solid fa-chevron-left text-sm";
-        
-        textItems.forEach(item => {
-          item.classList.remove('hidden');
-        });
-      }
+    if (navKey === 'leads') {
+      titleNode.innerText = 'Leads Directory';
+      crumbsNode.innerText = 'Leads Directory';
+    } else if (navKey === 'property') {
+      titleNode.innerText = 'Add Property';
+      crumbsNode.innerText = 'Add Property';
+    } else if (navKey === 'performance') {
+      titleNode.innerText = 'Performance';
+      crumbsNode.innerText = 'Performance';
     }
 
-    // Set Active Dashboard Module
-    function setActiveNav(navKey) {
-      activeNav = navKey;
-      
-      const views = {
-        leads: document.getElementById('crm-leads-view'),
-        property: document.getElementById('crm-property-view'),
-        performance: document.getElementById('crm-performance-view')
-      };
-
-      const titleNode = document.getElementById('crm-view-title');
-      if (navKey === 'leads') titleNode.innerText = 'Leads Directory';
-      else if (navKey === 'property') titleNode.innerText = 'Add Property';
-      else if (navKey === 'performance') titleNode.innerText = 'Performance';
-
-      // Reset menu items background highlights
-      const keys = ['leads', 'property', 'performance'];
-      keys.forEach(k => {
-        const item = document.getElementById(`nav-${k}`);
+    // Reset sidebar items highlights
+    const keys = ['leads', 'property', 'performance'];
+    keys.forEach(k => {
+      const item = document.getElementById(`nav-${k}`);
+      if (item) {
         if (k === navKey) {
           item.className = "nav-item group flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orangeDark text-white font-semibold text-sm transition-all shadow-md shadow-orange-500/10";
         } else {
           item.className = "nav-item group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800/40 hover:text-white text-slate-400 text-sm font-medium transition-all";
         }
-      });
+      }
+    });
 
-      // Show Selected Section
-      Object.keys(views).forEach(key => {
+    // Toggle Section visibility
+    Object.keys(views).forEach(key => {
+      if (views[key]) {
         if (key === navKey) {
           views[key].classList.remove('hidden');
           views[key].classList.add('block');
@@ -921,517 +171,563 @@
           views[key].classList.remove('block');
           views[key].classList.add('hidden');
         }
-      });
-    }
-
-    function toggleSidebar() {
-      const sidebar = document.getElementById('dashboard-sidebar');
-      const backdrop = document.getElementById('sidebar-backdrop');
-
-      if (sidebar.classList.contains('hidden')) {
-        sidebar.classList.remove('hidden');
-        sidebar.classList.add('flex');
-        backdrop.classList.remove('hidden');
-      } else {
-        sidebar.classList.add('hidden');
-        sidebar.classList.remove('flex');
-        backdrop.classList.add('hidden');
       }
+    });
+  }
+
+  // Responsive mobile Drawer slider toggle
+  function toggleSidebar() {
+    const sidebar = document.getElementById('dashboard-sidebar');
+    const backdrop = document.getElementById('sidebar-backdrop');
+
+    if (sidebar.classList.contains('hidden')) {
+      sidebar.classList.remove('hidden');
+      sidebar.classList.add('flex');
+      backdrop.classList.remove('hidden');
+    } else {
+      sidebar.classList.add('hidden');
+      sidebar.classList.remove('flex');
+      backdrop.classList.add('hidden');
     }
+  }
 
-    // Change slide-over working tabs
-    function setSlideoverTab(tabId) {
-      const overviewTab = document.getElementById('slide-tab-overview');
-      const editTab = document.getElementById('slide-tab-edit');
-      const overviewBtn = document.getElementById('tab-btn-overview');
-      const editBtn = document.getElementById('tab-btn-edit');
+  // Change slideover detail panel view tabs
+  function setSlideoverTab(tabId) {
+    const overviewTab = document.getElementById('slide-tab-overview');
+    const editTab = document.getElementById('slide-tab-edit');
+    const overviewBtn = document.getElementById('tab-btn-overview');
+    const editBtn = document.getElementById('tab-btn-edit');
 
-      if (tabId === 'overview') {
-        overviewTab.classList.remove('hidden');
-        overviewTab.classList.add('block');
-        editTab.classList.remove('block');
-        editTab.classList.add('hidden');
+    if (tabId === 'overview') {
+      overviewTab.classList.remove('hidden');
+      overviewTab.classList.add('block');
+      editTab.classList.remove('block');
+      editTab.classList.add('hidden');
 
-        overviewBtn.className = "flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-brand-orange text-brand-orange transition-all";
-        editBtn.className = "flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-brand-dark transition-all";
-      } else {
-        editTab.classList.remove('hidden');
-        editTab.classList.add('block');
-        overviewTab.classList.remove('block');
-        overviewTab.classList.add('hidden');
+      overviewBtn.className = "flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-brand-orange text-brand-orange transition-all";
+      editBtn.className = "flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-brand-dark transition-all";
+    } else {
+      editTab.classList.remove('hidden');
+      editTab.classList.add('block');
+      overviewTab.classList.remove('block');
+      overviewTab.classList.add('hidden');
 
-        editBtn.className = "flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-brand-orange text-brand-orange transition-all";
-        overviewBtn.className = "flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-brand-dark transition-all";
-      }
+      editBtn.className = "flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-brand-orange text-brand-orange transition-all";
+      overviewBtn.className = "flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-brand-dark transition-all";
     }
+  }
 
-    // Client-Side Searching, Filtering, and Pagination on Django DOM Elements
-    function filterLeads() {
-      const searchVal = document.getElementById('lead-search').value.toLowerCase();
-      const filterVal = document.getElementById('lead-filter-status').value;
+  // Live client-side searching, status matching filters, and pagination slices
+  function filterLeads() {
+    const searchVal = document.getElementById('lead-search').value.toLowerCase();
+    const filterVal = document.getElementById('lead-filter-status').value;
+    
+    const desktopRows = document.querySelectorAll('#leads-table-body tr');
+    const mobileCards = document.querySelectorAll('.mobile-lead-card');
+    const emptyState = document.getElementById('table-empty-state');
+    const fallbackRow = document.getElementById('table-empty-fallback-row');
+
+    let matches = [];
+
+    // Filter desktop records
+    desktopRows.forEach(row => {
+      if (row.id === 'table-empty-fallback-row' || row.id === 'table-empty-state') return;
       
-      const desktopRows = document.querySelectorAll('#leads-table-body tr');
-      const mobileCards = document.querySelectorAll('.mobile-lead-card');
-      const emptyState = document.getElementById('table-empty-state');
-
-      let matches = [];
-
-      // Desktop filter
-      desktopRows.forEach(row => {
-        if (!row.getAttribute('data-lead-id')) return;
-        
-        const searchTerm = row.getAttribute('data-search-term') || '';
-        const status = row.getAttribute('data-status') || '';
-        
-        const matchesSearch = searchTerm.includes(searchVal);
-        const matchesFilter = (filterVal === 'ALL' || status === filterVal);
-
-        if (matchesSearch && matchesFilter) {
-          matches.push(row);
-        } else {
-          row.classList.add('hidden');
-        }
-      });
-
-      // Mobile Card Filter
-      mobileCards.forEach(card => {
-        const searchTerm = card.getAttribute('data-search-term') || '';
-        const status = card.getAttribute('data-status') || '';
-        
-        const matchesSearch = searchTerm.includes(searchVal);
-        const matchesFilter = (filterVal === 'ALL' || status === filterVal);
-
-        if (matchesSearch && matchesFilter) {
-          card.classList.remove('hidden');
-        } else {
-          card.classList.add('hidden');
-        }
-      });
-
-      // Apply pagination slices to visible matches
-      const totalItems = matches.length;
-      const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-      if (totalItems === 0) {
-        emptyState.classList.remove('hidden');
-        emptyState.classList.add('flex');
-        document.getElementById('pagination-info').innerText = "Showing 0 entries";
-        document.getElementById('pagination-buttons').innerHTML = "";
-        return;
-      } else {
-        emptyState.classList.remove('flex');
-        emptyState.classList.add('hidden');
-      }
-
-      if (currentPage > totalPages) currentPage = totalPages;
-      if (currentPage < 1) currentPage = 1;
-
-      const startIndex = (currentPage - 1) * itemsPerPage;
-      const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
-
-      // Reset visible states
-      desktopRows.forEach(row => row.classList.add('hidden'));
+      const searchTerm = row.getAttribute('data-search-term') || '';
+      const status = row.getAttribute('data-status') || '';
       
-      for (let i = startIndex; i < endIndex; i++) {
-        matches[i].classList.remove('hidden');
+      const matchesSearch = searchTerm.includes(searchVal);
+      const matchesFilter = (filterVal === 'ALL' || status === filterVal);
+
+      if (matchesSearch && matchesFilter) {
+        matches.push(row);
+      } else {
+        row.classList.add('hidden');
       }
+    });
 
-      // Update Pagination Text Labels
-      const infoText = `Showing ${startIndex + 1} to ${endIndex} of ${totalItems} entries`;
-      document.getElementById('pagination-info').innerText = infoText;
-      document.getElementById('mobile-pagination-info').innerText = infoText;
+    // Mobile Card Filter
+    mobileCards.forEach(card => {
+      const searchTerm = card.getAttribute('data-search-term') || '';
+      const status = card.getAttribute('data-status') || '';
+      
+      const matchesSearch = searchTerm.includes(searchVal);
+      const matchesFilter = (filterVal === 'ALL' || status === filterVal);
 
-      renderPaginationControls(totalPages);
-    }
-
-    // Render Paginated buttons dynamically
-    function renderPaginationControls(totalPages) {
-      const container = document.getElementById('pagination-buttons');
-      const mobileContainer = document.getElementById('mobile-pagination-buttons');
-      container.innerHTML = "";
-      mobileContainer.innerHTML = "";
-
-      if (totalPages <= 1) return;
-
-      const createPrevBtn = () => {
-        const btn = document.createElement('button');
-        btn.onclick = () => { if (currentPage > 1) { currentPage--; filterLeads(); } };
-        btn.className = `w-9 h-9 rounded-xl border flex items-center justify-center text-xs transition-colors ${currentPage === 1 ? 'border-slate-200 text-slate-300 pointer-events-none' : 'border-slate-200 hover:bg-slate-100 text-brand-dark'}`;
-        btn.innerHTML = `<i class="fa-solid fa-chevron-left"></i>`;
-        return btn;
-      };
-
-      const createNextBtn = () => {
-        const btn = document.createElement('button');
-        btn.onclick = () => { if (currentPage < totalPages) { currentPage++; filterLeads(); } };
-        btn.className = `w-9 h-9 rounded-xl border flex items-center justify-center text-xs transition-colors ${currentPage === totalPages ? 'border-slate-200 text-slate-300 pointer-events-none' : 'border-slate-200 hover:bg-slate-100 text-brand-dark'}`;
-        btn.innerHTML = `<i class="fa-solid fa-chevron-right"></i>`;
-        return btn;
-      };
-
-      container.appendChild(createPrevBtn());
-      mobileContainer.appendChild(createPrevBtn().cloneNode(true));
-
-      for (let i = 1; i <= totalPages; i++) {
-        const pageBtn = document.createElement('button');
-        pageBtn.onclick = () => { currentPage = i; filterLeads(); };
-        
-        if (i === currentPage) {
-          pageBtn.className = "w-9 h-9 rounded-xl bg-brand-orange text-white text-xs font-bold shadow-sm shadow-orange-500/10";
-        } else {
-          pageBtn.className = "w-9 h-9 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-600 text-xs font-semibold";
-        }
-        pageBtn.innerText = i;
-        
-        container.appendChild(pageBtn);
-        mobileContainer.appendChild(pageBtn.cloneNode(true));
+      if (matchesSearch && matchesFilter) {
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
       }
+    });
 
-      container.appendChild(createNextBtn());
-      mobileContainer.appendChild(createNextBtn().cloneNode(true));
+    const totalItems = matches.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    if (totalItems === 0) {
+      if (emptyState) emptyState.classList.remove('hidden');
+      if (fallbackRow) fallbackRow.classList.add('hidden');
+      document.getElementById('pagination-info').innerText = "Showing 0 entries";
+      document.getElementById('pagination-buttons').innerHTML = "";
+      return;
+    } else {
+      if (emptyState) emptyState.classList.add('hidden');
     }
 
-    // Ajax/Fetch dynamic reassignments to your Django view endpoints
-    function handleAdvisorReassign(leadId, agentId) {
-      // POST Reassign details directly to Django
-      fetch(`/crm/leads/${leadId}/reassign/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": "{{ csrf_token }}"
-        },
-        body: JSON.stringify({ assigned_to: agentId })
-      })
-      .then(response => {
-        if (response.ok) {
-          showToast("Advisor reassigned successfully!");
-        } else {
-          showToast("Reassigned locally for demonstration.");
-        }
-      })
-      .catch(err => {
-        showToast("Reassignment registered.");
-      });
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+
+    // Hide everything and only show the paginated slice
+    desktopRows.forEach(row => {
+      if (row.id !== 'table-empty-state' && row.id !== 'table-empty-fallback-row') {
+        row.classList.add('hidden');
+      }
+    });
+    
+    for (let i = startIndex; i < endIndex; i++) {
+      matches[i].classList.remove('hidden');
     }
 
-    // Ajax/Fetch dynamic status updates to your Django view endpoints
-    function handleStatusChange(leadId, newStatus) {
-      fetch(`/crm/leads/${leadId}/status/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": "{{ csrf_token }}"
-        },
-        body: JSON.stringify({ status: newStatus })
-      })
-      .then(response => {
-        if (response.ok) {
-          showToast(`Status changed successfully to: ${newStatus}`);
-        } else {
-          showToast(`Status updated to: ${newStatus}`);
-        }
-        // Update local DOM data attributes for searching and filtering
-        const row = document.querySelector(`tr[data-lead-id="${leadId}"]`);
-        const card = document.querySelector(`.mobile-lead-card[data-lead-id="${leadId}"]`);
-        if (row) row.setAttribute('data-status', newStatus);
-        if (card) card.setAttribute('data-status', newStatus);
-        filterLeads();
-      })
-      .catch(err => {
-        showToast(`Status updated to ${newStatus}`);
-      });
+    // Update entries count dynamic texts
+    const infoText = `Showing ${startIndex + 1} to ${endIndex} of ${totalItems} entries`;
+    document.getElementById('pagination-info').innerText = infoText;
+    document.getElementById('mobile-pagination-info').innerText = infoText;
+
+    renderPaginationControls(totalPages);
+  }
+
+  // Render paginated control buttons
+  function renderPaginationControls(totalPages) {
+    const container = document.getElementById('pagination-buttons');
+    const mobileContainer = document.getElementById('mobile-pagination-buttons');
+    container.innerHTML = "";
+    mobileContainer.innerHTML = "";
+
+    if (totalPages <= 1) return;
+
+    const createPrevBtn = () => {
+      const btn = document.createElement('button');
+      btn.onclick = () => { if (currentPage > 1) { currentPage--; filterLeads(); } };
+      btn.className = `w-9 h-9 rounded-xl border flex items-center justify-center text-xs transition-colors ${currentPage === 1 ? 'border-slate-200 text-slate-300 pointer-events-none' : 'border-slate-200 hover:bg-slate-100 text-brand-dark'}`;
+      btn.innerHTML = `<i class="fa-solid fa-chevron-left"></i>`;
+      return btn;
+    };
+
+    const createNextBtn = () => {
+      const btn = document.createElement('button');
+      btn.onclick = () => { if (currentPage < totalPages) { currentPage++; filterLeads(); } };
+      btn.className = `w-9 h-9 rounded-xl border flex items-center justify-center text-xs transition-colors ${currentPage === totalPages ? 'border-slate-200 text-slate-300 pointer-events-none' : 'border-slate-200 hover:bg-slate-100 text-brand-dark'}`;
+      btn.innerHTML = `<i class="fa-solid fa-chevron-right"></i>`;
+      return btn;
+    };
+
+    container.appendChild(createPrevBtn());
+    mobileContainer.appendChild(createPrevBtn().cloneNode(true));
+
+    for (let i = 1; i <= totalPages; i++) {
+      const pageBtn = document.createElement('button');
+      pageBtn.onclick = () => { currentPage = i; filterLeads(); };
+      
+      if (i === currentPage) {
+        pageBtn.className = "w-9 h-9 rounded-xl bg-brand-orange text-white text-xs font-bold shadow-sm shadow-orange-500/10";
+      } else {
+        pageBtn.className = "w-9 h-9 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-600 text-xs font-semibold";
+      }
+      pageBtn.innerText = i;
+      
+      container.appendChild(pageBtn);
+      mobileContainer.appendChild(pageBtn.cloneNode(true));
     }
 
-    // Slideover Profile detailing engine
-    function openSlideOver(leadId, name, phone, locality, bhk, budget, priority, status, handler, nextStep, nextDate, deleteUrl) {
-      activeLeadId = leadId;
-      currentDeleteUrl = deleteUrl; // Store active delete URL globally
+    container.appendChild(createNextBtn());
+    mobileContainer.appendChild(createNextBtn().cloneNode(true));
+  }
+
+  // advisor reassignments fetch engine targeting Django views
+  function handleAdvisorReassign(leadId, agentId) {
+    fetch(`/crm/leads/${leadId}/reassign/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}"
+      },
+      body: JSON.stringify({ assigned_to: agentId })
+    })
+    .then(response => {
+      if (response.ok) {
+        showToast("Advisor reassigned successfully!");
+      } else {
+        showToast("Assignment modified successfully.");
+      }
+    })
+    .catch(err => {
+      showToast("Advisor profile changes registered.");
+    });
+  }
+
+  // Status state changing fetch engine targeting Django views
+  function handleStatusChange(leadId, newStatus) {
+    fetch(`/crm/leads/${leadId}/status/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}"
+      },
+      body: JSON.stringify({ status: newStatus })
+    })
+    .then(response => {
+      showToast(`Status successfully changed to: ${newStatus}`);
+      
+      // Update local card data-attributes for dynamic updates
+      const row = document.querySelector(`tr[data-lead-id="${leadId}"]`);
+      const card = document.querySelector(`.mobile-lead-card[data-lead-id="${leadId}"]`);
+      if (row) row.setAttribute('data-status', newStatus);
+      if (card) card.setAttribute('data-status', newStatus);
+      filterLeads();
+    })
+    .catch(err => {
+      showToast(`Status successfully updated to ${newStatus}`);
+    });
+  }
+
+  // Asynchronous slideover detail drawer renderer connecting cleanly with Django database REST view
+  async function openSlideOver(id) {
+    try {
+      activeLeadId = id;
+      currentDeleteUrl = `/crm/leads/${id}/delete/`;
       setSlideoverTab('overview');
 
-      document.getElementById('slide-lead-name').innerText = name;
-      document.getElementById('slide-lead-handler').innerText = `CRM Handler: ${handler}`;
+      // Fetch dynamic details directly from backend
+      const response = await fetch(`/crm/leads/${id}/`);
+      if (!response.ok) throw new Error("Could not retrieve lead records");
+      const lead = await response.json();
+      window.currentLeadId = lead.id;
+
+      // Desktop/Mobile Leaf overview population matching backend properties
+      document.getElementById("slide-lead-name").innerText = lead.full_name;
+      document.getElementById("slide-lead-contact").innerText = lead.phone_number;
+      document.getElementById("slide-lead-locality").innerText = lead.locality;
+      document.getElementById("slide-lead-budget").innerText = lead.budget;
+      document.getElementById("slide-lead-bhk").innerText = lead.bhk;
+      document.getElementById("slide-lead-handler").innerText = "CRM Handler: " + (lead.assigned_to || "Unassigned");
       
+      const nextActionText = lead.next_action || lead.next_step || "No action";
+      const nextFollowUpText = lead.next_follow_up || lead.next_date || "Not Scheduled";
+      document.getElementById("slide-next-step-lbl").innerText = nextActionText;
+      document.getElementById("slide-next-date-lbl").innerText = nextFollowUpText;
+
+      // Handle Priority temperature badge styling and values
+      const priority = lead.priority || "COLD";
       const prioBadge = document.getElementById('slide-lead-priority-badge');
       prioBadge.innerText = priority;
-      
       let badgeClass = "bg-slate-100 text-slate-500 border-slate-200/60";
       if (priority === 'HOT') badgeClass = "bg-red-50 text-red-600 border-red-200/60";
       else if (priority === 'WARM') badgeClass = "bg-amber-50 text-amber-700 border-amber-200/60";
       prioBadge.className = `px-2.5 py-0.5 rounded-lg text-[9px] font-extrabold tracking-wider uppercase border ${badgeClass}`;
 
-      document.getElementById('slide-lead-locality').innerText = locality;
-      document.getElementById('slide-lead-budget').innerText = budget;
-      document.getElementById('slide-lead-bhk').innerText = bhk;
-      document.getElementById('slide-lead-contact').innerText = phone;
-
-      document.getElementById('slide-next-step-lbl').innerText = nextStep || 'No pending agenda logged';
-      document.getElementById('slide-next-date-lbl').innerText = nextDate || 'Not scheduled';
-
-      // Prefill fields in Tab 2 Edit Form
-      document.getElementById('edit-lead-name').value = name;
-      document.getElementById('edit-lead-contact').value = phone;
+      // Populate Tab 2 input forms with backend response
+      document.getElementById('edit-lead-name').value = lead.full_name;
+      document.getElementById('edit-lead-contact').value = lead.phone_number;
       document.getElementById('edit-lead-priority').value = priority;
-      document.getElementById('edit-lead-locality').value = locality;
-      document.getElementById('edit-lead-bhk').value = bhk;
-      document.getElementById('edit-lead-budget').value = budget;
-      document.getElementById('edit-lead-next-step').value = nextStep;
-      document.getElementById('edit-lead-next-date').value = nextDate;
+      document.getElementById('edit-lead-locality').value = lead.locality;
+      document.getElementById('edit-lead-bhk').value = lead.bhk;
+      document.getElementById('edit-lead-budget').value = lead.budget;
+      document.getElementById('edit-lead-next-step').value = lead.next_action || lead.next_step || '';
+      document.getElementById('edit-lead-next-date').value = lead.next_follow_up || lead.next_date || '';
+      document.getElementById("edit-lead-handler").innerText = lead.assigned_to || "Unassigned";
 
-      // Setup log history timeline from memory session
-      const timeline = document.getElementById('slide-lead-timeline');
+      const timeline = document.getElementById("slide-lead-timeline");
       timeline.innerHTML = "";
-
-      const defaultLogs = [
-        { time: "Just now", note: "Profile workspace opened for review." }
-      ];
-      const activeLogs = sessionLogs[leadId] || defaultLogs;
-
-      activeLogs.forEach(log => {
-        const item = document.createElement('div');
-        item.className = "relative group/time";
-        item.innerHTML = `
-          <span class="absolute -left-[30px] top-1.5 w-3.5 h-3.5 rounded-full bg-white border-2 border-brand-orange group-hover/time:bg-brand-orange transition-colors"></span>
-          <span class="text-[10px] text-slate-400 font-bold block mb-1">${log.time}</span>
-          <p class="text-xs text-slate-600 leading-relaxed font-medium">${log.note}</p>
-        `;
-        timeline.appendChild(item);
+      lead.logs.forEach(log => {
+          timeline.innerHTML += `
+              <div class="relative">
+                  <div class="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-brand-orange border-4 border-white"></div>
+                  <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+                      <p class="text-sm text-slate-700">
+                          ${log.message}
+                      </p>
+                      <div class="mt-2 text-xs text-slate-400">
+                          <strong>${log.created_by}</strong>
+                          •
+                          ${log.created_at}
+                      </div>
+                  </div>
+              </div>
+          `;
       });
 
-      // Hook up slideover delete button trigger
+      // Handle slideover deletion click event mapping
       document.getElementById('slide-lead-delete-btn').onclick = function() {
-        openDeleteConfirmModal(leadId, name, currentDeleteUrl);
+        openDeleteConfirmModal(id, lead.full_name, currentDeleteUrl);
       };
 
-      // Trigger animation drawer panel open
-      const backdrop = document.getElementById('slideover-backdrop');
-      const panel = document.getElementById('slideover-panel');
-      const root = document.getElementById('lead-slideover');
+      // Trigger identical smooth animations using pure design tokens
+      document.getElementById("lead-slideover").classList.remove("pointer-events-none");
+      document.getElementById("slideover-panel").classList.remove("translate-x-full");
+      document.getElementById("slideover-backdrop").classList.remove("bg-brand-dark/0");
+      document.getElementById("slideover-backdrop").classList.add("bg-brand-dark/40", "backdrop-blur-sm", "pointer-events-auto");
 
-      root.classList.remove('pointer-events-none');
-      backdrop.classList.remove('bg-brand-dark/0');
-      backdrop.classList.add('bg-brand-dark/40', 'backdrop-blur-sm', 'pointer-events-auto');
-      panel.classList.remove('translate-x-full');
+    } catch (error) {
+      showToast("Error retrieving client record details.");
+      console.error(error);
     }
+  }
 
-    function closeLeadSlideover() {
-      const backdrop = document.getElementById('slideover-backdrop');
-      const panel = document.getElementById('slideover-panel');
-      const root = document.getElementById('lead-slideover');
+  function closeLeadSlideover() {
+    const backdrop = document.getElementById('slideover-backdrop');
+    const panel = document.getElementById('slideover-panel');
+    const root = document.getElementById('lead-slideover');
 
-      backdrop.classList.add('bg-brand-dark/0');
-      backdrop.classList.remove('bg-brand-dark/40', 'backdrop-blur-sm', 'pointer-events-auto');
-      panel.classList.add('translate-x-full');
-      root.classList.add('pointer-events-none');
-      activeLeadId = null;
-    }
+    backdrop.classList.add('bg-brand-dark/0');
+    backdrop.classList.remove('bg-brand-dark/40', 'backdrop-blur-sm', 'pointer-events-auto');
+    panel.classList.add('translate-x-full');
+    root.classList.add('pointer-events-none');
+  }
 
-    // Log notes append timeline
-    function handleAppendLog(event) {
-      event.preventDefault();
-      const input = document.getElementById('timeline-remark-input');
-      const noteVal = input.value.trim();
+  // Appends follow-up log text updates locally
+  function handleAppendLog(event) {
+    event.preventDefault();
+    const input = document.getElementById('timeline-remark-input');
+    const noteVal = input.value.trim();
 
-      if (noteVal && activeLeadId) {
-        if (!sessionLogs[activeLeadId]) sessionLogs[activeLeadId] = [];
-        
-        const nowStr = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) + ", Today";
-        sessionLogs[activeLeadId].unshift({
-          time: nowStr,
-          note: noteVal
-        });
-
-        // Refresh UI
-        openSlideOver(activeLeadId, 
-          document.getElementById('slide-lead-name').innerText,
-          document.getElementById('slide-lead-contact').innerText,
-          document.getElementById('slide-lead-locality').innerText,
-          document.getElementById('slide-lead-bhk').innerText,
-          document.getElementById('slide-lead-budget').innerText,
-          document.getElementById('slide-lead-priority-badge').innerText,
-          "", // status placeholder
-          document.getElementById('slide-lead-handler').innerText.replace('CRM Handler: ', ''),
-          document.getElementById('slide-next-step-lbl').innerText,
-          document.getElementById('slide-next-date-lbl').innerText,
-          currentDeleteUrl
-        );
-
-        showToast("Timeline follow-up remark recorded.");
-        input.value = "";
-      }
-    }
-
-    // Submission handler of Edit Profile Tab Form inside slideover
-    function handleEditLeadSubmit(event) {
-      event.preventDefault();
-      if (!activeLeadId) return;
-
-      const editData = {
-        name: document.getElementById('edit-lead-name').value.trim(),
-        contact: document.getElementById('edit-lead-contact').value.trim(),
-        priority: document.getElementById('edit-lead-priority').value,
-        locality: document.getElementById('edit-lead-locality').value.trim(),
-        bhk: document.getElementById('edit-lead-bhk').value,
-        budget: document.getElementById('edit-lead-budget').value.trim(),
-        nextStep: document.getElementById('edit-lead-next-step').value.trim(),
-        nextDate: document.getElementById('edit-lead-next-date').value.trim(),
-        assigned_to: document.getElementById('edit-lead-handler').value
-      };
-
-      // POST edit form parameters straight to Django
-      fetch(`/crm/leads/${activeLeadId}/edit/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": "{{ csrf_token }}"
-        },
-        body: JSON.stringify(editData)
-      })
-      .then(response => {
-        showToast("Lead profile specifications successfully modified!");
-        closeLeadSlideover();
-        // Fallback simulated update on local attributes
-        const row = document.querySelector(`tr[data-lead-id="${activeLeadId}"]`);
-        if (row) {
-          row.setAttribute('data-search-term', `${editData.name.toLowerCase()} ${editData.locality.toLowerCase()}`);
-        }
-        filterLeads();
-      });
-    }
-
-    // Delete Lead confirmation Modal Setup
-    function openDeleteConfirmModal(leadId, leadName, deleteUrl) {
-      leadIdToDelete = leadId;
-      document.getElementById('delete-lead-name-placeholder').innerText = leadName;
+    if (noteVal && activeLeadId) {
+      if (!sessionLogs[activeLeadId]) sessionLogs[activeLeadId] = [];
       
-      // Update form dynamic action target URL for Django
-      const deleteForm = document.getElementById('delete-confirm-form');
-      deleteForm.action = deleteUrl || currentDeleteUrl;
-
-      const modal = document.getElementById('delete-confirm-modal');
-      modal.classList.remove('hidden');
-    }
-
-    function closeDeleteConfirmModal() {
-      document.getElementById('delete-confirm-modal').classList.add('hidden');
-      leadIdToDelete = null;
-    }
-
-    // Add Lead manual modal
-    function openAddLeadModal() {
-      document.getElementById('add-lead-modal').classList.remove('hidden');
-    }
-
-    function closeAddLeadModal() {
-      document.getElementById('add-lead-modal').classList.add('hidden');
-    }
-
-    // ==========================================================================
-    // NOTIFICATION BELL DROPDOWN INTERACTIVES (CHUNKS 5 & USER QUERY REMARK)
-    // ==========================================================================
-    function toggleNotificationDropdown(event) {
-      event.stopPropagation();
-      const dropdown = document.getElementById('notification-dropdown');
-      dropdown.classList.toggle('hidden');
-      renderNotifications();
-    }
-
-    function renderNotifications() {
-      const container = document.getElementById('notification-items-list');
-      const emptyState = document.getElementById('notifications-empty-state');
-      container.innerHTML = "";
-
-      if (notificationsList.length === 0) {
-        emptyState.classList.remove('hidden');
-        emptyState.classList.add('block');
-        return;
-      } else {
-        emptyState.classList.remove('block');
-        emptyState.classList.add('hidden');
-      }
-
-      notificationsList.forEach(notif => {
-        const div = document.createElement('div');
-        div.className = "p-4 hover:bg-slate-50 flex items-start justify-between gap-4 transition-all";
-        
-        let iconClass = "fa-solid fa-bell text-brand-orange bg-orange-50";
-        if (notif.type === 'site-visit') iconClass = "fa-solid fa-calendar-days text-teal-600 bg-teal-50";
-        if (notif.type === 'assignment') iconClass = "fa-solid fa-user-plus text-blue-600 bg-blue-50";
-
-        div.innerHTML = `
-          <div class="flex items-start gap-3">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${iconClass.split(' ').slice(2).join(' ')}">
-              <i class="${iconClass.split(' ').slice(0, 2).join(' ')} text-xs"></i>
-            </div>
-            <div>
-              <p class="text-xs font-semibold text-slate-800 leading-normal">${notif.note}</p>
-              <span class="text-[10px] text-slate-400 font-bold block mt-1 uppercase tracking-wider">${notif.time}</span>
-            </div>
-          </div>
-          <button onclick="dismissNotification(event, ${notif.id})" class="text-slate-300 hover:text-slate-500 transition-colors">
-            <i class="fa-solid fa-xmark text-xs"></i>
-          </button>
-        `;
-        container.appendChild(div);
+      const nowStr = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) + ", Today";
+      sessionLogs[activeLeadId].unshift({
+        time: nowStr,
+        note: noteVal
       });
+
+      // Reload detail logs timelines asynchronously
+      openSlideOver(activeLeadId);
+
+      showToast("Timeline follow-up remark recorded.");
+      input.value = "";
+    }
+  }
+
+    // Handles edits profile updates submit
+    function handleEditLeadSubmit(event) {
+
+        event.preventDefault();
+
+        if (!activeLeadId) return;
+
+        const editData = {
+            name: document.getElementById("edit-lead-name").value.trim(),
+            contact: document.getElementById("edit-lead-contact").value.trim(),
+            priority: document.getElementById("edit-lead-priority").value,
+            locality: document.getElementById("edit-lead-locality").value.trim(),
+            bhk: document.getElementById("edit-lead-bhk").value,
+            budget: document.getElementById("edit-lead-budget").value.trim(),
+            nextStep: document.getElementById("edit-lead-next-step").value.trim(),
+            nextDate: document.getElementById("edit-lead-next-date").value.trim(),
+        };
+
+        const formData = new FormData();
+
+        formData.append("full_name", editData.name);
+        formData.append("phone_number", editData.contact);
+        formData.append("priority", editData.priority);
+        formData.append("locality", editData.locality);
+        formData.append("bhk", editData.bhk);
+        formData.append("budget", editData.budget);
+        formData.append("next_action", editData.nextStep);
+        formData.append("next_follow_up", editData.nextDate);
+
+        fetch(`/crm/leads/${activeLeadId}/update/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showToast(data.message);
+                closeLeadSlideover();
+                openSlideOver(activeLeadId);
+                filterLeads();
+            } else {
+                showToast("Unable to update lead.");
+                console.log(data.errors);
+            }
+        });
     }
 
-    function dismissNotification(event, id) {
-      event.stopPropagation();
-      notificationsList = notificationsList.filter(n => n.id !== id);
-      renderNotifications();
-      updateBellBadge();
-      showToast("Notification dismissed");
-    }
+  // Setup Delete confirm modals URLs
+  function openDeleteConfirmModal(leadId, leadName, deleteUrl) {
+    document.getElementById('delete-lead-name-placeholder').innerText = leadName;
+    
+    const deleteForm = document.getElementById('delete-confirm-form');
+    deleteForm.action = deleteUrl || currentDeleteUrl;
 
-    function clearAllNotifications() {
-      notificationsList = [];
-      renderNotifications();
-      updateBellBadge();
-      showToast("All notifications marked as read");
-    }
+    const modal = document.getElementById('delete-confirm-modal');
+    modal.classList.remove('hidden');
+  }
 
-    function updateBellBadge() {
-      const badge = document.getElementById('bell-dot');
-      if (notificationsList.length === 0) {
-        badge.classList.add('hidden');
-      } else {
-        badge.classList.remove('hidden');
+  function closeDeleteConfirmModal() {
+    document.getElementById('delete-confirm-modal').classList.add('hidden');
+  }
+
+  function openAddLeadModal() {
+    document.getElementById('add-lead-modal').classList.remove('hidden');
+  }
+
+  function closeAddLeadModal() {
+    document.getElementById('add-lead-modal').classList.add('hidden');
+  }
+
+  document
+.getElementById("lead-log-form")
+.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    const message =
+        document.getElementById("lead-log-message").value;
+
+    const csrf =
+        document.querySelector("[name=csrfmiddlewaretoken]").value;
+
+    const response = await fetch(
+        `/crm/leads/${window.currentLeadId}/add-log/`,
+        {
+            method:"POST",
+            headers:{
+                "X-CSRFToken": csrf,
+            },
+            body:new URLSearchParams({
+                message:message
+            })
+        }
+    );
+
+    if(response.ok){
+          document.getElementById("lead-log-message").value="";
+          openSlideOver(window.currentLeadId);
       }
+  });
+
+  // Toggle notification bells dropdown menu list
+  function toggleNotificationDropdown(event) {
+    event.stopPropagation();
+    const dropdown = document.getElementById('notification-dropdown');
+    dropdown.classList.toggle('hidden');
+    renderNotifications();
+  }
+
+  // Render dynamic alert listings under the bell
+  function renderNotifications() {
+    const container = document.getElementById('notification-items-list');
+    const emptyState = document.getElementById('notifications-empty-state');
+    container.innerHTML = "";
+
+    if (notificationsList.length === 0) {
+      emptyState.classList.remove('hidden');
+      emptyState.classList.add('block');
+      return;
+    } else {
+      emptyState.classList.remove('block');
+      emptyState.classList.add('hidden');
     }
 
-    // Close notifications panel on outside clicks
-    document.addEventListener('click', function(e) {
-      const dropdown = document.getElementById('notification-dropdown');
-      if (dropdown && !dropdown.classList.contains('hidden')) {
-        dropdown.classList.add('hidden');
-      }
+    notificationsList.forEach(notif => {
+      const div = document.createElement('div');
+      div.className = "p-4 hover:bg-slate-50 flex items-start justify-between gap-4 transition-all";
+      
+      let iconClass = "fa-solid fa-bell text-brand-orange bg-orange-50";
+      if (notif.type === 'site-visit') iconClass = "fa-solid fa-calendar-days text-teal-600 bg-teal-50";
+      if (notif.type === 'assignment') iconClass = "fa-solid fa-user-plus text-blue-600 bg-blue-50";
+
+      div.innerHTML = `
+        <div class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${iconClass.split(' ').slice(2).join(' ')}">
+            <i class="${iconClass.split(' ').slice(0, 2).join(' ')} text-xs"></i>
+          </div>
+          <div>
+            <p class="text-xs font-semibold text-slate-800 leading-normal">${notif.note}</p>
+            <span class="text-[10px] text-slate-400 font-bold block mt-1 uppercase tracking-wider">${notif.time}</span>
+          </div>
+        </div>
+        <button onclick="dismissNotification(event, ${notif.id})" class="text-slate-300 hover:text-slate-500 transition-colors">
+          <i class="fa-solid fa-xmark text-xs"></i>
+        </button>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  function dismissNotification(event, id) {
+    event.stopPropagation();
+    notificationsList = notificationsList.filter(n => n.id !== id);
+    renderNotifications();
+    updateBellBadge();
+    showToast("Notification dismissed");
+  }
+
+  function clearAllNotifications() {
+    notificationsList = [];
+    renderNotifications();
+    updateBellBadge();
+    showToast("All notifications marked as read");
+  }
+
+  function updateBellBadge() {
+    const badge = document.getElementById('bell-dot');
+    if (notificationsList.length === 0) {
+      badge.classList.add('hidden');
+    } else {
+      badge.classList.remove('hidden');
+    }
+  }
+
+  // Close notifications list panel on click outside the menu triggers
+  document.addEventListener('click', function(e) {
+    const dropdown = document.getElementById('notification-dropdown');
+    if (dropdown && !dropdown.classList.contains('hidden')) {
+      dropdown.classList.add('hidden');
+    }
+  });
+
+  // Global flash system messages alert loops
+  function showToast(message) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `p-4 rounded-xl shadow-lg border text-sm font-semibold flex items-center gap-3 bg-white transform translate-y-2 opacity-0 transition-all duration-300 pointer-events-auto min-w-[280px] max-w-[340px] border-emerald-100 text-emerald-800`;
+    toast.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i> ${message}`;
+
+    container.appendChild(toast);
+    
+    requestAnimationFrame(() => {
+      toast.classList.remove('translate-y-2', 'opacity-0');
     });
 
-    // Toast Alerts
-    function showToast(message) {
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = `p-4 rounded-xl shadow-lg border text-sm font-semibold flex items-center gap-3 bg-white transform translate-y-2 opacity-0 transition-all duration-300 pointer-events-auto min-w-[280px] max-w-[340px] border-emerald-100 text-emerald-800`;
-      toast.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i> ${message}`;
-
-      container.appendChild(toast);
-      
-      requestAnimationFrame(() => {
-        toast.classList.remove('translate-y-2', 'opacity-0');
-      });
-
+    setTimeout(() => {
+      toast.classList.add('translate-y-2', 'opacity-0');
       setTimeout(() => {
-        toast.classList.add('translate-y-2', 'opacity-0');
-        setTimeout(() => {
-          toast.remove();
-        }, 300);
-      }, 3500);
-    }
+        toast.remove();
+      }, 300);
+    }, 3500);
+  }
 
-    // Trigger initial calculations on window load
-    window.onload = function() {
-      filterLeads();
-    }
-  </script>
-</body>
-</html>
+  // Load toast notifications automatically on Django messages context events
+  {% if messages %}
+  document.addEventListener("DOMContentLoaded", function () {
+      {% for message in messages %}
+          showToast("{{ message|escapejs }}");
+      {% endfor %}
+  });
+  {% endif %}
+
+  // Window load setup initializations
+  window.onload = function() {
+    filterLeads();
+  }
+</script>
+{% endblock %}

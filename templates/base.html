@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="{% block html_class %}h-full bg-slate-50{% endblock %}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}QuickIndia Homes - Premium Real Estate{% endblock %}</title>
+  
+  <!-- Tailwind CSS CDN with Pristine Design Parity Config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              orange: '#F3811E',
+              orangeDark: '#D96E14',
+              slate: '#4B6584',
+              slateDark: '#35495E',
+              dark: '#1E272E',
+              light: '#F9F9F9',
+              border: '#E5E9F0'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            accent: ['Outfit', 'sans-serif'],
+            hindi: ['Noto Serif Devanagari', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Inter, Noto Serif Devanagari, Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+Devanagari:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons for modern UI symbols -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Link to central style assets / Custom page overrides -->
+  {% block extra_css %}{% endblock %}
+</head>
+<body class="{% block body_class %}h-full text-brand-dark font-sans antialiased overflow-hidden{% endblock %}">
+
+  <!-- Unified Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
+
+  <!-- Primary Page Body Content -->
+  {% block content %}{% endblock %}
+
+  <!-- Global scripts, utility libraries, and layout integrations -->
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

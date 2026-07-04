@@ -1,0 +1,48 @@
+<div class="flex-1 flex flex-col overflow-hidden relative">
+  
+  <!-- Top Dashboard Header Panel -->
+  <header class="h-20 bg-white border-b border-brand-border flex items-center justify-between px-4 sm:px-8 flex-shrink-0 relative z-20">
+    
+    <!-- Mobile Sidebar Toggler & Page Title -->
+    <div class="flex items-center gap-4">
+      <button onclick="toggleSidebar()" class="lg:hidden p-2 hover:bg-slate-100 rounded-lg text-brand-dark transition-colors" aria-label="Open sidebar menu">
+        <i class="fa-solid fa-bars text-xl"></i>
+      </button>
+      
+      <div class="flex items-center gap-3">
+        <h2 id="crm-view-title" class="font-accent font-extrabold text-xl sm:text-2xl text-brand-dark tracking-tight">Leads Directory</h2>
+      </div>
+    </div>
+
+    <!-- Notification Engine Area -->
+    <div class="flex items-center gap-3 relative">
+      <!-- Notification Bell Trigger Button -->
+      <button onclick="toggleNotificationDropdown(event)" class="w-10 h-10 rounded-xl hover:bg-slate-100 border border-slate-200/80 flex items-center justify-center text-slate-500 relative transition-all" title="View Notifications">
+        <i class="fa-regular fa-bell text-lg"></i>
+        <span id="bell-dot" class="absolute top-2 right-2 w-2 h-2 rounded-full bg-brand-orange animate-pulse"></span>
+      </button>
+
+      <!-- REAL-TIME INTERACTIVE NOTIFICATION POPUP (Toggled via JavaScript) -->
+      <div id="notification-dropdown" class="hidden absolute right-0 top-12 w-80 sm:w-96 bg-white rounded-2xl border border-slate-200 shadow-2xl z-50 overflow-hidden">
+        <div class="px-5 py-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+          <h4 class="font-accent font-extrabold text-sm text-brand-dark">CRM Notifications</h4>
+          <button onclick="clearAllNotifications()" class="text-[10px] font-extrabold uppercase text-brand-orange hover:text-brand-orangeDark transition-colors">
+            Mark all as read
+          </button>
+        </div>
+        
+        <!-- Interactive Notification Items dynamic slot -->
+        <div id="notification-items-list" class="max-h-[320px] overflow-y-auto custom-scroll divide-y divide-slate-100"></div>
+        
+        <!-- Empty State Node -->
+        <div id="notifications-empty-state" class="hidden p-8 text-center text-slate-400 text-xs font-semibold">
+          <i class="fa-regular fa-bell-slash text-2xl text-slate-300 block mb-2"></i>
+          <span>All caught up! No unread notifications.</span>
+        </div>
+      </div>
+    </div>
+
+  </header>
+
+  <!-- Scrollable Main Viewport Container -->
+  <main class="flex-1 overflow-y-auto custom-scroll bg-[#F8FAFC] p-4 sm:p-8">

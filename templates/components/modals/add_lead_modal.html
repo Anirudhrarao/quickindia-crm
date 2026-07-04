@@ -1,0 +1,95 @@
+<!-- ==========================================================================
+    ADD LEAD MANUALLY DIALOG/MODAL
+    ========================================================================== -->
+<div id="add-lead-modal" class="hidden fixed inset-0 bg-brand-dark/60 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
+  <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-brand-border relative animate-[scaleIn_0.3s_ease-out]">
+    
+    <!-- Close Button -->
+    <button onclick="closeAddLeadModal()" class="absolute top-5 right-5 text-slate-400 hover:text-brand-dark transition-colors" aria-label="Close modal">
+      <i class="fa-solid fa-xmark text-lg"></i>
+    </button>
+    
+    <!-- Modal Header -->
+    <div class="mb-6">
+      <span class="text-brand-orange font-bold text-xs uppercase tracking-wider block mb-1">Inbound CRM Stream</span>
+      <h3 class="font-accent text-2xl font-extrabold text-brand-dark tracking-tight">Manual Lead Intake</h3>
+    </div>
+    
+    <!-- Lead Intake Form -->
+    <form id="add-lead-form" method="post" action="{% url 'leads:create' %}" class="space-y-4">
+      {% csrf_token %}
+      
+      <!-- Client Name Input -->
+      <div class="flex flex-col gap-1.5">
+        <label class="text-[10px] uppercase font-bold text-slate-400">Client Name</label>
+        <input name="full_name" type="text" required placeholder="Ex: Amit Sharma" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange bg-white shadow-sm">
+      </div>
+      
+      <!-- Contact & Advisor Assignment Row -->
+      <div class="grid grid-cols-2 gap-4">
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[10px] uppercase font-bold text-slate-400">Contact Number</label>
+          <input name="phone_number" type="tel" required placeholder="Ex: +91 99999 99999" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm">
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[10px] uppercase font-bold text-slate-400">Assign Advisor</label>
+          <div class="relative">
+            <select name="assigned_to" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm pr-8">
+              {% for employee in employees %}
+                  <option
+                      value="{{ employee.id }}"
+                      {% if employee.id == request.user.id %}selected{% endif %}
+                  >
+                      {{ employee.get_full_name|default:employee.username }}
+                  </option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Locality & BHK Configuration Row -->
+      <div class="grid grid-cols-3 gap-2.5">
+        <div class="flex flex-col gap-1.5 col-span-2">
+          <label class="text-[10px] uppercase font-bold text-slate-400">Preferred Locality</label>
+          <input name="locality" type="text" required placeholder="Ex: Whitefield" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm">
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[10px] uppercase font-bold text-slate-400">BHK</label>
+          <div class="relative">
+            <select name="bhk" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm pr-8">
+              <option value="1 BHK">1 BHK</option>
+              <option value="2 BHK">2 BHK</option>
+              <option value="3 BHK+">3 BHK+</option>
+              <option value="4 BHK">4 BHK</option>
+              <option value="5 BHK">5 BHK</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Budget & Priority Level Row -->
+      <div class="grid grid-cols-2 gap-4">
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[10px] uppercase font-bold text-slate-400">Target Budget</label>
+          <input name="budget" type="text" required placeholder="Ex: ₹1.85 Cr" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm">
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[10px] uppercase font-bold text-slate-400">Priority Level</label>
+          <div class="relative">
+            <select name="priority" class="custom-select-indicator appearance-none w-full border border-slate-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white shadow-sm pr-8">
+              <option value="HOT">Hot</option>
+              <option value="WARM">Warm</option>
+              <option value="COLD">Cold</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Submit Action Button -->
+      <button type="submit" class="w-full bg-brand-orange hover:bg-brand-orangeDark text-white py-3.5 px-6 rounded-xl font-accent font-bold text-sm tracking-wide shadow-lg shadow-orange-500/20 transition-all duration-300">
+        Inject Into Lead Board
+      </button>
+    </form>
+  </div>
+</div>
