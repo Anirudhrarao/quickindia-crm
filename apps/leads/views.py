@@ -248,7 +248,7 @@ class LeadAssignView(View):
             LeadLog.objects.create(
                 lead=lead,
                 created_by=request.user,
-                message=f"Lead reassigned from '{old_employee}' to '{employee.get_full_name()}'.",
+                message=f"Lead reassigned from '{old_employee}' to '{employee.get_full_name() or employee.username}'.",
             )
         return JsonResponse(
             {
