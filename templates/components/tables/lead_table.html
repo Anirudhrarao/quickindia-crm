@@ -92,17 +92,34 @@
               </td>
 
               <!-- Core Lead Status Stages -->
-              <td class="py-4.5 px-6">
-                  <div class="relative max-w-[150px]">
-                      <select onchange="handleStatusChange('{{ lead.id }}', this.value)" class="custom-select-indicator appearance-none text-xs font-bold pl-3.5 pr-8 py-2 rounded-xl focus:outline-none focus:ring-1 focus:ring-brand-orange/20 cursor-pointer border {% if lead.status == 'NEW' %}bg-blue-50 text-blue-700 border-blue-200{% elif lead.status == 'CALLED' %}bg-amber-50 text-amber-700 border-amber-200{% elif lead.status == 'INTERESTED' %}bg-indigo-50 text-indigo-700 border-indigo-200{% elif lead.status == 'SITE_VISIT' %}bg-purple-50 text-purple-700 border-purple-200{% else %}bg-emerald-50 text-emerald-700 border-emerald-200{% endif %}">
-                          <option value="NEW" {% if lead.status == 'NEW' %}selected{% endif %}>New</option>
-                          <option value="CALLED" {% if lead.status == 'CALLED' %}selected{% endif %}>Called</option>
-                          <option value="INTERESTED" {% if lead.status == 'INTERESTED' %}selected{% endif %}>Interested</option>
-                          <option value="SITE_VISIT" {% if lead.status == 'SITE_VISIT' %}selected{% endif %}>Site Visit Scheduled</option>
-                          <option value="CLOSED" {% if lead.status == 'CLOSED' %}selected{% endif %}>Closed</option>
-                      </select>
-                  </div>
-              </td>
+                <td class="py-4.5 px-6">
+                    <div class="relative w-full max-w-[170px]">
+                        <select
+                            onchange="handleStatusChange('{{ lead.id }}', this)"
+                            class="appearance-none w-full text-xs font-bold pl-3.5 pr-10 py-2 rounded-xl border cursor-pointer transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-orange/20
+                            {% if lead.status == 'NEW' %}
+                                bg-blue-50 text-blue-700 border-blue-200
+                            {% elif lead.status == 'CALLED' %}
+                                bg-amber-50 text-amber-700 border-amber-200
+                            {% elif lead.status == 'INTERESTED' %}
+                                bg-indigo-50 text-indigo-700 border-indigo-200
+                            {% elif lead.status == 'SITE_VISIT' %}
+                                bg-purple-50 text-purple-700 border-purple-200
+                            {% else %}
+                                bg-emerald-50 text-emerald-700 border-emerald-200
+                            {% endif %}">
+                            <option value="NEW" {% if lead.status == "NEW" %}selected{% endif %}>New</option>
+                            <option value="CALLED" {% if lead.status == "CALLED" %}selected{% endif %}>Called</option>
+                            <option value="INTERESTED" {% if lead.status == "INTERESTED" %}selected{% endif %}>Interested</option>
+                            <option value="SITE_VISIT" {% if lead.status == "SITE_VISIT" %}selected{% endif %}>Site Visit Scheduled</option>
+                            <option value="CLOSED" {% if lead.status == "CLOSED" %}selected{% endif %}>Closed</option>
+                        </select>
+                        <!-- Dropdown Arrow -->
+                        <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
+                        </div>
+                    </div>
+                </td>
 
               <!-- Action Operations -->
               <td class="py-5 px-6 text-right">

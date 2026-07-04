@@ -368,30 +368,96 @@
     });
   }
 
-  // Status state changing fetch engine targeting Django views
-  function handleStatusChange(leadId, newStatus) {
-    fetch(`/crm/leads/${leadId}/status/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": "{{ csrf_token }}"
-      },
-      body: JSON.stringify({ status: newStatus })
-    })
-    .then(response => {
-      showToast(`Status successfully changed to: ${newStatus}`);
-      
-      // Update local card data-attributes for dynamic updates
-      const row = document.querySelector(`tr[data-lead-id="${leadId}"]`);
-      const card = document.querySelector(`.mobile-lead-card[data-lead-id="${leadId}"]`);
-      if (row) row.setAttribute('data-status', newStatus);
-      if (card) card.setAttribute('data-status', newStatus);
-      filterLeads();
-    })
-    .catch(err => {
-      showToast(`Status successfully updated to ${newStatus}`);
-    });
-  }
+    // Status state changing fetch engine targeting Django views
+    function handleStatusChange(leadId, selectElement) {
+        const newStatus = selectElement.value;
+        const formData = new FormData();
+        formData.append("status", newStatus);
+        fetch(`/crm/leads/${leadId}/status/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showToast(data.message);
+                // Update dropdown color immediately
+                selectElement.classList.remove(
+                    "bg-blue-50", "text-blue-700", "border-blue-200",
+                    "bg-amber-50", "text-amber-700", "border-amber-200",
+                    "bg-indigo-50", "text-indigo-700", "border-indigo-200",
+                    "bg-purple-50", "text-purple-700", "border-purple-200",
+                    "bg-emerald-50", "text-emerald-700", "border-emerald-200"
+                );
+
+                switch (newStatus) {
+
+                    case "NEW":
+                        selectElement.classList.add(
+                            "bg-blue-50",
+                            "text-blue-700",
+                            "border-blue-200"
+                        );
+                        break;
+
+                    case "CALLED":
+                        selectElement.classList.add(
+                            "bg-amber-50",
+                            "text-amber-700",
+                            "border-amber-200"
+                        );
+                        break;
+
+                    case "INTERESTED":
+                        selectElement.classList.add(
+                            "bg-indigo-50",
+                            "text-indigo-700",
+                            "border-indigo-200"
+                        );
+                        break;
+
+                    case "SITE_VISIT":
+                        selectElement.classList.add(
+                            "bg-purple-50",
+                            "text-purple-700",
+                            "border-purple-200"
+                        );
+                        break;
+
+                    case "CLOSED":
+                        selectElement.classList.add(
+                            "bg-emerald-50",
+                            "text-emerald-700",
+                            "border-emerald-200"
+                        );
+                        break;
+                }
+                const row = document.querySelector(
+                    `tr[data-lead-id="${leadId}"]`
+                );
+                const card = document.querySelector(
+                    `.mobile-lead-card[data-lead-id="${leadId}"]`
+                );
+                if (row) {
+                    row.setAttribute("data-status", newStatus);
+                }
+                if (card) {
+                    card.setAttribute("data-status", newStatus);
+                }
+                filterLeads();
+            } else {
+                showToast("Unable to update status.");
+                console.log(data.errors);
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            showToast("Something went wrong.");
+        });
+}
 
   // Asynchronous slideover detail drawer renderer connecting cleanly with Django database REST view
   async function openSlideOver(id) {

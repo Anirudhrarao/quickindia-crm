@@ -167,6 +167,47 @@ class LeadUpdateView(View):
             status=400,
         )
 
+class LeadStatusUpdateView(View):
+    """
+    Update lead status.
+    """
+
+    def post(self, request, pk):
+
+        lead = get_object_or_404(
+            Lead,
+            pk=pk,
+        )
+
+        new_status = request.POST.get("status")
+
+        if not new_status:
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Status is required.",
+                },
+                status=400,
+            )
+
+        old_status = lead.get_status_display()
+
+        if lead.status != new_status:
+            lead.status = new_status
+            lead.save(update_fields=["status"])
+
+            LeadLog.objects.create(
+                lead=lead,
+                created_by=request.user,
+                message=f"Status changed from '{old_status}' to '{lead.get_status_display()}'.",
+            )
+        return JsonResponse(
+            {
+                "success": True,
+                "message": "Status updated successfully.",
+            }
+        )
+
     
 class AddLeadLogView(View):
     """
