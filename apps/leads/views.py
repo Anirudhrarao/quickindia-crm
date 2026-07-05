@@ -6,6 +6,9 @@ from django.http import JsonResponse
 from apps.accounts.models import User
 
 from apps.leads.models import Lead, LeadLog
+from apps.notifications.models import Notification
+from apps.notifications.services import NotificationService
+
 from apps.leads.forms import LeadForm, LeadUpdateForm
 
 def delete_lead(request, pk):
@@ -46,6 +49,16 @@ class LeadCreateView(View):
                 created_by=request.user,
                 message="Lead created.",
             )
+
+            if lead.assigned_to:
+                NotificationService.create(
+                    recipient=lead.assigned_to,
+                    title="New Lead Assigned",
+                    message=f"{lead.full_name} has been assigned to you.",
+                    notification_type=Notification.Type.LEAD_ASSIGNED,
+                    lead=lead,
+                    action_url=f"/crm/leads/{lead.id}/",
+                )
 
             messages.success(
                 request,
@@ -245,6 +258,16 @@ class LeadAssignView(View):
         if lead.assigned_to != employee:
             lead.assigned_to = employee
             lead.save(update_fields=["assigned_to"])
+
+            NotificationService.create(
+                recipient=employee,
+                title="New Lead Assigned",
+                message=f"{lead.full_name} has been assigned to you.",
+                notification_type=Notification.Type.LEAD_ASSIGNED,
+                lead=lead,
+                action_url=f"/crm/leads/{lead.id}/",
+            )
+
             LeadLog.objects.create(
                 lead=lead,
                 created_by=request.user,

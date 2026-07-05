@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from apps.leads.models import Lead
 from apps.accounts.models import User
+from apps.notifications.models import Notification
 
 
 
@@ -21,9 +22,36 @@ def crm(request):
         is_active = True,
     ).order_by("first_name")
 
+    notifications = (
+        Notification.objects
+        .filter(recipient=request.user)
+        .order_by("-created_at")[:10]
+    )
+
+    unread_notification_count = (
+        Notification.objects
+        .filter(
+            recipient=request.user,
+            is_read=False,
+        )
+        .count()
+    )
+
+    notification_data = []
+
+    for notification in notifications:
+        notification_data.append({
+            "id": notification.id,
+            "note": notification.message,
+            "time": notification.created_at.strftime("%d %b %Y %I:%M %p"),
+            "type": notification.notification_type.lower(),
+        })
+
     context = {
         "leads": leads,
-        "employees": employees
+        "employees": employees,
+        "notifications": notification_data,
+        "unread_notification_count": unread_notification_count,
     }
 
     return render(request, "dashboard/crm.html", context)

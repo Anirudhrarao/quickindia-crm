@@ -13,13 +13,18 @@
         <h2 id="crm-view-title" class="font-accent font-extrabold text-xl sm:text-2xl text-brand-dark tracking-tight">Leads Directory</h2>
       </div>
     </div>
-
     <!-- Notification Engine Area -->
     <div class="flex items-center gap-3 relative">
       <!-- Notification Bell Trigger Button -->
       <button onclick="toggleNotificationDropdown(event)" class="w-10 h-10 rounded-xl hover:bg-slate-100 border border-slate-200/80 flex items-center justify-center text-slate-500 relative transition-all" title="View Notifications">
         <i class="fa-regular fa-bell text-lg"></i>
-        <span id="bell-dot" class="absolute top-2 right-2 w-2 h-2 rounded-full bg-brand-orange animate-pulse"></span>
+        {% if unread_notification_count > 0 %}
+        <span
+            id="bell-dot"
+            class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-brand-orange text-white text-[10px] font-bold flex items-center justify-center">
+            {{ unread_notification_count }}
+        </span>
+        {% endif %}
       </button>
 
       <!-- REAL-TIME INTERACTIVE NOTIFICATION POPUP (Toggled via JavaScript) -->

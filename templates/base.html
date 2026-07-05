@@ -44,6 +44,7 @@
   <!-- Link to central style assets / Custom page overrides -->
   {% block extra_css %}{% endblock %}
 </head>
+{{ notifications|json_script:"notifications-data" }}
 <body class="{% block body_class %}h-full text-brand-dark font-sans antialiased overflow-hidden{% endblock %}">
 
   <!-- Unified Toast Notification Container -->

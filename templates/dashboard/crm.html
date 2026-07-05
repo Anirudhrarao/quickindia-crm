@@ -94,11 +94,9 @@
   let sidebarCollapsed = false;
 
   // Live workspace notifications list (Mock state data structure matching design specifications)
-  let notificationsList = [
-    { id: 1, type: "site-visit", note: "Site Tour scheduled tomorrow morning at 11:00 AM", time: "10 mins ago" },
-    { id: 2, type: "assignment", note: "New high-intent lead allocated to your portfolio", time: "1 hour ago" },
-    { id: 3, type: "system", note: "Transaction stamp clearance verified", time: "Yesterday" }
-  ];
+  const notificationsList = JSON.parse(
+      document.getElementById("notifications-data").textContent
+  );
 
   function toggleSidebarCollapse() {
     sidebarCollapsed = !sidebarCollapsed;
@@ -711,8 +709,21 @@
       div.className = "p-4 hover:bg-slate-50 flex items-start justify-between gap-4 transition-all";
       
       let iconClass = "fa-solid fa-bell text-brand-orange bg-orange-50";
-      if (notif.type === 'site-visit') iconClass = "fa-solid fa-calendar-days text-teal-600 bg-teal-50";
-      if (notif.type === 'assignment') iconClass = "fa-solid fa-user-plus text-blue-600 bg-blue-50";
+
+      if (notif.type === "lead_assigned")
+          iconClass = "fa-solid fa-user-plus text-blue-600 bg-blue-50";
+
+      if (notif.type === "lead_reassigned")
+          iconClass = "fa-solid fa-users text-indigo-600 bg-indigo-50";
+
+      if (notif.type === "follow_up")
+          iconClass = "fa-solid fa-calendar-days text-teal-600 bg-teal-50";
+
+      if (notif.type === "overdue")
+          iconClass = "fa-solid fa-triangle-exclamation text-red-600 bg-red-50";
+
+      if (notif.type === "system")
+          iconClass = "fa-solid fa-gear text-slate-600 bg-slate-100";
 
       div.innerHTML = `
         <div class="flex items-start gap-3">
