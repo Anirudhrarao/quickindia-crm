@@ -26,6 +26,8 @@ urlpatterns = [
     path("", include("apps.accounts.urls")),
     path("crm/", include("apps.dashboard.urls")),
     path("crm/leads/", include("apps.leads.urls")),
+    path("crm/notifications/",include("apps.notifications.urls"),
+),
 ]
 
 if settings.DEBUG:

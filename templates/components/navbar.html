@@ -19,11 +19,11 @@
       <button onclick="toggleNotificationDropdown(event)" class="w-10 h-10 rounded-xl hover:bg-slate-100 border border-slate-200/80 flex items-center justify-center text-slate-500 relative transition-all" title="View Notifications">
         <i class="fa-regular fa-bell text-lg"></i>
         {% if unread_notification_count > 0 %}
-        <span
-            id="bell-dot"
-            class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-brand-orange text-white text-[10px] font-bold flex items-center justify-center">
-            {{ unread_notification_count }}
-        </span>
+          <span
+              id="notification-count"
+              class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-brand-orange text-white text-[10px] font-bold flex items-center justify-center">
+              {{ unread_notification_count }}
+          </span>
         {% endif %}
       </button>
 

@@ -41,11 +41,12 @@ def crm(request):
 
     for notification in notifications:
         notification_data.append({
-            "id": notification.id,
-            "note": notification.message,
-            "time": notification.created_at.strftime("%d %b %Y %I:%M %p"),
-            "type": notification.notification_type.lower(),
-        })
+                "id": notification.id,
+                "lead_id": notification.lead.id if notification.lead else None,
+                "note": notification.message,
+                "time": notification.created_at.strftime("%d %b %Y %I:%M %p"),
+                "type": notification.notification_type.lower(),
+            })
 
     context = {
         "leads": leads,

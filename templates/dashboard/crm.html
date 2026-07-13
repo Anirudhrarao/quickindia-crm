@@ -94,7 +94,7 @@
   let sidebarCollapsed = false;
 
   // Live workspace notifications list (Mock state data structure matching design specifications)
-  const notificationsList = JSON.parse(
+  let notificationsList = JSON.parse(
       document.getElementById("notifications-data").textContent
   );
 
@@ -681,6 +681,42 @@
       }
   });
 
+
+  // Read notification
+  async function openNotification(notificationId, leadId) {
+
+      const formData = new FormData();
+
+      const response = await fetch(
+          `/crm/notifications/${notificationId}/read/`,
+          {
+              method: "POST",
+              headers: {
+                  "X-CSRFToken": "{{ csrf_token }}"
+              },
+              body: formData
+          }
+      );
+
+      if (response.ok) {
+
+          notificationsList = notificationsList.filter(
+              notification => notification.id !== notificationId
+          );
+
+          renderNotifications();
+
+          updateBellBadge();
+      }
+
+      document
+          .getElementById("notification-dropdown")
+          .classList.add("hidden");
+
+      openSlideOver(leadId);
+
+  }
+
   // Toggle notification bells dropdown menu list
   function toggleNotificationDropdown(event) {
     event.stopPropagation();
@@ -726,7 +762,7 @@
           iconClass = "fa-solid fa-gear text-slate-600 bg-slate-100";
 
       div.innerHTML = `
-        <div class="flex items-start gap-3">
+        <div onclick="openNotification(${notif.id}, ${notif.lead_id})" class="flex items-start gap-3 cursor-pointer flex-1">
           <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${iconClass.split(' ').slice(2).join(' ')}">
             <i class="${iconClass.split(' ').slice(0, 2).join(' ')} text-xs"></i>
           </div>
@@ -759,12 +795,13 @@
   }
 
   function updateBellBadge() {
-    const badge = document.getElementById('bell-dot');
-    if (notificationsList.length === 0) {
-      badge.classList.add('hidden');
-    } else {
-      badge.classList.remove('hidden');
-    }
+      const badge = document.getElementById("notification-count");
+      if (!badge) return;
+      if (notificationsList.length === 0) {
+          badge.remove();
+      } else {
+          badge.innerText = notificationsList.length;
+      }
   }
 
   // Close notifications list panel on click outside the menu triggers
