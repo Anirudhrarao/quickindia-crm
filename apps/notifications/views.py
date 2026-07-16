@@ -26,3 +26,24 @@ class MarkNotificationReadView(View):
                 "success": True,
             }
         )
+    
+class MarkAllNotificationsReadView(View):
+    """
+    Mark all notifications as read.
+    """
+
+    def post(self, request):
+
+        Notification.objects.filter(
+            recipient=request.user,
+            is_read=False,
+        ).update(
+            is_read=True,
+        )
+
+        return JsonResponse(
+            {
+                "success": True,
+                "message": "All notifications marked as read.",
+            }
+        )

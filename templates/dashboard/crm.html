@@ -772,26 +772,54 @@
           </div>
         </div>
         <button onclick="dismissNotification(event, ${notif.id})" class="text-slate-300 hover:text-slate-500 transition-colors">
-          <i class="fa-solid fa-xmark text-xs"></i>
+            <i class="fa-solid fa-xmark text-xs"></i>
         </button>
       `;
       container.appendChild(div);
     });
   }
 
-  function dismissNotification(event, id) {
-    event.stopPropagation();
-    notificationsList = notificationsList.filter(n => n.id !== id);
-    renderNotifications();
-    updateBellBadge();
-    showToast("Notification dismissed");
+  async function dismissNotification(event, notificationId) {
+      event.stopPropagation();
+      const formData = new FormData();
+      const response = await fetch(
+          `/crm/notifications/${notificationId}/read/`,
+          {
+              method: "POST",
+              headers: {
+                  "X-CSRFToken": "{{ csrf_token }}"
+              },
+              body: formData
+          }
+      );
+      if (response.ok) {
+          notificationsList = notificationsList.filter(
+              notification => notification.id !== notificationId
+          );
+          renderNotifications();
+          updateBellBadge();
+          showToast("Notification dismissed.");
+      }
   }
 
-  function clearAllNotifications() {
-    notificationsList = [];
-    renderNotifications();
-    updateBellBadge();
-    showToast("All notifications marked as read");
+  async function clearAllNotifications() {
+      const formData = new FormData();
+      const response = await fetch(
+          "/crm/notifications/read-all/",
+          {
+              method: "POST",
+              headers: {
+                  "X-CSRFToken": "{{ csrf_token }}"
+              },
+              body: formData
+          }
+      );
+      if (response.ok) {
+          notificationsList = [];
+          renderNotifications();
+          updateBellBadge();
+          showToast("All notifications marked as read.");
+      }
   }
 
   function updateBellBadge() {
