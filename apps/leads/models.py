@@ -1,12 +1,49 @@
 from django.conf import settings
 from django.db import models
-
+from django.utils import timezone
 
 class Lead(models.Model):
     """
     Stores customer lead information.
     """
+    def get_follow_up_status(self):
+        """
+        Returns:
+            NO_FOLLOW_UP
+            UPCOMING
+            DUE_TODAY
+            OVERDUE
+        """
 
+        if not self.next_follow_up:
+            return "NO_FOLLOW_UP"
+
+        today = timezone.localdate()
+
+        if self.next_follow_up < today:
+            return "OVERDUE"
+
+        if self.next_follow_up == today:
+            return "DUE_TODAY"
+
+        return "UPCOMING"
+
+
+    def is_overdue(self):
+        return self.get_follow_up_status() == "OVERDUE"
+
+
+    def is_due_today(self):
+        return self.get_follow_up_status() == "DUE_TODAY"
+
+
+    def is_upcoming(self):
+        return self.get_follow_up_status() == "UPCOMING"
+
+
+    def has_follow_up(self):
+        return self.next_follow_up is not None
+    
     class Status(models.TextChoices):
         NEW = "NEW", "New"
         CALLED = "CALLED", "Called"

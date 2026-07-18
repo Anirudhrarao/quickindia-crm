@@ -3,7 +3,6 @@
     ========================================================================== -->
 
 <!-- SEARCH FILTERS DECK -->
-{% include "components/search_filter.html" %}
 
 <div id="crm-leads-view" class="block space-y-6 max-w-7xl mx-auto animate-[fadeIn_0.4s_ease-out]">
 
@@ -12,43 +11,45 @@
     <div class="overflow-x-auto custom-scroll">
       <table class="w-full text-left border-collapse">
         <thead>
-          <tr class="bg-slate-50/80 border-b border-slate-200">
-            <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Lead Info & Priority</th>
-            <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Property Interest</th>
-            <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Timestamp</th>
-            <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Assigned Advisor</th>
-            <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Status State</th>
-            <th class="py-4.5 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">Actions</th>
+          <tr class="bg-white border-b border-slate-100">
+            <th class="py-5 px-6 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Lead Info & Priority</th>
+            <!-- <th class="py-5 px-6 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Property Interest</th> -->
+            <!-- <th class="py-5 px-6 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Timestamp</th> -->
+            <th class="py-5 px-6 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Follow-up Attention</th>
+            <th class="py-5 px-6 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Assigned Advisor</th>
+            <th class="py-5 px-6 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Status State</th>
+            <th class="py-5 px-6 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest text-right">Actions</th>
           </tr>
         </thead>
         <tbody id="leads-table-body" class="divide-y divide-slate-100">
           {% for lead in leads %}
-          <tr class="hover:bg-slate-50/40 transition-colors group/row" data-lead-id="{{ lead.id }}" data-status="{{ lead.status }}" data-search-term="{{ lead.full_name|lower }} {{ lead.locality|lower }} {{ lead.assigned_to.get_full_name|lower|default:lead.assigned_to.username|lower }}">
+          <tr class="hover:bg-slate-50/30 transition-colors group/row" data-lead-id="{{ lead.id }}" data-status="{{ lead.status }}" data-search-term="{{ lead.full_name|lower }} {{ lead.locality|lower }} {{ lead.assigned_to.get_full_name|lower|default:lead.assigned_to.username|lower }}">
               
               <!-- Lead Profile & Priority Temperature Badge -->
               <td class="py-5 px-6">
-                  <div class="flex items-start gap-3">
-                      <div class="pt-0.5">
+                  <div class="flex items-center gap-4">
+                      <!-- Fixed width container for pill badges to keep name column vertically aligned -->
+                      <div class="w-16 shrink-0">
                           {% if lead.priority == "HOT" %}
-                              <span class="inline-flex items-center justify-center text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-lg border bg-red-50 text-red-600 border-red-200/60 tracking-wider shadow-sm">
+                              <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2.5 py-1 rounded bg-red-50 text-red-500 border border-red-100 tracking-wider">
                                   {{ lead.get_priority_display }}
                               </span>
                           {% elif lead.priority == "WARM" %}
-                              <span class="inline-flex items-center justify-center text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-lg border bg-amber-50 text-amber-700 border-amber-200/60 tracking-wider shadow-sm">
+                              <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2.5 py-1 rounded bg-amber-50 text-amber-500 border border-amber-100 tracking-wider">
                                   {{ lead.get_priority_display }}
                               </span>
                           {% else %}
-                              <span class="inline-flex items-center justify-center text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-lg border bg-slate-100 text-slate-500 border-slate-200/60 tracking-wider shadow-sm">
+                              <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2.5 py-1 rounded bg-slate-50 text-slate-400 border border-slate-100 tracking-wider">
                                   {{ lead.get_priority_display }}
                               </span>
                           {% endif %}
                       </div>
-                      <div>
-                          <div onclick="openSlideOver('{{ lead.id }}') " class="font-bold text-slate-900 group-hover/row:text-brand-orange transition-all duration-300 cursor-pointer text-sm font-accent tracking-tight leading-snug">
+                      <div class="min-w-0">
+                          <div onclick="openSlideOver('{{ lead.id }}')" class="font-bold text-slate-900 group-hover/row:text-brand-orange transition-all duration-300 cursor-pointer text-sm font-accent tracking-tight leading-snug truncate">
                               {{ lead.full_name }}
                           </div>
-                          <div class="text-xs text-slate-400 mt-1 flex items-center gap-1.5 font-medium">
-                              <i class="fa-solid fa-phone text-[10px]"></i>
+                          <div class="text-xs text-slate-400 mt-0.5 flex items-center gap-1.5 font-medium">
+                              <i class="fa-solid fa-phone text-[9px]"></i>
                               {{ lead.phone_number }}
                           </div>
                       </div>
@@ -56,31 +57,55 @@
               </td>
 
               <!-- Real Estate Requirements -->
-              <td class="py-5 px-6 text-sm">
-                  <div class="font-semibold text-slate-800 font-accent">
+              <!-- <td class="py-5 px-6 text-sm">
+                  <div class="font-bold text-slate-800 font-accent leading-normal">
                       {{ lead.locality }}
                   </div>
-                  <div class="text-xs text-slate-400 mt-1 flex items-center gap-1.5 font-medium">
-                      <i class="fa-solid fa-bed text-brand-orange"></i>
-                      {{ lead.bhk }}
-                      <span class="text-slate-300">•</span>
-                      <i class="fa-solid fa-wallet text-brand-orange"></i>
-                      Budget: {{ lead.budget }}
+                  <div class="text-[11px] text-slate-400 mt-1 flex items-center gap-1.5 font-medium">
+                      <i class="fa-solid fa-bed text-brand-orange text-[10px]"></i>
+                      <span class="text-slate-600 font-semibold">{{ lead.bhk }}</span>
+                      <span class="text-slate-200 font-light">•</span>
+                      <i class="fa-solid fa-wallet text-brand-orange text-[10px]"></i>
+                      <span class="text-slate-600 font-semibold">Budget: {{ lead.budget }}</span>
                   </div>
-              </td>
+              </td> -->
 
               <!-- CRM Ingestion Timestamp -->
-              <td class="py-5 px-6 text-xs text-slate-400 font-medium">
-                  <div class="flex items-center gap-1.5">
-                      <i class="fa-regular fa-clock"></i>
-                      {{ lead.created_at|date:"d M Y H:i" }}
+              <!-- <td class="py-5 px-6 text-xs text-slate-400 font-medium">
+                  <div class="flex items-center gap-2">
+                      <i class="fa-regular fa-clock text-[13px] text-slate-300"></i>
+                      <span>{{ lead.created_at|date:"d M Y" }}</span>
+                      <span class="text-slate-300">{{ lead.created_at|date:"H:i" }}</span>
                   </div>
+              </td> -->
+
+              <!-- Attention/Follow-up status badge column -->
+              <td class="py-5 px-6 text-xs font-semibold">
+                  {% with status=lead.get_follow_up_status %}
+                      {% if status == "OVERDUE" %}
+                          <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2.5 py-1 rounded bg-red-50 text-red-500 border border-red-100 tracking-wider">
+                              Overdue
+                          </span>
+                      {% elif status == "DUE_TODAY" %}
+                          <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2.5 py-1 rounded bg-amber-50 text-amber-500 border border-amber-100 tracking-wider">
+                              Due Today
+                          </span>
+                      {% elif status == "UPCOMING" %}
+                          <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2.5 py-1 rounded bg-emerald-50 text-emerald-500 border border-emerald-100 tracking-wider">
+                              Upcoming
+                          </span>
+                      {% else %}
+                          <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2.5 py-1 rounded bg-slate-50 text-slate-400 border border-slate-100 tracking-wider">
+                              No Follow-up
+                          </span>
+                      {% endif %}
+                  {% endwith %}
               </td>
 
               <!-- Interactive Advisor Assignment -->
               <td class="py-5 px-6">
-                  <div class="relative max-w-[170px]">
-                      <select onchange="handleAdvisorReassign('{{ lead.id }}', this.value)" class="custom-select-indicator appearance-none w-full text-xs font-semibold pl-3 pr-8 py-2 bg-slate-50 border border-slate-200/80 rounded-xl hover:border-slate-300 focus:outline-none focus:ring-1 focus:ring-brand-orange cursor-pointer">
+                  <div class="relative max-w-[150px]">
+                      <select onchange="handleAdvisorReassign('{{ lead.id }}', this.value)" class="appearance-none w-full text-xs font-semibold pl-3 pr-8 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-100 hover:border-slate-200 text-slate-600 rounded-xl focus:outline-none focus:ring-1 focus:ring-brand-orange/30 cursor-pointer transition-all">
                           {% for employee in employees %}
                               <option value="{{ employee.id }}" {% if lead.assigned_to.id == employee.id %}selected{% endif %}>
                                   {{ employee.get_full_name|default:employee.username }}
@@ -91,48 +116,48 @@
                               </option>
                           {% endfor %}
                       </select>
-                      <i class="fa-solid fa-user-pen absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[10px] pointer-events-none"></i>
+                      <i class="fa-solid fa-user-pen absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-[10px] pointer-events-none"></i>
                   </div>
               </td>
 
               <!-- Core Lead Status Stages -->
-                <td class="py-4.5 px-6">
-                    <div class="relative w-full max-w-[170px]">
-                        <select
-                            onchange="handleStatusChange('{{ lead.id }}', this)"
-                            class="appearance-none w-full text-xs font-bold pl-3.5 pr-10 py-2 rounded-xl border cursor-pointer transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-orange/20
-                            {% if lead.status == 'NEW' %}
-                                bg-blue-50 text-blue-700 border-blue-200
-                            {% elif lead.status == 'CALLED' %}
-                                bg-amber-50 text-amber-700 border-amber-200
-                            {% elif lead.status == 'INTERESTED' %}
-                                bg-indigo-50 text-indigo-700 border-indigo-200
-                            {% elif lead.status == 'SITE_VISIT' %}
-                                bg-purple-50 text-purple-700 border-purple-200
-                            {% else %}
-                                bg-emerald-50 text-emerald-700 border-emerald-200
-                            {% endif %}">
-                            <option value="NEW" {% if lead.status == "NEW" %}selected{% endif %}>New</option>
-                            <option value="CALLED" {% if lead.status == "CALLED" %}selected{% endif %}>Called</option>
-                            <option value="INTERESTED" {% if lead.status == "INTERESTED" %}selected{% endif %}>Interested</option>
-                            <option value="SITE_VISIT" {% if lead.status == "SITE_VISIT" %}selected{% endif %}>Site Visit Scheduled</option>
-                            <option value="CLOSED" {% if lead.status == "CLOSED" %}selected{% endif %}>Closed</option>
-                        </select>
-                        <!-- Dropdown Arrow -->
-                        <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
-                            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
-                        </div>
-                    </div>
-                </td>
+              <td class="py-5 px-6">
+                  <div class="relative w-full max-w-[150px]">
+                      <select
+                          onchange="handleStatusChange('{{ lead.id }}', this)"
+                          class="appearance-none w-full text-xs font-extrabold pl-3.5 pr-8 py-2 rounded-xl border cursor-pointer transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-orange/10
+                          {% if lead.status == 'NEW' %}
+                              bg-blue-50 text-blue-600 border-blue-100
+                          {% elif lead.status == 'CALLED' %}
+                              bg-amber-50 text-amber-600 border-amber-100
+                          {% elif lead.status == 'INTERESTED' %}
+                              bg-indigo-50 text-indigo-600 border-indigo-100
+                          {% elif lead.status == 'SITE_VISIT' %}
+                              bg-purple-50 text-purple-600 border-purple-100
+                          {% else %}
+                              bg-emerald-50 text-emerald-600 border-emerald-100
+                          {% endif %}">
+                          <option value="NEW" {% if lead.status == "NEW" %}selected{% endif %}>New</option>
+                          <option value="CALLED" {% if lead.status == "CALLED" %}selected{% endif %}>Called</option>
+                          <option value="INTERESTED" {% if lead.status == "INTERESTED" %}selected{% endif %}>Interested</option>
+                          <option value="SITE_VISIT" {% if lead.status == "SITE_VISIT" %}selected{% endif %}>Site Visit Scheduled</option>
+                          <option value="CLOSED" {% if lead.status == "CLOSED" %}selected{% endif %}>Closed</option>
+                      </select>
+                      <!-- Dropdown Arrow -->
+                      <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                          <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
+                      </div>
+                  </div>
+              </td>
 
               <!-- Action Operations -->
               <td class="py-5 px-6 text-right">
-                  <div class="flex items-center justify-end gap-2">
-                      <button onclick="openSlideOver('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{{ lead.phone_number|escapejs }}', '{{ lead.locality|escapejs }}', '{{ lead.bhk|escapejs }}', '{{ lead.budget|escapejs }}', '{{ lead.priority|escapejs }}', '{{ lead.status|escapejs }}', '{{ lead.assigned_to.get_full_name|default:lead.assigned_to.username|escapejs }}', '{{ lead.next_step|default:''|escapejs }}', '{{ lead.next_date|default:''|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="text-xs font-bold text-slate-500 hover:text-brand-orange bg-slate-100 hover:bg-orange-50 w-8.5 h-8.5 rounded-xl transition-all border border-slate-200 hover:border-brand-orange/30 flex items-center justify-center shadow-sm" title="Open Full Lead Form">
-                          <i class="fa-solid fa-expand"></i>
+                  <div class="flex items-center justify-end gap-2.5">
+                      <button onclick="openSlideOver('{{ lead.id }}')" class="text-xs font-bold text-slate-400 hover:text-brand-orange bg-slate-50 hover:bg-orange-50/50 w-8.5 h-8.5 rounded-xl transition-all border border-slate-100 hover:border-brand-orange/20 flex items-center justify-center shadow-sm" title="Open Full Lead Form">
+                          <i class="fa-solid fa-expand text-[11px]"></i>
                       </button>
-                      <button onclick="openDeleteConfirmModal('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="text-xs font-bold text-slate-400 hover:text-red-500 bg-slate-100 hover:bg-red-50 w-8.5 h-8.5 rounded-xl transition-all border border-slate-200 hover:border-red-200 flex items-center justify-center shadow-sm" title="Delete Lead Record">
-                          <i class="fa-solid fa-trash-can"></i>
+                      <button onclick="openDeleteConfirmModal('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="text-xs font-bold text-slate-400 hover:text-red-500 bg-slate-50 hover:bg-rose-50/50 w-8.5 h-8.5 rounded-xl transition-all border border-slate-100 hover:border-red-100 flex items-center justify-center shadow-sm" title="Delete Lead Record">
+                          <i class="fa-solid fa-trash-can text-[11px]"></i>
                       </button>
                   </div>
               </td>
@@ -140,12 +165,13 @@
           {% empty %}
           <!-- Empty State fallback inside Table structure -->
           <tr id="table-empty-fallback-row">
-              <td colspan="6" class="text-center py-16 text-slate-500 font-medium bg-white">
+              <td colspan="7" class="text-center py-20 text-slate-500 font-medium bg-white">
                   <div class="flex flex-col items-center justify-center">
-                      <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 mb-2 border border-slate-100">
-                          <i class="fa-regular fa-folder-open text-lg"></i>
+                      <div class="w-14 h-14 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 mb-3 border border-slate-100">
+                          <i class="fa-regular fa-folder-open text-xl"></i>
                       </div>
-                      <p class="text-sm">No leads currently logged in the directory.</p>
+                      <p class="text-sm font-semibold text-slate-800">No leads currently logged in the directory.</p>
+                      <p class="text-xs text-slate-400 mt-1">Please insert a lead manually or test integration streams.</p>
                   </div>
               </td>
           </tr>
@@ -153,12 +179,13 @@
           
           <!-- Unified script-targeted zero matches container -->
           <tr id="table-empty-state" class="hidden">
-              <td colspan="6" class="text-center py-16 text-slate-500 font-medium bg-white">
+              <td colspan="7" class="text-center py-20 text-slate-500 font-medium bg-white">
                   <div class="flex flex-col items-center justify-center">
-                      <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 mb-2 border border-slate-100">
-                          <i class="fa-regular fa-folder-open text-lg"></i>
+                      <div class="w-14 h-14 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 mb-3 border border-slate-100">
+                          <i class="fa-solid fa-magnifying-glass-chart text-xl"></i>
                       </div>
-                      <p class="text-sm">No matching search query entries found.</p>
+                      <p class="text-sm font-semibold text-slate-800">No matching search query entries found.</p>
+                      <p class="text-xs text-slate-400 mt-1">Verify spelling, area queries, or status filters.</p>
                   </div>
               </td>
           </tr>
@@ -167,8 +194,8 @@
     </div>
     
     <!-- Table Pagination Footer Deck -->
-    <div class="px-6 py-4 border-t border-slate-200 bg-slate-50/80 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-slate-500 font-medium">
-      <div id="pagination-info">Showing entries</div>
+    <div class="px-6 py-4 border-t border-slate-100 bg-white flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-500 font-medium">
+      <div id="pagination-info" class="text-slate-400 font-semibold tracking-wider uppercase text-[10px]">Showing entries</div>
       <div class="flex items-center gap-1.5" id="pagination-buttons">
         <!-- Buttons dynamically managed by JS client pagination -->
       </div>
@@ -179,58 +206,81 @@
   <div class="block md:hidden space-y-4">
     <div id="leads-mobile-container" class="space-y-4">
       {% for lead in leads %}
-      <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4 mobile-lead-card" data-lead-id="{{ lead.id }}" data-status="{{ lead.status }}" data-search-term="{{ lead.full_name|lower }} {{ lead.locality|lower }} {{ lead.assigned_to.get_full_name|lower|default:lead.assigned_to.username|lower }}">
+      <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-4 mobile-lead-card" data-lead-id="{{ lead.id }}" data-status="{{ lead.status }}" data-search-term="{{ lead.full_name|lower }} {{ lead.locality|lower }} {{ lead.assigned_to.get_full_name|lower|default:lead.assigned_to.username|lower }}">
           
           <div class="flex justify-between items-start gap-4">
-              <div>
-                  {% if lead.priority == "HOT" %}
-                      <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md border bg-red-50 text-red-600 border-red-200/60 mb-1.5 tracking-wider">
-                          {{ lead.get_priority_display }}
-                      </span>
-                  {% elif lead.priority == "WARM" %}
-                      <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md border bg-amber-50 text-amber-700 border-amber-200/60 mb-1.5 tracking-wider">
-                          {{ lead.get_priority_display }}
-                      </span>
-                  {% else %}
-                      <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md border bg-slate-100 text-slate-500 border-slate-200/60 mb-1.5 tracking-wider">
-                          {{ lead.get_priority_display }}
-                      </span>
-                  {% endif %}
+              <div class="min-w-0">
+                  <div class="flex flex-wrap items-center gap-1.5 mb-2">
+                      {% if lead.priority == "HOT" %}
+                          <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2 py-0.5 rounded bg-red-50 text-red-500 border border-red-100 tracking-wider">
+                              {{ lead.get_priority_display }}
+                          </span>
+                      {% elif lead.priority == "WARM" %}
+                          <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2 py-0.5 rounded bg-amber-50 text-amber-500 border-amber-100 tracking-wider">
+                              {{ lead.get_priority_display }}
+                          </span>
+                      {% else %}
+                          <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2 py-0.5 rounded bg-slate-50 text-slate-400 border border-slate-100 tracking-wider">
+                              {{ lead.get_priority_display }}
+                          </span>
+                      {% endif %}
+                      
+                      <!-- Mobile attention badge inclusion -->
+                      {% with status=lead.get_follow_up_status %}
+                          {% if status == "OVERDUE" %}
+                              <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2 py-0.5 rounded bg-rose-50 text-red-500 border border-red-100 tracking-wider">
+                                  Overdue
+                              </span>
+                          {% elif status == "DUE_TODAY" %}
+                              <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2 py-0.5 rounded bg-amber-50 text-amber-500 border border-amber-100 tracking-wider">
+                                  Due Today
+                              </span>
+                          {% elif status == "UPCOMING" %}
+                              <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2 py-0.5 rounded bg-emerald-50 text-emerald-500 border-emerald-100 tracking-wider">
+                                  Upcoming
+                              </span>
+                          {% else %}
+                              <span class="inline-flex items-center justify-center text-[9px] font-extrabold uppercase px-2 py-0.5 rounded bg-slate-50 text-slate-400 border border-slate-100 tracking-wider">
+                                  No Follow-up
+                              </span>
+                          {% endif %}
+                      {% endwith %}
+                  </div>
                   
-                  <h4 onclick="openSlideOver('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{{ lead.phone_number|escapejs }}', '{{ lead.locality|escapejs }}', '{{ lead.bhk|escapejs }}', '{{ lead.budget|escapejs }}', '{{ lead.priority|escapejs }}', '{{ lead.status|escapejs }}', '{{ lead.assigned_to.get_full_name|default:lead.assigned_to.username|escapejs }}', '{{ lead.next_step|default:''|escapejs }}', '{{ lead.next_date|default:''|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="font-bold text-slate-900 text-base font-accent cursor-pointer hover:text-brand-orange transition-colors">
+                  <h4 onclick="openSlideOver('{{ lead.id }}')" class="font-bold text-slate-900 text-base font-accent cursor-pointer hover:text-brand-orange transition-colors truncate">
                       {{ lead.full_name }}
                   </h4>
-                  <p class="text-xs text-slate-400 mt-0.5 flex items-center gap-1.5">
-                      <i class="fa-solid fa-phone"></i> {{ lead.phone_number }}
+                  <p class="text-xs text-slate-400 mt-1 flex items-center gap-1.5 font-medium">
+                      <i class="fa-solid fa-phone text-[10px]"></i> {{ lead.phone_number }}
                   </p>
               </div>
               
               <div class="flex gap-1.5 shrink-0">
-                  <button onclick="openSlideOver('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{{ lead.phone_number|escapejs }}', '{{ lead.locality|escapejs }}', '{{ lead.bhk|escapejs }}', '{{ lead.budget|escapejs }}', '{{ lead.priority|escapejs }}', '{{ lead.status|escapejs }}', '{{ lead.assigned_to.get_full_name|default:lead.assigned_to.username|escapejs }}', '{{ lead.next_step|default:''|escapejs }}', '{{ lead.next_date|default:''|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 text-slate-500 hover:text-brand-orange flex items-center justify-center text-xs">
-                      <i class="fa-solid fa-expand"></i>
+                  <button onclick="openSlideOver('{{ lead.id }}')" class="w-8.5 h-8.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-400 hover:text-brand-orange flex items-center justify-center text-xs shadow-sm">
+                      <i class="fa-solid fa-expand text-[10px]"></i>
                   </button>
-                  <button onclick="openDeleteConfirmModal('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 text-slate-400 hover:text-red-500 flex items-center justify-center text-xs">
-                      <i class="fa-solid fa-trash-can"></i>
+                  <button onclick="openDeleteConfirmModal('{{ lead.id }}', '{{ lead.full_name|escapejs }}', '{% url 'leads:delete' lead.id %}')" class="w-8.5 h-8.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-400 hover:text-red-500 flex items-center justify-center text-xs shadow-sm">
+                      <i class="fa-solid fa-trash-can text-[10px]"></i>
                   </button>
               </div>
           </div>
           
-          <div class="grid grid-cols-2 gap-3 pt-3.5 border-t border-slate-100 text-xs text-slate-600">
+          <div class="grid grid-cols-2 gap-4 pt-3.5 border-t border-slate-100 text-xs text-slate-600">
               <div>
-                  <span class="text-[10px] text-slate-400 font-semibold block mb-0.5">LOCALITY</span>
-                  <strong class="text-slate-800">{{ lead.locality }}</strong>
+                  <span class="text-[9px] text-slate-400 font-extrabold uppercase tracking-wider block mb-0.5">LOCALITY</span>
+                  <strong class="text-slate-800 font-bold font-accent">{{ lead.locality }}</strong>
               </div>
               <div>
-                  <span class="text-[10px] text-slate-400 block mb-0.5">REQUIREMENTS</span>
-                  <strong class="text-slate-800">{{ lead.bhk }} • Budget: {{ lead.budget }}</strong>
+                  <span class="text-[9px] text-slate-400 font-extrabold uppercase tracking-wider block mb-0.5">REQUIREMENTS</span>
+                  <strong class="text-slate-800 font-bold font-accent">{{ lead.bhk }} • {{ lead.budget }}</strong>
               </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-3 pt-3.5 border-t border-slate-100">
+          <div class="grid grid-cols-2 gap-4 pt-3.5 border-t border-slate-100">
               <div>
-                  <label class="text-[9px] text-slate-400 font-bold block mb-1">ASSIGNED ADVISOR</label>
+                  <label class="text-[9px] text-slate-400 font-extrabold uppercase tracking-wider block mb-1">ASSIGNED ADVISOR</label>
                   <div class="relative">
-                      <select onchange="handleAdvisorReassign('{{ lead.id }}', this.value)" class="custom-select-indicator appearance-none w-full text-xs font-semibold pl-2 pr-6 py-1.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none bg-white">
+                      <select onchange="handleAdvisorReassign('{{ lead.id }}', this.value)" class="appearance-none w-full text-xs font-semibold pl-2 pr-6 py-1.5 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none">
                           {% for employee in employees %}
                               <option value="{{ employee.id }}" {% if lead.assigned_to.id == employee.id %}selected{% endif %}>
                                   {{ employee.get_full_name|default:employee.username }}
@@ -241,23 +291,25 @@
                               </option>
                           {% endfor %}
                       </select>
+                      <i class="fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[8px] pointer-events-none"></i>
                   </div>
               </div>
               <div>
-                  <label class="text-[9px] text-slate-400 font-bold block mb-1">STATUS</label>
+                  <label class="text-[9px] text-slate-400 font-extrabold uppercase tracking-wider block mb-1">STATUS</label>
                   <div class="relative">
-                      <select onchange="handleStatusChange('{{ lead.id }}', this.value)" class="custom-select-indicator appearance-none w-full text-xs font-bold pl-2 pr-6 py-1.5 border rounded-xl focus:outline-none {{ lead.status|lower }} {% if lead.status == 'NEW' %}bg-blue-50 text-blue-700 border-blue-200{% elif lead.status == 'CALLED' %}bg-amber-50 text-amber-700 border-amber-200{% elif lead.status == 'INTERESTED' %}bg-indigo-50 text-indigo-700 border-indigo-200{% elif lead.status == 'SITE_VISIT' %}bg-purple-50 text-purple-700 border-purple-200{% else %}bg-emerald-50 text-emerald-700 border-emerald-200{% endif %}">
+                      <select onchange="handleStatusChange('{{ lead.id }}', this.value)" class="appearance-none w-full text-xs font-bold pl-2 pr-6 py-1.5 border rounded-xl focus:outline-none {{ lead.status|lower }} {% if lead.status == 'NEW' %}bg-blue-50 text-blue-600 border-blue-100{% elif lead.status == 'CALLED' %}bg-amber-50 text-amber-600 border-amber-100{% elif lead.status == 'INTERESTED' %}bg-indigo-50 text-indigo-600 border-indigo-100{% elif lead.status == 'SITE_VISIT' %}bg-purple-50 text-purple-600 border-purple-100{% else %}bg-emerald-50 text-emerald-600 border-emerald-100{% endif %}">
                           <option value="NEW" {% if lead.status == 'NEW' %}selected{% endif %}>New</option>
                           <option value="CALLED" {% if lead.status == 'CALLED' %}selected{% endif %}>Called</option>
                           <option value="INTERESTED" {% if lead.status == 'INTERESTED' %}selected{% endif %}>Interested</option>
                           <option value="SITE_VISIT" {% if lead.status == 'SITE_VISIT' %}selected{% endif %}>Site Visit Scheduled</option>
                           <option value="CLOSED" {% if lead.status == 'CLOSED' %}selected{% endif %}>Closed</option>
                       </select>
+                      <i class="fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[8px] pointer-events-none"></i>
                   </div>
               </div>
           </div>
-          <div class="text-[10px] text-slate-400 pt-1 flex items-center justify-between font-medium">
-              <span>CRM Database Intake</span>
+          <div class="text-[9px] text-slate-400 pt-1 flex items-center justify-between font-bold uppercase tracking-wider">
+              <span>Database Intake</span>
               <span>{{ lead.created_at|date:"d M Y H:i" }}</span>
           </div>
       </div>
@@ -265,8 +317,8 @@
     </div>
     
     <!-- Mobile Pagination Footer Bar -->
-    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-3 items-center text-sm text-slate-500 font-medium mt-4">
-      <div id="mobile-pagination-info">Showing entries</div>
+    <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex flex-col gap-3 items-center text-xs text-slate-500 font-medium mt-4">
+      <div id="mobile-pagination-info" class="text-slate-400 font-bold uppercase tracking-wider text-[10px]">Showing entries</div>
       <div class="flex items-center gap-1.5" id="mobile-pagination-buttons">
         <!-- Mobile Buttons dynamically loaded -->
       </div>

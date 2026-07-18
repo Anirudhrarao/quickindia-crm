@@ -1,0 +1,135 @@
+<div id="crm-followups-section" class="max-w-7xl mx-auto mt-12 mb-6 animate-[fadeIn_0.5s_ease-out]">
+  
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-2">
+    
+    <!-- Metric Card 1: Due Today -->
+    <div onclick="filterLeadsByFollowupCard('DUE_TODAY')" class="bg-white hover:bg-slate-50/50 border border-slate-200/80 p-5 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group flex items-start justify-between">
+      <div class="space-y-1">
+        <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Due Today</span>
+        <h4 class="font-accent font-extrabold text-3xl text-brand-dark group-hover:text-brand-orange transition-colors">
+          {{ followups_count.due_today|default:"0" }}
+        </h4>
+        <p class="text-xs text-brand-slate font-medium">Need immediate attention</p>
+      </div>
+      <div class="w-11 h-11 rounded-2xl bg-orange-50 text-brand-orange flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform duration-300">
+        <i class="fa-solid fa-fire text-base"></i>
+      </div>
+    </div>
+
+    <!-- Metric Card 2: Overdue -->
+    <div onclick="filterLeadsByFollowupCard('OVERDUE')" class="bg-white hover:bg-slate-50/50 border border-slate-200/80 p-5 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group flex items-start justify-between">
+      <div class="space-y-1">
+        <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Overdue</span>
+        <h4 class="font-accent font-extrabold text-3xl text-brand-dark group-hover:text-red-500 transition-colors">
+          {{ followups_count.overdue|default:"0" }}
+        </h4>
+        <p class="text-xs text-brand-slate font-medium">Past scheduled follow-ups</p>
+      </div>
+      <div class="w-11 h-11 rounded-2xl bg-rose-50 text-red-500 flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform duration-300">
+        <i class="fa-solid fa-circle-exclamation text-base"></i>
+      </div>
+    </div>
+
+    <!-- Metric Card 3: Upcoming -->
+    <div onclick="filterLeadsByFollowupCard('UPCOMING')" class="bg-white hover:bg-slate-50/50 border border-slate-200/80 p-5 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group flex items-start justify-between">
+      <div class="space-y-1">
+        <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Upcoming</span>
+        <h4 class="font-accent font-extrabold text-3xl text-brand-dark group-hover:text-teal-600 transition-colors">
+          {{ followups_count.upcoming|default:"0" }}
+        </h4>
+        <p class="text-xs text-brand-slate font-medium">Scheduled for future dates</p>
+      </div>
+      <div class="w-11 h-11 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform duration-300">
+        <i class="fa-solid fa-calendar-check text-base"></i>
+      </div>
+    </div>
+
+    <!-- Metric Card 4: No Follow-up -->
+    <div onclick="filterLeadsByFollowupCard('NONE')" class="bg-white hover:bg-slate-50/50 border border-slate-200/80 p-5 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group flex items-start justify-between">
+      <div class="space-y-1">
+        <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">No Follow-up</span>
+        <h4 class="font-accent font-extrabold text-3xl text-brand-dark group-hover:text-emerald-500 transition-colors">
+          {{ followups_count.none|default:"0" }}
+        </h4>
+        <p class="text-xs text-brand-slate font-medium">Clients up-to-date</p>
+      </div>
+      <div class="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform duration-300">
+        <i class="fa-solid fa-circle-check text-base"></i>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  /**
+   * Automatically sets the existing filter values of your lead board's status dropdown 
+   * and runs the existing filter logic when metrics cards are clicked.
+   */
+  function filterLeadsByFollowupCard(statusKey) {
+    const mainFilter = document.getElementById('lead-filter-status');
+    if (!mainFilter) return;
+
+    // Map card click states directly to status select categories if appropriate
+    if (statusKey === 'DUE_TODAY' || statusKey === 'OVERDUE' || statusKey === 'UPCOMING' || statusKey === 'NONE') {
+      // Find rows in standard lead board matching follow-up context and trigger local search filtration
+      const desktopRows = document.querySelectorAll('#leads-table-body tr');
+      const mobileCards = document.querySelectorAll('.mobile-lead-card');
+      const emptyState = document.getElementById('table-empty-state');
+      
+      let visibleCount = 0;
+
+      // Filter desktop rows based on internal attention badge match
+      desktopRows.forEach(row => {
+        if (row.id === 'table-empty-fallback-row' || row.id === 'table-empty-state') return;
+        
+        // Find inside column 4 or status matching
+        const cellText = row.innerText.toUpperCase();
+        let matchesCard = false;
+        
+        if (statusKey === 'DUE_TODAY' && cellText.includes('DUE TODAY')) matchesCard = true;
+        else if (statusKey === 'OVERDUE' && cellText.includes('OVERDUE')) matchesCard = true;
+        else if (statusKey === 'UPCOMING' && cellText.includes('UPCOMING')) matchesCard = true;
+        else if (statusKey === 'NONE' && (cellText.includes('NO FOLLOW-UP') || cellText.includes('NO FOLLOW_UP'))) matchesCard = true;
+
+        if (matchesCard) {
+          row.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+
+      // Filter mobile cards
+      mobileCards.forEach(card => {
+        const cardText = card.innerText.toUpperCase();
+        let matchesCard = false;
+        
+        if (statusKey === 'DUE_TODAY' && cardText.includes('DUE TODAY')) matchesCard = true;
+        else if (statusKey === 'OVERDUE' && cardText.includes('OVERDUE')) matchesCard = true;
+        else if (statusKey === 'UPCOMING' && cardText.includes('UPCOMING')) matchesCard = true;
+        else if (statusKey === 'NONE' && (cardText.includes('NO FOLLOW-UP') || cardText.includes('NO FOLLOW_UP'))) matchesCard = true;
+
+        if (matchesCard) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      // Handle Empty States
+      if (visibleCount === 0) {
+        if (emptyState) emptyState.classList.remove('hidden');
+      } else {
+        if (emptyState) emptyState.classList.add('hidden');
+      }
+      
+      // Notify user via dynamic toast system
+      if (typeof showToast === 'function') {
+        showToast(`Filtered leads list by follow-up type: ${statusKey.replace('_', ' ')}`);
+      }
+    }
+  }
+</script>
+

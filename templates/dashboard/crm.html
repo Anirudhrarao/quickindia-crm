@@ -24,8 +24,12 @@
       
       <!-- PAGE CRUMBS AND HEADING CONTEXT -->
       {% include "components/page_header.html" %}
+      {% include "components/followups.html" %}
 
-
+      <!-- SEARCH FILTERS DECK -->
+      <div id="crm-search-filter-section" class="block">
+        {% include "components/search_filter.html" %}
+      </div>
 
       <!-- DYNAMIC TABULAR VIEWPORT -->
       {% include "components/tables/lead_table.html" %}
@@ -133,16 +137,36 @@
 
     const titleNode = document.getElementById('crm-view-title');
     const crumbsNode = document.getElementById('breadcrumbs-active-tab');
+    const followupsSection = document.getElementById('crm-followups-section');
+    const searchFilterSection = document.getElementById('crm-search-filter-section');
     
     if (navKey === 'leads') {
       titleNode.innerText = 'Leads Directory';
       crumbsNode.innerText = 'Leads Directory';
-    } else if (navKey === 'property') {
-      titleNode.innerText = 'Add Property';
-      crumbsNode.innerText = 'Add Property';
-    } else if (navKey === 'performance') {
-      titleNode.innerText = 'Performance';
-      crumbsNode.innerText = 'Performance';
+      if (followupsSection) {
+        followupsSection.classList.remove('hidden');
+        followupsSection.classList.add('block');
+      }
+      if (searchFilterSection) {
+        searchFilterSection.classList.remove('hidden');
+        searchFilterSection.classList.add('block');
+      }
+    } else {
+      if (followupsSection) {
+        followupsSection.classList.remove('block');
+        followupsSection.classList.add('hidden');
+      }
+      if (searchFilterSection) {
+        searchFilterSection.classList.remove('block');
+        searchFilterSection.classList.add('hidden');
+      }
+      if (navKey === 'property') {
+        titleNode.innerText = 'Add Property';
+        crumbsNode.innerText = 'Add Property';
+      } else if (navKey === 'performance') {
+        titleNode.innerText = 'Performance';
+        crumbsNode.innerText = 'Performance';
+      }
     }
 
     // Reset sidebar items highlights

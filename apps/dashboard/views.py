@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from apps.leads.models import Lead
 from apps.accounts.models import User
 from apps.notifications.models import Notification
+from django.utils import timezone
 
 
 
@@ -50,12 +51,37 @@ def crm(request):
                 "time": notification.created_at.strftime("%d %b %Y %I:%M %p"),
                 "type": notification.notification_type.lower(),
             })
+        
+    today = timezone.localdate()
+
+    followups_count = {
+        "due_today": 0,
+        "overdue": 0,
+        "upcoming": 0,
+        "none": 0,
+    }
+
+    for lead in leads:
+        status = lead.get_follow_up_status()
+
+        if status == "DUE_TODAY":
+            followups_count["due_today"] += 1
+
+        elif status == "OVERDUE":
+            followups_count["overdue"] += 1
+
+        elif status == "UPCOMING":
+            followups_count["upcoming"] += 1
+
+        else:
+            followups_count["none"] += 1
 
     context = {
         "leads": leads,
         "employees": employees,
         "notifications": notification_data,
         "unread_notification_count": unread_notification_count,
+        "followups_count": followups_count,
     }
 
     return render(request, "dashboard/crm.html", context)
