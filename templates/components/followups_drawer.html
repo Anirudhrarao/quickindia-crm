@@ -1,0 +1,364 @@
+<!-- ==========================================================================
+    CRM SAAS PRODUCTIVITY TOOL: FOLLOW-UP CENTER DRAWER
+    ========================================================================== -->
+<div id="followups-drawer" class="fixed inset-0 z-50 overflow-hidden pointer-events-none" aria-labelledby="drawer-title" role="dialog" aria-modal="true">
+  
+  <!-- Smooth Blur Backdrop -->
+  <div id="followups-drawer-backdrop" onclick="closeFollowupsDrawer()" class="absolute inset-0 bg-brand-dark/0 transition-all duration-500 ease-in-out pointer-events-auto"></div>
+
+  <div class="absolute inset-y-0 right-0 max-w-full flex pl-4 sm:pl-10">
+    
+    <!-- Sliding Panel Layout (HubSpot & Salesforce Design Parity) -->
+    <div id="followups-drawer-panel" class="w-screen max-w-lg bg-white translate-x-full transition-transform duration-500 ease-in-out pointer-events-auto border-l border-brand-border shadow-2xl flex flex-col h-full">
+      
+      <!-- Drawer Header Controls -->
+      <div class="px-6 py-5 border-b border-slate-200 bg-slate-50/60 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-orange-100 flex items-center justify-center text-brand-orange text-xl shadow-inner">
+            <i class="fa-solid fa-calendar-check"></i>
+          </div>
+          <div>
+            <h3 class="font-accent font-extrabold text-lg text-brand-dark leading-tight">Follow-up Center</h3>
+            <span class="text-[10px] font-bold text-brand-slate uppercase tracking-wider block mt-0.5">SaaS Productivity Console</span>
+          </div>
+        </div>
+        <button onclick="closeFollowupsDrawer()" class="p-2.5 text-slate-400 hover:text-brand-dark hover:bg-slate-200/50 rounded-xl transition-colors">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Mini Summary Cards (Muted CRM Grayscale Themes) -->
+      <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 grid grid-cols-3 gap-2.5 shrink-0">
+        
+        <!-- Stats Card 1: Overdue -->
+        <div onclick="setFollowupDrawerTab('overdue')" class="bg-white p-3 rounded-xl border border-slate-200 hover:border-red-200 cursor-pointer transition-all shadow-sm text-center">
+          <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400 block">Overdue</span>
+          <span id="drawer-count-overdue" class="font-accent font-extrabold text-lg text-red-500 block mt-0.5">1</span>
+        </div>
+
+        <!-- Stats Card 2: Due Today -->
+        <div onclick="setFollowupDrawerTab('due')" class="bg-white p-3 rounded-xl border border-slate-200 hover:border-brand-orange cursor-pointer transition-all shadow-sm text-center">
+          <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400 block">Due Today</span>
+          <span id="drawer-count-due" class="font-accent font-extrabold text-lg text-brand-orange block mt-0.5">2</span>
+        </div>
+
+        <!-- Stats Card 3: Upcoming -->
+        <div onclick="setFollowupDrawerTab('upcoming')" class="bg-white p-3 rounded-xl border border-slate-200 hover:border-teal-200 cursor-pointer transition-all shadow-sm text-center">
+          <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400 block">Upcoming</span>
+          <span id="drawer-count-upcoming" class="font-accent font-extrabold text-lg text-teal-600 block mt-0.5">1</span>
+        </div>
+
+      </div>
+
+      <!-- Tab Selection System Row -->
+      <div class="flex border-b border-slate-200 bg-white shrink-0">
+        <button onclick="setFollowupDrawerTab('overdue')" id="dr-tab-btn-overdue" class="flex-1 py-3 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-brand-dark transition-all">
+          🔴 Overdue
+        </button>
+        <button onclick="setFollowupDrawerTab('due')" id="dr-tab-btn-due" class="flex-1 py-3 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-brand-orange text-brand-orange transition-all">
+          🔥 Due Today
+        </button>
+        <button onclick="setFollowupDrawerTab('upcoming')" id="dr-tab-btn-upcoming" class="flex-1 py-3 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-brand-dark transition-all">
+          🟢 Upcoming
+        </button>
+      </div>
+
+      <!-- Scrollable Cards Feed Area -->
+      <div class="flex-1 overflow-y-auto custom-scroll px-6 py-6 bg-slate-50/50">
+        
+        <div id="drawer-cards-feed" class="space-y-4">
+          <!-- Follow-up action cards get generated here dynamically -->
+        </div>
+
+        <!-- Fully Styled Empty State Module -->
+        <div id="drawer-empty-state" class="hidden flex-col items-center justify-center py-24 text-center">
+          <div class="w-14 h-14 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 mb-3 shadow-sm">
+            <i class="fa-solid fa-clipboard-check text-xl"></i>
+          </div>
+          <h5 class="font-accent font-extrabold text-sm text-brand-dark mb-1">No pending actions found</h5>
+          <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Everything is up to date.</p>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Inline Direct Reschedule Datetime Modal Wrapper -->
+  <div id="reschedule-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-brand-dark/40 backdrop-blur-sm pointer-events-auto">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-brand-border">
+      <h4 class="font-accent font-extrabold text-base text-brand-dark mb-2">Reschedule Follow-up</h4>
+      <p class="text-xs text-brand-slate mb-4">Select the new target callback schedule for <strong id="reschedule-name-lbl" class="text-slate-800">Client</strong>.</p>
+      
+      <div class="flex flex-col gap-1.5 mb-5">
+        <label class="text-[9px] uppercase font-bold text-slate-400">Target Date & Time</label>
+        <input id="reschedule-datetime-input" type="text" placeholder="e.g. 24 Jul 2026, 04:30 PM" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-brand-orange bg-slate-50/50 font-semibold text-slate-800">
+      </div>
+
+      <div class="flex gap-2">
+        <button onclick="closeRescheduleModal()" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-brand-dark text-xs font-bold rounded-xl transition-all">Cancel</button>
+        <button onclick="submitFollowupReschedule()" class="flex-1 py-2 bg-brand-orange hover:bg-brand-orangeDark text-white text-xs font-bold rounded-xl transition-all">Save Date</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Pre-seeded high fidelity mock database of active SaaS follow-up objects
+  let followupsDB = [
+    {
+      id: 101,
+      leadId: 1,
+      customerName: "Amit Patel",
+      phone: "+91 97777 66666",
+      assignedAgent: "John Doe",
+      avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=60&h=60&q=80",
+      datetime: "18 Jul 2026, 11:30 AM",
+      priority: "HOT",
+      tab: "overdue",
+      lastNote: "Met at Versova 1 BHK site layout. Client requested builder title disclosures, pricing slabs, and legal clearances folder."
+    },
+    {
+      id: 102,
+      leadId: 2,
+      customerName: "Rahul Sharma",
+      phone: "+91 98765 43210",
+      assignedAgent: "Yash Ramani",
+      avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=60&h=60&q=80",
+      datetime: "Today, 04:30 PM",
+      priority: "HOT",
+      tab: "due",
+      lastNote: "Clarified interest in 3BHK+ configuration near Whitefield. Ready for online Zoom presentation schedule check."
+    },
+    {
+      id: 103,
+      leadId: 3,
+      customerName: "Ruby Pawar",
+      phone: "+91 84594 11908",
+      assignedAgent: "Yash Ramani",
+      avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=60&h=60&q=80",
+      datetime: "Today, 06:15 PM",
+      priority: "WARM",
+      tab: "due",
+      lastNote: "Inquired about parking module and solar integrations availability at the residential complex. Follow-up after structural checks."
+    },
+    {
+      id: 104,
+      leadId: 4,
+      customerName: "Bagesh Pandey",
+      phone: "+91 84594 11909",
+      assignedAgent: "Yash Ramani",
+      avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=60&h=60&q=80",
+      datetime: "22 Jul 2026, 10:00 AM",
+      priority: "COLD",
+      tab: "upcoming",
+      lastNote: "Needs general RERA document checking walkthrough guidelines before executing any formal bookings."
+    }
+  ];
+
+  let currentFollowupDrawerTab = "due";
+  let activeRescheduleObject = null;
+
+  function openFollowupsDrawer() {
+    const backdrop = document.getElementById('followups-drawer-backdrop');
+    const panel = document.getElementById('followups-drawer-panel');
+    const root = document.getElementById('followups-drawer');
+
+    root.classList.remove('pointer-events-none');
+    backdrop.classList.remove('bg-brand-dark/0');
+    backdrop.classList.add('bg-brand-dark/40', 'backdrop-blur-sm', 'pointer-events-auto');
+    panel.classList.remove('translate-x-full');
+
+    updateFollowupDrawerCounts();
+    renderFollowupDrawerCards();
+  }
+
+  function closeFollowupsDrawer() {
+    const backdrop = document.getElementById('followups-drawer-backdrop');
+    const panel = document.getElementById('followups-drawer-panel');
+    const root = document.getElementById('followups-drawer');
+
+    backdrop.classList.add('bg-brand-dark/0');
+    backdrop.classList.remove('bg-brand-dark/40', 'backdrop-blur-sm', 'pointer-events-auto');
+    panel.classList.add('translate-x-full');
+    root.classList.add('pointer-events-none');
+  }
+
+  function setFollowupDrawerTab(tabId) {
+    currentFollowupDrawerTab = tabId;
+
+    // Reset button design states
+    const tabs = ['overdue', 'due', 'upcoming'];
+    tabs.forEach(t => {
+      const btn = document.getElementById(`dr-tab-btn-${t}`);
+      if (t === tabId) {
+        btn.className = "flex-1 py-3 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-brand-orange text-brand-orange transition-all";
+      } else {
+        btn.className = "flex-1 py-3 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-brand-dark transition-all";
+      }
+    });
+
+    renderFollowupDrawerCards();
+  }
+
+  function updateFollowupDrawerCounts() {
+    const overdue = followupsDB.filter(f => f.tab === 'overdue').length;
+    const due = followupsDB.filter(f => f.tab === 'due').length;
+    const upcoming = followupsDB.filter(f => f.tab === 'upcoming').length;
+
+    document.getElementById('drawer-count-overdue').innerText = overdue;
+    document.getElementById('drawer-count-due').innerText = due;
+    document.getElementById('drawer-count-upcoming').innerText = upcoming;
+
+    // Update global header badge count on Navbar
+    const badge = document.getElementById('followup-badge-count');
+    if (badge) {
+      const totalPending = overdue + due;
+      if (totalPending > 0) {
+        badge.innerText = totalPending;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+  }
+
+  function renderFollowupDrawerCards() {
+    const feed = document.getElementById('drawer-cards-feed');
+    const emptyState = document.getElementById('drawer-empty-state');
+    feed.innerHTML = "";
+
+    const activeList = followupsDB.filter(f => f.tab === currentFollowupDrawerTab);
+
+    if (activeList.length === 0) {
+      emptyState.classList.remove('hidden');
+      emptyState.classList.add('flex');
+      return;
+    } else {
+      emptyState.classList.add('hidden');
+      emptyState.classList.remove('flex');
+    }
+
+    activeList.forEach(item => {
+      // Build priority badge styling classes
+      let priorityClass = "bg-slate-100 text-slate-500 border-slate-200/60";
+      if (item.priority === 'HOT') priorityClass = "bg-red-50 text-red-600 border-red-200/60";
+      else if (item.priority === 'WARM') priorityClass = "bg-amber-50 text-amber-700 border-amber-200/60";
+
+      const card = document.createElement('div');
+      card.className = "bg-white p-4.5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4 hover:shadow-md transition-all duration-300 relative group/card";
+      
+      card.innerHTML = `
+        <!-- Card Header Info -->
+        <div class="flex justify-between items-start gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <h4 class="font-bold text-slate-900 text-sm font-accent">${item.customerName}</h4>
+              <span class="px-2 py-0.5 rounded-lg text-[8px] font-extrabold tracking-wider border ${priorityClass}">${item.priority}</span>
+            </div>
+            <p class="text-[11px] text-slate-400 font-medium flex items-center gap-1.5 mt-0.5">
+              <i class="fa-solid fa-phone text-[9px]"></i> ${item.phone}
+            </p>
+          </div>
+          
+          <!-- Assigned Agent Avatar -->
+          <div class="flex items-center gap-1.5 bg-slate-50 pl-2 pr-3 py-1 rounded-xl border border-slate-100" title="Assigned Agent">
+            <img class="w-5 h-5 rounded-full object-cover border border-slate-200 shrink-0" src="${item.avatar}" alt="${item.assignedAgent}">
+            <span class="text-[9px] text-slate-500 font-bold">${item.assignedAgent.split(' ')[0]}</span>
+          </div>
+        </div>
+
+        <!-- Schedule Date Block -->
+        <div class="flex items-center gap-1.5 text-[11px] font-semibold text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+          <i class="fa-regular fa-clock text-slate-400 text-xs"></i>
+          <span>${item.datetime}</span>
+        </div>
+
+        <!-- Last Logging Remark -->
+        <div class="bg-slate-50/50 border border-slate-100 rounded-xl p-3">
+          <span class="text-[8px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Last Log Note</span>
+          <p class="text-[11px] text-slate-500 leading-relaxed font-medium line-clamp-2">${item.lastNote}</p>
+        </div>
+
+        <!-- Action Controls Matrix -->
+        <div class="grid grid-cols-4 gap-1.5 pt-2 border-t border-slate-100">
+          <!-- Action Call -->
+          <a href="tel:${item.phone.replace(/\s+/g, '')}" class="py-2.5 bg-slate-50 hover:bg-orange-50 hover:text-brand-orange border border-slate-100 hover:border-brand-orange/30 text-slate-500 rounded-xl flex items-center justify-center text-xs transition-colors shadow-sm" title="Initiate Call">
+            <i class="fa-solid fa-phone"></i>
+          </a>
+          <!-- Action Inspect Detail -->
+          <button onclick="drawerOpenLeadSlideover('${item.leadId}')" class="py-2.5 bg-slate-50 hover:bg-orange-50 hover:text-brand-orange border border-slate-100 hover:border-brand-orange/30 text-slate-500 rounded-xl flex items-center justify-center text-xs transition-colors shadow-sm" title="Inspect Full Lead Details">
+            <i class="fa-solid fa-expand"></i>
+          </button>
+          <!-- Action Reschedule -->
+          <button onclick="triggerReschedule('${item.id}')" class="py-2.5 bg-slate-50 hover:bg-orange-50 hover:text-brand-orange border border-slate-100 hover:border-brand-orange/30 text-slate-500 rounded-xl flex items-center justify-center text-xs transition-colors shadow-sm" title="Reschedule Follow-up">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+          </button>
+          <!-- Action Mark Completed -->
+          <button onclick="markFollowupCompleted('${item.id}')" class="py-2.5 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-100 hover:border-emerald-200 text-slate-500 rounded-xl flex items-center justify-center text-xs transition-colors shadow-sm" title="Mark Action Completed">
+            <i class="fa-solid fa-check"></i>
+          </button>
+        </div>
+      `;
+
+      feed.appendChild(card);
+    });
+  }
+
+  function drawerOpenLeadSlideover(leadId) {
+    closeFollowupsDrawer();
+    if (typeof openSlideOver === 'function') {
+      openSlideOver(leadId);
+    } else {
+      showToast(`Showing Workspace detail dashboard for Lead: ${leadId}`);
+    }
+  }
+
+  function triggerReschedule(followupId) {
+    const item = followupsDB.find(f => f.id == followupId);
+    if (!item) return;
+
+    activeRescheduleObject = item;
+    document.getElementById('reschedule-name-lbl').innerText = item.customerName;
+    document.getElementById('reschedule-datetime-input').value = item.datetime;
+
+    const modal = document.getElementById('reschedule-modal');
+    modal.classList.remove('hidden');
+  }
+
+  function closeRescheduleModal() {
+    document.getElementById('reschedule-modal').classList.add('hidden');
+    activeRescheduleObject = null;
+  }
+
+  function submitFollowupReschedule() {
+    const newDatetime = document.getElementById('reschedule-datetime-input').value.trim();
+    if (!newDatetime || !activeRescheduleObject) return;
+
+    activeRescheduleObject.datetime = newDatetime;
+    
+    // Simulating rescheduling transitions
+    if (activeRescheduleObject.tab === 'overdue' && (newDatetime.toLowerCase().includes('today') || newDatetime.toLowerCase().includes('jul'))) {
+      activeRescheduleObject.tab = 'due';
+    } else if (activeRescheduleObject.tab === 'due' && !newDatetime.toLowerCase().includes('today')) {
+      activeRescheduleObject.tab = 'upcoming';
+    }
+
+    closeRescheduleModal();
+    updateFollowupDrawerCounts();
+    renderFollowupDrawerCards();
+    showToast("Follow-up successfully rescheduled.");
+  }
+
+  function markFollowupCompleted(followupId) {
+    followupsDB = followupsDB.filter(f => f.id != followupId);
+    
+    updateFollowupDrawerCounts();
+    renderFollowupDrawerCards();
+    
+    if (typeof showToast === 'function') {
+      showToast("Activity successfully marked completed!");
+    }
+  }
+</script>

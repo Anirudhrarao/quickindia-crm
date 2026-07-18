@@ -25,6 +25,7 @@
       <!-- PAGE CRUMBS AND HEADING CONTEXT -->
       {% include "components/page_header.html" %}
       {% include "components/followups.html" %}
+      {% include "components/followups_drawer.html" %}
 
       <!-- SEARCH FILTERS DECK -->
       <div id="crm-search-filter-section" class="block">
@@ -127,50 +128,150 @@
     }
   }
 
-  // Active workspace tab view coordinator (Toggles Lead table vs Mock Property views vs Charts views)
-  function setActiveNav(navKey) {
+// Active workspace tab view coordinator
+function setActiveNav(navKey) {
+
+    // ===========================
+    // SALES FOLLOW UP DRAWER
+    // ===========================
+    if (navKey === "followups") {
+
+        const titleNode = document.getElementById('crm-view-title');
+        const crumbsNode = document.getElementById('breadcrumbs-active-tab');
+        const followupsSection = document.getElementById('crm-followups-section');
+        const searchFilterSection = document.getElementById('crm-search-filter-section');
+
+        titleNode.innerText = "Sales Follow Up";
+        crumbsNode.innerText = "Sales Follow Up";
+
+        if (followupsSection) {
+            followupsSection.classList.add("hidden");
+        }
+
+        if (searchFilterSection) {
+            searchFilterSection.classList.add("hidden");
+        }
+
+        // Highlight sidebar
+        const keys = ['leads', 'property', 'followups', 'performance'];
+
+        keys.forEach(k => {
+            const item = document.getElementById(`nav-${k}`);
+            if (!item) return;
+
+            if (k === "followups") {
+                item.className =
+                    "nav-item group flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orangeDark text-white font-semibold text-sm transition-all shadow-md shadow-orange-500/10";
+            } else {
+                item.className =
+                    "nav-item group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800/40 hover:text-white text-slate-400 text-sm font-medium transition-all";
+            }
+        });
+
+        // Hide all normal views
+        const views = {
+            leads: document.getElementById('crm-leads-view'),
+            property: document.getElementById('crm-property-view'),
+            performance: document.getElementById('crm-performance-view')
+        };
+
+        Object.values(views).forEach(view => {
+            if (view) {
+                view.classList.remove("block");
+                view.classList.add("hidden");
+            }
+        });
+
+        // Open Follow Up Drawer
+        openFollowupsDrawer();
+
+        return;
+    }
+
+    // ===========================
+    // EXISTING CODE
+    // ===========================
+
     const views = {
-      leads: document.getElementById('crm-leads-view'),
-      property: document.getElementById('crm-property-view'),
-      performance: document.getElementById('crm-performance-view')
+        leads: document.getElementById('crm-leads-view'),
+        property: document.getElementById('crm-property-view'),
+        followups: document.getElementById('crm-followups-view'),
+        performance: document.getElementById('crm-performance-view')
     };
 
     const titleNode = document.getElementById('crm-view-title');
     const crumbsNode = document.getElementById('breadcrumbs-active-tab');
     const followupsSection = document.getElementById('crm-followups-section');
     const searchFilterSection = document.getElementById('crm-search-filter-section');
-    
+
     if (navKey === 'leads') {
-      titleNode.innerText = 'Leads Directory';
-      crumbsNode.innerText = 'Leads Directory';
-      if (followupsSection) {
-        followupsSection.classList.remove('hidden');
-        followupsSection.classList.add('block');
-      }
-      if (searchFilterSection) {
-        searchFilterSection.classList.remove('hidden');
-        searchFilterSection.classList.add('block');
-      }
+        titleNode.innerText = 'Leads Directory';
+        crumbsNode.innerText = 'Leads Directory';
+
+        if (followupsSection) {
+            followupsSection.classList.remove('hidden');
+            followupsSection.classList.add('block');
+        }
+
+        if (searchFilterSection) {
+            searchFilterSection.classList.remove('hidden');
+            searchFilterSection.classList.add('block');
+        }
+
     } else {
-      if (followupsSection) {
-        followupsSection.classList.remove('block');
-        followupsSection.classList.add('hidden');
-      }
-      if (searchFilterSection) {
-        searchFilterSection.classList.remove('block');
-        searchFilterSection.classList.add('hidden');
-      }
-      if (navKey === 'property') {
-        titleNode.innerText = 'Add Property';
-        crumbsNode.innerText = 'Add Property';
-      } else if (navKey === 'performance') {
-        titleNode.innerText = 'Performance';
-        crumbsNode.innerText = 'Performance';
-      }
+
+        if (followupsSection) {
+            followupsSection.classList.remove('block');
+            followupsSection.classList.add('hidden');
+        }
+
+        if (searchFilterSection) {
+            searchFilterSection.classList.remove('block');
+            searchFilterSection.classList.add('hidden');
+        }
+
+        if (navKey === 'property') {
+            titleNode.innerText = 'Add Property';
+            crumbsNode.innerText = 'Add Property';
+
+        } else if (navKey === 'performance') {
+            titleNode.innerText = 'Performance';
+            crumbsNode.innerText = 'Performance';
+        }
     }
 
+    // Sidebar Highlight
+    const keys = ['leads', 'property', 'followups', 'performance'];
+
+    keys.forEach(k => {
+        const item = document.getElementById(`nav-${k}`);
+
+        if (item) {
+            if (k === navKey) {
+                item.className = "nav-item group flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orangeDark text-white font-semibold text-sm transition-all shadow-md shadow-orange-500/10";
+            } else {
+                item.className = "nav-item group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800/40 hover:text-white text-slate-400 text-sm font-medium transition-all";
+            }
+        }
+    });
+
+    // Toggle Views
+    Object.keys(views).forEach(key => {
+        if (views[key]) {
+            if (key === navKey) {
+                views[key].classList.remove('hidden');
+                views[key].classList.add('block');
+            } else {
+                views[key].classList.remove('block');
+                views[key].classList.add('hidden');
+            }
+        }
+    });
+}
+    
+
     // Reset sidebar items highlights
-    const keys = ['leads', 'property', 'performance'];
+    const keys = ['leads', 'property', 'followups', 'performance'];
     keys.forEach(k => {
       const item = document.getElementById(`nav-${k}`);
       if (item) {
@@ -194,7 +295,7 @@
         }
       }
     });
-  }
+  
 
   // Responsive mobile Drawer slider toggle
   function toggleSidebar() {

@@ -4,6 +4,7 @@ from apps.leads.models import Lead
 from apps.accounts.models import User
 from apps.notifications.models import Notification
 from django.utils import timezone
+from apps.notifications.services import NotificationService
 
 
 
@@ -13,6 +14,8 @@ def crm(request):
     """
     Render CRM dashboard.
     """
+    NotificationService.generate_notifications(request.user)
+
     leads = (
         Lead.objects
         .select_related("assigned_to")

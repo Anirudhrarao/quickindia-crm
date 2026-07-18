@@ -151,6 +151,9 @@ class LeadUpdateView(View):
 
         if form.is_valid():
 
+            # Store old follow-up before saving
+            old_follow_up = lead.next_follow_up
+
             updated_lead = form.save()
 
             # Create audit logs only for changed fields
@@ -165,6 +168,16 @@ class LeadUpdateView(View):
                         created_by=request.user,
                         message=f"{field.replace('_', ' ').title()} changed from '{old_value}' to '{new_value}'.",
                     )
+
+            # Follow-up date changed
+            if old_follow_up != updated_lead.next_follow_up:
+
+                # Old notifications are no longer valid
+                NotificationService.mark_old_followups_read(updated_lead)
+
+                # Generate notification if the new date is
+                # tomorrow, today or overdue
+                NotificationService.sync_lead_notifications(updated_lead)
 
             return JsonResponse(
                 {
