@@ -5,6 +5,7 @@ from apps.accounts.models import User
 from apps.notifications.models import Notification
 from django.utils import timezone
 from apps.notifications.services import NotificationService
+from apps.landing.forms import PropertyForm
 
 
 
@@ -85,6 +86,7 @@ def crm(request):
         "notifications": notification_data,
         "unread_notification_count": unread_notification_count,
         "followups_count": followups_count,
+        "property_form": PropertyForm(),
     }
 
     return render(request, "dashboard/crm.html", context)

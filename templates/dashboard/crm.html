@@ -35,17 +35,131 @@
       <!-- DYNAMIC TABULAR VIEWPORT -->
       {% include "components/tables/lead_table.html" %}
 
-      <!-- MOCK MODULE: ADDS DRAFT PROPERTY STUB -->
-      <div id="crm-property-view" class="hidden space-y-6 max-w-3xl mx-auto bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm animate-[fadeIn_0.4s_ease-out]">
-        <h3 class="font-accent font-extrabold text-2xl text-brand-dark mb-4">Register New Property Asset</h3>
+      <!-- PROPERTY ASSET REGISTRATION VIEW -->
+      <div id="crm-property-view" class="hidden max-w-3xl mx-auto bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm animate-[fadeIn_0.4s_ease-out]">
+        <h3 class="font-accent font-extrabold text-2xl text-brand-dark mb-2">Register New Property Asset</h3>
         <p class="text-sm text-brand-slate mb-6">CRM inventory panel to inject tested premium real-estate locations for public showcase.</p>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <input type="text" placeholder="Property Title" class="p-3 border border-slate-200 rounded-xl text-sm focus:outline-none">
-          <input type="text" placeholder="Price (e.g. ₹1.5 Cr)" class="p-3 border border-slate-200 rounded-xl text-sm focus:outline-none">
-          <input type="text" placeholder="Locality" class="p-3 border border-slate-200 rounded-xl text-sm focus:outline-none">
-          <input type="text" placeholder="BHK Config" class="p-3 border border-slate-200 rounded-xl text-sm focus:outline-none">
-        </div>
-        <button onclick="showToast('Mock Property Draft Saved!')" class="mt-6 bg-brand-orange text-white px-6 py-3 rounded-xl font-bold text-sm">Save Property Draft</button>
+        
+        <!-- Connected to Real Django Backend View Action -->
+        <form  id="property-create-form" method="POST" action="{% url 'landing:property_create' %}" enctype="multipart/form-data" class="space-y-5">
+          {% csrf_token %}
+          
+          {% if property_form.non_field_errors %}
+            <div class="p-4 bg-red-50 text-red-700 text-xs font-bold rounded-xl border border-red-100">
+              {{ property_form.non_field_errors }}
+            </div>
+          {% endif %}
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Title -->
+            <div class="col-span-1 sm:col-span-2">
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Property Title</label>
+              {{ property_form.title }}
+              {% if property_form.title.errors %}
+                <span class="text-xs text-red-500 font-semibold mt-1 block">{{ property_form.title.errors.0 }}</span>
+              {% endif %}
+            </div>
+
+            <!-- Property Type -->
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Property Type</label>
+              {{ property_form.property_type }}
+              {% if property_form.property_type.errors %}
+                <span class="text-xs text-red-500 font-semibold mt-1 block">{{ property_form.property_type.errors.0 }}</span>
+              {% endif %}
+            </div>
+
+            <!-- Price -->
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Price (INR)</label>
+              {{ property_form.price }}
+              {% if property_form.price.errors %}
+                <span class="text-xs text-red-500 font-semibold mt-1 block">{{ property_form.price.errors.0 }}</span>
+              {% endif %}
+            </div>
+
+            <!-- Locality -->
+            <div class="col-span-1 sm:col-span-2">
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Locality</label>
+              {{ property_form.location }}
+              {% if property_form.location.errors %}
+                <span class="text-xs text-red-500 font-semibold mt-1 block">{{ property_form.location.errors.0 }}</span>
+              {% endif %}
+            </div>
+
+            <!-- Area Square Feet -->
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Area (Sq.Ft.)</label>
+              {{ property_form.area_sqft }}
+              {% if property_form.area_sqft.errors %}
+                <span class="text-xs text-red-500 font-semibold mt-1 block">{{ property_form.area_sqft.errors.0 }}</span>
+              {% endif %}
+            </div>
+
+            <!-- BHK Configuration -->
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Bedrooms</label>
+                {{ property_form.bedrooms }}
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Bathrooms</label>
+                {{ property_form.bathrooms }}
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div class="col-span-1 sm:col-span-2">
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Property Description</label>
+              {{ property_form.description }}
+              {% if property_form.description.errors %}
+                <span class="text-xs text-red-500 font-semibold mt-1 block">{{ property_form.description.errors.0 }}</span>
+              {% endif %}
+            </div>
+
+            <!-- Cover Image File Upload -->
+            <div class="col-span-1 sm:col-span-2">
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Upload Property Image</label>
+              {{ property_form.image }}
+              {% if property_form.image.errors %}
+                <span class="text-xs text-red-500 font-semibold mt-1 block">{{ property_form.image.errors.0 }}</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Extra Checklist Switches -->
+          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex flex-wrap items-center justify-between gap-4 mt-2">
+            <div class="flex items-center gap-3">
+              {{ property_form.is_rera_compliant }}
+              <div>
+                <label for="id_is_rera_compliant" class="block text-xs font-extrabold text-brand-dark uppercase tracking-wider cursor-pointer">RERA Compliant</label>
+                <span class="text-[10px] text-slate-400 block font-medium">Verified Registration status</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+              {{ property_form.is_active }}
+              <div>
+                <label for="id_is_active" class="block text-xs font-extrabold text-brand-dark uppercase tracking-wider cursor-pointer">Active Listing</label>
+                <span class="text-[10px] text-slate-400 block font-medium">Visible to prospective buyers</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <label class="text-xs font-extrabold text-brand-dark uppercase tracking-wider whitespace-nowrap">Order:</label>
+              <div class="w-16">
+                {{ property_form.display_order }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit Buttons -->
+          <div class="flex items-center justify-end gap-3 pt-2">
+            <button type="submit" class="bg-brand-orange hover:bg-brand-orangeDark text-white px-6 py-3 rounded-xl font-bold text-sm shadow-md shadow-orange-500/10 transition-colors">
+              Save Property Listing
+            </button>
+          </div>
+        </form>
       </div>
 
       <!-- MOCK MODULE: BRANCH PERFORMANCE STUB -->
@@ -98,10 +212,16 @@
   // Sidebar States & Collapse Logic
   let sidebarCollapsed = false;
 
-  // Live workspace notifications list (Mock state data structure matching design specifications)
-  let notificationsList = JSON.parse(
-      document.getElementById("notifications-data").textContent
-  );
+  // Live workspace notifications list with defensive check
+  let notificationsList = [];
+  const notificationsDataNode = document.getElementById("notifications-data");
+  if (notificationsDataNode && notificationsDataNode.textContent.trim()) {
+    try {
+      notificationsList = JSON.parse(notificationsDataNode.textContent);
+    } catch (e) {
+      console.error("Error parsing notifications JSON data:", e);
+    }
+  }
 
   function toggleSidebarCollapse() {
     sidebarCollapsed = !sidebarCollapsed;
@@ -110,17 +230,25 @@
     const textItems = document.querySelectorAll('.sidebar-text-item');
 
     if (sidebarCollapsed) {
-      sidebar.classList.remove('w-64');
-      sidebar.classList.add('w-20');
-      collapseIcon.className = "fa-solid fa-chevron-right text-sm";
+      if (sidebar) {
+        sidebar.classList.remove('w-64');
+        sidebar.classList.add('w-20');
+      }
+      if (collapseIcon) {
+        collapseIcon.className = "fa-solid fa-chevron-right text-sm";
+      }
       
       textItems.forEach(item => {
         item.classList.add('hidden');
       });
     } else {
-      sidebar.classList.remove('w-20');
-      sidebar.classList.add('w-64');
-      collapseIcon.className = "fa-solid fa-chevron-left text-sm";
+      if (sidebar) {
+        sidebar.classList.remove('w-20');
+        sidebar.classList.add('w-64');
+      }
+      if (collapseIcon) {
+        collapseIcon.className = "fa-solid fa-chevron-left text-sm";
+      }
       
       textItems.forEach(item => {
         item.classList.remove('hidden');
@@ -128,8 +256,8 @@
     }
   }
 
-// Active workspace tab view coordinator
-function setActiveNav(navKey) {
+  // Active workspace tab view coordinator
+  function setActiveNav(navKey) {
 
     // ===========================
     // SALES FOLLOW UP DRAWER
@@ -141,8 +269,8 @@ function setActiveNav(navKey) {
         const followupsSection = document.getElementById('crm-followups-section');
         const searchFilterSection = document.getElementById('crm-search-filter-section');
 
-        titleNode.innerText = "Sales Follow Up";
-        crumbsNode.innerText = "Sales Follow Up";
+        if (titleNode) titleNode.innerText = "Sales Follow Up";
+        if (crumbsNode) crumbsNode.innerText = "Sales Follow Up";
 
         if (followupsSection) {
             followupsSection.classList.add("hidden");
@@ -182,8 +310,10 @@ function setActiveNav(navKey) {
             }
         });
 
-        // Open Follow Up Drawer
-        openFollowupsDrawer();
+        // Open Follow Up Drawer (making sure it exists)
+        if (typeof openFollowupsDrawer === "function") {
+            openFollowupsDrawer();
+        }
 
         return;
     }
@@ -205,8 +335,8 @@ function setActiveNav(navKey) {
     const searchFilterSection = document.getElementById('crm-search-filter-section');
 
     if (navKey === 'leads') {
-        titleNode.innerText = 'Leads Directory';
-        crumbsNode.innerText = 'Leads Directory';
+        if (titleNode) titleNode.innerText = 'Leads Directory';
+        if (crumbsNode) crumbsNode.innerText = 'Leads Directory';
 
         if (followupsSection) {
             followupsSection.classList.remove('hidden');
@@ -231,12 +361,12 @@ function setActiveNav(navKey) {
         }
 
         if (navKey === 'property') {
-            titleNode.innerText = 'Add Property';
-            crumbsNode.innerText = 'Add Property';
+            if (titleNode) titleNode.innerText = 'Add Property';
+            if (crumbsNode) crumbsNode.innerText = 'Add Property';
 
         } else if (navKey === 'performance') {
-            titleNode.innerText = 'Performance';
-            crumbsNode.innerText = 'Performance';
+            if (titleNode) titleNode.innerText = 'Performance';
+            if (crumbsNode) crumbsNode.innerText = 'Performance';
         }
     }
 
@@ -267,49 +397,23 @@ function setActiveNav(navKey) {
             }
         }
     });
-}
-    
-
-    // Reset sidebar items highlights
-    const keys = ['leads', 'property', 'followups', 'performance'];
-    keys.forEach(k => {
-      const item = document.getElementById(`nav-${k}`);
-      if (item) {
-        if (k === navKey) {
-          item.className = "nav-item group flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orangeDark text-white font-semibold text-sm transition-all shadow-md shadow-orange-500/10";
-        } else {
-          item.className = "nav-item group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800/40 hover:text-white text-slate-400 text-sm font-medium transition-all";
-        }
-      }
-    });
-
-    // Toggle Section visibility
-    Object.keys(views).forEach(key => {
-      if (views[key]) {
-        if (key === navKey) {
-          views[key].classList.remove('hidden');
-          views[key].classList.add('block');
-        } else {
-          views[key].classList.remove('block');
-          views[key].classList.add('hidden');
-        }
-      }
-    });
-  
+  }
 
   // Responsive mobile Drawer slider toggle
   function toggleSidebar() {
     const sidebar = document.getElementById('dashboard-sidebar');
     const backdrop = document.getElementById('sidebar-backdrop');
 
-    if (sidebar.classList.contains('hidden')) {
-      sidebar.classList.remove('hidden');
-      sidebar.classList.add('flex');
-      backdrop.classList.remove('hidden');
-    } else {
-      sidebar.classList.add('hidden');
-      sidebar.classList.remove('flex');
-      backdrop.classList.add('hidden');
+    if (sidebar && backdrop) {
+      if (sidebar.classList.contains('hidden')) {
+        sidebar.classList.remove('hidden');
+        sidebar.classList.add('flex');
+        backdrop.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('hidden');
+        sidebar.classList.remove('flex');
+        backdrop.classList.add('hidden');
+      }
     }
   }
 
@@ -320,29 +424,37 @@ function setActiveNav(navKey) {
     const overviewBtn = document.getElementById('tab-btn-overview');
     const editBtn = document.getElementById('tab-btn-edit');
 
-    if (tabId === 'overview') {
-      overviewTab.classList.remove('hidden');
-      overviewTab.classList.add('block');
-      editTab.classList.remove('block');
-      editTab.classList.add('hidden');
+    if (overviewTab && editTab && overviewBtn && editBtn) {
+      if (tabId === 'overview') {
+        overviewTab.classList.remove('hidden');
+        overviewTab.classList.add('block');
+        editTab.classList.remove('block');
+        editTab.classList.add('hidden');
 
-      overviewBtn.className = "flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-brand-orange text-brand-orange transition-all";
-      editBtn.className = "flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-brand-dark transition-all";
-    } else {
-      editTab.classList.remove('hidden');
-      editTab.classList.add('block');
-      overviewTab.classList.remove('block');
-      overviewTab.classList.add('hidden');
+        overviewBtn.className = "flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-brand-orange text-brand-orange transition-all";
+        editBtn.className = "flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-brand-dark transition-all";
+      } else {
+        editTab.classList.remove('hidden');
+        editTab.classList.add('block');
+        overviewTab.classList.remove('block');
+        overviewTab.classList.add('hidden');
 
-      editBtn.className = "flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-brand-orange text-brand-orange transition-all";
-      overviewBtn.className = "flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-brand-dark transition-all";
+        editBtn.className = "flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-brand-orange text-brand-orange transition-all";
+        overviewBtn.className = "flex-1 py-3.5 text-center text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-slate-400 hover:text-brand-dark transition-all";
+      }
     }
   }
 
   // Live client-side searching, status matching filters, and pagination slices
   function filterLeads() {
-    const searchVal = document.getElementById('lead-search').value.toLowerCase();
-    const filterVal = document.getElementById('lead-filter-status').value;
+    const searchInput = document.getElementById('lead-search');
+    const filterSelect = document.getElementById('lead-filter-status');
+    
+    // Guard against running on pages that do not render directory controls
+    if (!searchInput || !filterSelect) return;
+
+    const searchVal = searchInput.value.toLowerCase();
+    const filterVal = filterSelect.value;
     
     const desktopRows = document.querySelectorAll('#leads-table-body tr');
     const mobileCards = document.querySelectorAll('.mobile-lead-card');
@@ -386,11 +498,15 @@ function setActiveNav(navKey) {
     const totalItems = matches.length;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
+    const paginationInfo = document.getElementById('pagination-info');
+    const mobilePaginationInfo = document.getElementById('mobile-pagination-info');
+    const pagButtons = document.getElementById('pagination-buttons');
+
     if (totalItems === 0) {
       if (emptyState) emptyState.classList.remove('hidden');
       if (fallbackRow) fallbackRow.classList.add('hidden');
-      document.getElementById('pagination-info').innerText = "Showing 0 entries";
-      document.getElementById('pagination-buttons').innerHTML = "";
+      if (paginationInfo) paginationInfo.innerText = "Showing 0 entries";
+      if (pagButtons) pagButtons.innerHTML = "";
       return;
     } else {
       if (emptyState) emptyState.classList.add('hidden');
@@ -410,13 +526,13 @@ function setActiveNav(navKey) {
     });
     
     for (let i = startIndex; i < endIndex; i++) {
-      matches[i].classList.remove('hidden');
+      if (matches[i]) matches[i].classList.remove('hidden');
     }
 
     // Update entries count dynamic texts
     const infoText = `Showing ${startIndex + 1} to ${endIndex} of ${totalItems} entries`;
-    document.getElementById('pagination-info').innerText = infoText;
-    document.getElementById('mobile-pagination-info').innerText = infoText;
+    if (paginationInfo) paginationInfo.innerText = infoText;
+    if (mobilePaginationInfo) mobilePaginationInfo.innerText = infoText;
 
     renderPaginationControls(totalPages);
   }
@@ -425,6 +541,8 @@ function setActiveNav(navKey) {
   function renderPaginationControls(totalPages) {
     const container = document.getElementById('pagination-buttons');
     const mobileContainer = document.getElementById('mobile-pagination-buttons');
+    if (!container || !mobileContainer) return;
+    
     container.innerHTML = "";
     mobileContainer.innerHTML = "";
 
@@ -494,8 +612,8 @@ function setActiveNav(navKey) {
       });
   }
 
-    // Status state changing fetch engine targeting Django views
-    function handleStatusChange(leadId, selectElement) {
+  // Status state changing fetch engine targeting Django views
+  function handleStatusChange(leadId, selectElement) {
         const newStatus = selectElement.value;
         const formData = new FormData();
         formData.append("status", newStatus);
@@ -520,53 +638,24 @@ function setActiveNav(navKey) {
                 );
 
                 switch (newStatus) {
-
                     case "NEW":
-                        selectElement.classList.add(
-                            "bg-blue-50",
-                            "text-blue-700",
-                            "border-blue-200"
-                        );
+                        selectElement.classList.add("bg-blue-50", "text-blue-700", "border-blue-200");
                         break;
-
                     case "CALLED":
-                        selectElement.classList.add(
-                            "bg-amber-50",
-                            "text-amber-700",
-                            "border-amber-200"
-                        );
+                        selectElement.classList.add("bg-amber-50", "text-amber-700", "border-amber-200");
                         break;
-
                     case "INTERESTED":
-                        selectElement.classList.add(
-                            "bg-indigo-50",
-                            "text-indigo-700",
-                            "border-indigo-200"
-                        );
+                        selectElement.classList.add("bg-indigo-50", "text-indigo-700", "border-indigo-200");
                         break;
-
                     case "SITE_VISIT":
-                        selectElement.classList.add(
-                            "bg-purple-50",
-                            "text-purple-700",
-                            "border-purple-200"
-                        );
+                        selectElement.classList.add("bg-purple-50", "text-purple-700", "border-purple-200");
                         break;
-
                     case "CLOSED":
-                        selectElement.classList.add(
-                            "bg-emerald-50",
-                            "text-emerald-700",
-                            "border-emerald-200"
-                        );
+                        selectElement.classList.add("bg-emerald-50", "text-emerald-700", "border-emerald-200");
                         break;
                 }
-                const row = document.querySelector(
-                    `tr[data-lead-id="${leadId}"]`
-                );
-                const card = document.querySelector(
-                    `.mobile-lead-card[data-lead-id="${leadId}"]`
-                );
+                const row = document.querySelector(`tr[data-lead-id="${leadId}"]`);
+                const card = document.querySelector(`.mobile-lead-card[data-lead-id="${leadId}"]`);
                 if (row) {
                     row.setAttribute("data-status", newStatus);
                 }
@@ -583,7 +672,7 @@ function setActiveNav(navKey) {
             console.error(error);
             showToast("Something went wrong.");
         });
-}
+  }
 
   // Asynchronous slideover detail drawer renderer connecting cleanly with Django database REST view
   async function openSlideOver(id) {
@@ -599,68 +688,103 @@ function setActiveNav(navKey) {
       window.currentLeadId = lead.id;
 
       // Desktop/Mobile Leaf overview population matching backend properties
-      document.getElementById("slide-lead-name").innerText = lead.full_name;
-      document.getElementById("slide-lead-contact").innerText = lead.phone_number;
-      document.getElementById("slide-lead-locality").innerText = lead.locality;
-      document.getElementById("slide-lead-budget").innerText = lead.budget;
-      document.getElementById("slide-lead-bhk").innerText = lead.bhk;
-      document.getElementById("slide-lead-handler").innerText = "CRM Handler: " + (lead.assigned_to || "Unassigned");
+      const nameEl = document.getElementById("slide-lead-name");
+      const contactEl = document.getElementById("slide-lead-contact");
+      const localityEl = document.getElementById("slide-lead-locality");
+      const budgetEl = document.getElementById("slide-lead-budget");
+      const bhkEl = document.getElementById("slide-lead-bhk");
+      const handlerEl = document.getElementById("slide-lead-handler");
+      
+      if (nameEl) nameEl.innerText = lead.full_name;
+      if (contactEl) contactEl.innerText = lead.phone_number;
+      if (localityEl) localityEl.innerText = lead.locality;
+      if (budgetEl) budgetEl.innerText = lead.budget;
+      if (bhkEl) bhkEl.innerText = lead.bhk;
+      if (handlerEl) handlerEl.innerText = "CRM Handler: " + (lead.assigned_to || "Unassigned");
       
       const nextActionText = lead.next_action || lead.next_step || "No action";
       const nextFollowUpText = lead.next_follow_up || lead.next_date || "Not Scheduled";
-      document.getElementById("slide-next-step-lbl").innerText = nextActionText;
-      document.getElementById("slide-next-date-lbl").innerText = nextFollowUpText;
+      
+      const stepEl = document.getElementById("slide-next-step-lbl");
+      const dateEl = document.getElementById("slide-next-date-lbl");
+      if (stepEl) stepEl.innerText = nextActionText;
+      if (dateEl) dateEl.innerText = nextFollowUpText;
 
       // Handle Priority temperature badge styling and values
       const priority = lead.priority || "COLD";
       const prioBadge = document.getElementById('slide-lead-priority-badge');
-      prioBadge.innerText = priority;
-      let badgeClass = "bg-slate-100 text-slate-500 border-slate-200/60";
-      if (priority === 'HOT') badgeClass = "bg-red-50 text-red-600 border-red-200/60";
-      else if (priority === 'WARM') badgeClass = "bg-amber-50 text-amber-700 border-amber-200/60";
-      prioBadge.className = `px-2.5 py-0.5 rounded-lg text-[9px] font-extrabold tracking-wider uppercase border ${badgeClass}`;
+      if (prioBadge) {
+        prioBadge.innerText = priority;
+        let badgeClass = "bg-slate-100 text-slate-500 border-slate-200/60";
+        if (priority === 'HOT') badgeClass = "bg-red-50 text-red-600 border-red-200/60";
+        else if (priority === 'WARM') badgeClass = "bg-amber-50 text-amber-700 border-amber-200/60";
+        prioBadge.className = `px-2.5 py-0.5 rounded-lg text-[9px] font-extrabold tracking-wider uppercase border ${badgeClass}`;
+      }
 
       // Populate Tab 2 input forms with backend response
-      document.getElementById('edit-lead-name').value = lead.full_name;
-      document.getElementById('edit-lead-contact').value = lead.phone_number;
-      document.getElementById('edit-lead-priority').value = priority;
-      document.getElementById('edit-lead-locality').value = lead.locality;
-      document.getElementById('edit-lead-bhk').value = lead.bhk;
-      document.getElementById('edit-lead-budget').value = lead.budget;
-      document.getElementById('edit-lead-next-step').value = lead.next_action || lead.next_step || '';
-      document.getElementById('edit-lead-next-date').value = lead.next_follow_up || lead.next_date || '';
-      document.getElementById("edit-lead-handler").innerText = lead.assigned_to || "Unassigned";
+      const editName = document.getElementById('edit-lead-name');
+      const editContact = document.getElementById('edit-lead-contact');
+      const editPriority = document.getElementById('edit-lead-priority');
+      const editLocality = document.getElementById('edit-lead-locality');
+      const editBhk = document.getElementById('edit-lead-bhk');
+      const editBudget = document.getElementById('edit-lead-budget');
+      const editNextStep = document.getElementById('edit-lead-next-step');
+      const editNextDate = document.getElementById('edit-lead-next-date');
+      const editHandler = document.getElementById("edit-lead-handler");
+
+      if (editName) editName.value = lead.full_name;
+      if (editContact) editContact.value = lead.phone_number;
+      if (editPriority) editPriority.value = priority;
+      if (editLocality) editLocality.value = lead.locality;
+      if (editBhk) editBhk.value = lead.bhk;
+      if (editBudget) editBudget.value = lead.budget;
+      if (editNextStep) editNextStep.value = lead.next_action || lead.next_step || '';
+      if (editNextDate) editNextDate.value = lead.next_follow_up || lead.next_date || '';
+      if (editHandler) editHandler.innerText = lead.assigned_to || "Unassigned";
 
       const timeline = document.getElementById("slide-lead-timeline");
-      timeline.innerHTML = "";
-      lead.logs.forEach(log => {
-          timeline.innerHTML += `
-              <div class="relative">
-                  <div class="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-brand-orange border-4 border-white"></div>
-                  <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-                      <p class="text-sm text-slate-700">
-                          ${log.message}
-                      </p>
-                      <div class="mt-2 text-xs text-slate-400">
-                          <strong>${log.created_by}</strong>
-                          •
-                          ${log.created_at}
+      if (timeline) {
+        timeline.innerHTML = "";
+        if (lead.logs && Array.isArray(lead.logs)) {
+          lead.logs.forEach(log => {
+              timeline.innerHTML += `
+                  <div class="relative">
+                      <div class="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-brand-orange border-4 border-white"></div>
+                      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+                          <p class="text-sm text-slate-700">
+                              ${log.message}
+                          </p>
+                          <div class="mt-2 text-xs text-slate-400">
+                              <strong>${log.created_by}</strong>
+                              •
+                              ${log.created_at}
+                          </div>
                       </div>
                   </div>
-              </div>
-          `;
-      });
+              `;
+          });
+        }
+      }
 
       // Handle slideover deletion click event mapping
-      document.getElementById('slide-lead-delete-btn').onclick = function() {
-        openDeleteConfirmModal(id, lead.full_name, currentDeleteUrl);
-      };
+      const delBtn = document.getElementById('slide-lead-delete-btn');
+      if (delBtn) {
+        delBtn.onclick = function() {
+          openDeleteConfirmModal(id, lead.full_name, currentDeleteUrl);
+        };
+      }
 
       // Trigger identical smooth animations using pure design tokens
-      document.getElementById("lead-slideover").classList.remove("pointer-events-none");
-      document.getElementById("slideover-panel").classList.remove("translate-x-full");
-      document.getElementById("slideover-backdrop").classList.remove("bg-brand-dark/0");
-      document.getElementById("slideover-backdrop").classList.add("bg-brand-dark/40", "backdrop-blur-sm", "pointer-events-auto");
+      const slideoverRoot = document.getElementById("lead-slideover");
+      const slideoverPanel = document.getElementById("slideover-panel");
+      const slideoverBackdrop = document.getElementById("slideover-backdrop");
+
+      if (slideoverRoot) slideoverRoot.classList.remove("pointer-events-none");
+      if (slideoverPanel) slideoverPanel.classList.remove("translate-x-full");
+      if (slideoverBackdrop) {
+        slideoverBackdrop.classList.remove("bg-brand-dark/0");
+        slideoverBackdrop.classList.add("bg-brand-dark/40", "backdrop-blur-sm", "pointer-events-auto");
+      }
 
     } catch (error) {
       showToast("Error retrieving client record details.");
@@ -673,16 +797,19 @@ function setActiveNav(navKey) {
     const panel = document.getElementById('slideover-panel');
     const root = document.getElementById('lead-slideover');
 
-    backdrop.classList.add('bg-brand-dark/0');
-    backdrop.classList.remove('bg-brand-dark/40', 'backdrop-blur-sm', 'pointer-events-auto');
-    panel.classList.add('translate-x-full');
-    root.classList.add('pointer-events-none');
+    if (backdrop) {
+      backdrop.classList.add('bg-brand-dark/0');
+      backdrop.classList.remove('bg-brand-dark/40', 'backdrop-blur-sm', 'pointer-events-auto');
+    }
+    if (panel) panel.classList.add('translate-x-full');
+    if (root) root.classList.add('pointer-events-none');
   }
 
   // Appends follow-up log text updates locally
   function handleAppendLog(event) {
     event.preventDefault();
     const input = document.getElementById('timeline-remark-input');
+    if (!input) return;
     const noteVal = input.value.trim();
 
     if (noteVal && activeLeadId) {
@@ -702,26 +829,32 @@ function setActiveNav(navKey) {
     }
   }
 
-    // Handles edits profile updates submit
-    function handleEditLeadSubmit(event) {
-
+  // Handles edits profile updates submit
+  function handleEditLeadSubmit(event) {
         event.preventDefault();
-
         if (!activeLeadId) return;
 
+        const nameInput = document.getElementById("edit-lead-name");
+        const contactInput = document.getElementById("edit-lead-contact");
+        const priorityInput = document.getElementById("edit-lead-priority");
+        const localityInput = document.getElementById("edit-lead-locality");
+        const bhkInput = document.getElementById("edit-lead-bhk");
+        const budgetInput = document.getElementById("edit-lead-budget");
+        const nextStepInput = document.getElementById("edit-lead-next-step");
+        const nextDateInput = document.getElementById("edit-lead-next-date");
+
         const editData = {
-            name: document.getElementById("edit-lead-name").value.trim(),
-            contact: document.getElementById("edit-lead-contact").value.trim(),
-            priority: document.getElementById("edit-lead-priority").value,
-            locality: document.getElementById("edit-lead-locality").value.trim(),
-            bhk: document.getElementById("edit-lead-bhk").value,
-            budget: document.getElementById("edit-lead-budget").value.trim(),
-            nextStep: document.getElementById("edit-lead-next-step").value.trim(),
-            nextDate: document.getElementById("edit-lead-next-date").value.trim(),
+            name: nameInput ? nameInput.value.trim() : "",
+            contact: contactInput ? contactInput.value.trim() : "",
+            priority: priorityInput ? priorityInput.value : "COLD",
+            locality: localityInput ? localityInput.value.trim() : "",
+            bhk: bhkInput ? bhkInput.value : "2 BHK",
+            budget: budgetInput ? budgetInput.value.trim() : "",
+            nextStep: nextStepInput ? nextStepInput.value.trim() : "",
+            nextDate: nextDateInput ? nextDateInput.value.trim() : "",
         };
 
         const formData = new FormData();
-
         formData.append("full_name", editData.name);
         formData.append("phone_number", editData.contact);
         formData.append("priority", editData.priority);
@@ -749,69 +882,44 @@ function setActiveNav(navKey) {
                 showToast("Unable to update lead.");
                 console.log(data.errors);
             }
+        })
+        .catch(err => {
+            console.error("Error editing lead profile:", err);
+            showToast("Something went wrong.");
         });
-    }
+  }
 
   // Setup Delete confirm modals URLs
   function openDeleteConfirmModal(leadId, leadName, deleteUrl) {
-    document.getElementById('delete-lead-name-placeholder').innerText = leadName;
+    const placeholder = document.getElementById('delete-lead-name-placeholder');
+    if (placeholder) placeholder.innerText = leadName;
     
     const deleteForm = document.getElementById('delete-confirm-form');
-    deleteForm.action = deleteUrl || currentDeleteUrl;
+    if (deleteForm) deleteForm.action = deleteUrl || currentDeleteUrl;
 
     const modal = document.getElementById('delete-confirm-modal');
-    modal.classList.remove('hidden');
+    if (modal) modal.classList.remove('hidden');
   }
 
   function closeDeleteConfirmModal() {
-    document.getElementById('delete-confirm-modal').classList.add('hidden');
+    const modal = document.getElementById('delete-confirm-modal');
+    if (modal) modal.classList.add('hidden');
   }
 
+  // Add lead modal trigger helpers
   function openAddLeadModal() {
-    document.getElementById('add-lead-modal').classList.remove('hidden');
+    const modal = document.getElementById('add-lead-modal');
+    if (modal) modal.classList.remove('hidden');
   }
 
   function closeAddLeadModal() {
-    document.getElementById('add-lead-modal').classList.add('hidden');
+    const modal = document.getElementById('add-lead-modal');
+    if (modal) modal.classList.add('hidden');
   }
-
-  document
-.getElementById("lead-log-form")
-.addEventListener("submit", async function(e){
-
-    e.preventDefault();
-
-    const message =
-        document.getElementById("lead-log-message").value;
-
-    const csrf =
-        document.querySelector("[name=csrfmiddlewaretoken]").value;
-
-    const response = await fetch(
-        `/crm/leads/${window.currentLeadId}/add-log/`,
-        {
-            method:"POST",
-            headers:{
-                "X-CSRFToken": csrf,
-            },
-            body:new URLSearchParams({
-                message:message
-            })
-        }
-    );
-
-    if(response.ok){
-          document.getElementById("lead-log-message").value="";
-          openSlideOver(window.currentLeadId);
-      }
-  });
-
 
   // Read notification
   async function openNotification(notificationId, leadId) {
-
       const formData = new FormData();
-
       const response = await fetch(
           `/crm/notifications/${notificationId}/read/`,
           {
@@ -824,29 +932,26 @@ function setActiveNav(navKey) {
       );
 
       if (response.ok) {
-
           notificationsList = notificationsList.filter(
               notification => notification.id !== notificationId
           );
-
           renderNotifications();
-
           updateBellBadge();
       }
 
-      document
-          .getElementById("notification-dropdown")
-          .classList.add("hidden");
+      const notifDrop = document.getElementById("notification-dropdown");
+      if (notifDrop) notifDrop.classList.add("hidden");
 
       openSlideOver(leadId);
-
   }
 
   // Toggle notification bells dropdown menu list
   function toggleNotificationDropdown(event) {
     event.stopPropagation();
     const dropdown = document.getElementById('notification-dropdown');
-    dropdown.classList.toggle('hidden');
+    if (dropdown) {
+      dropdown.classList.toggle('hidden');
+    }
     renderNotifications();
   }
 
@@ -854,15 +959,20 @@ function setActiveNav(navKey) {
   function renderNotifications() {
     const container = document.getElementById('notification-items-list');
     const emptyState = document.getElementById('notifications-empty-state');
+    if (!container) return;
     container.innerHTML = "";
 
     if (notificationsList.length === 0) {
-      emptyState.classList.remove('hidden');
-      emptyState.classList.add('block');
+      if (emptyState) {
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('block');
+      }
       return;
     } else {
-      emptyState.classList.remove('block');
-      emptyState.classList.add('hidden');
+      if (emptyState) {
+        emptyState.classList.remove('block');
+        emptyState.classList.add('hidden');
+      }
     }
 
     notificationsList.forEach(notif => {
@@ -957,17 +1067,11 @@ function setActiveNav(navKey) {
       }
   }
 
-  // Close notifications list panel on click outside the menu triggers
-  document.addEventListener('click', function(e) {
-    const dropdown = document.getElementById('notification-dropdown');
-    if (dropdown && !dropdown.classList.contains('hidden')) {
-      dropdown.classList.add('hidden');
-    }
-  });
-
   // Global flash system messages alert loops
   function showToast(message) {
     const container = document.getElementById('toast-container');
+    if (!container) return;
+    
     const toast = document.createElement('div');
     toast.className = `p-4 rounded-xl shadow-lg border text-sm font-semibold flex items-center gap-3 bg-white transform translate-y-2 opacity-0 transition-all duration-300 pointer-events-auto min-w-[280px] max-w-[340px] border-emerald-100 text-emerald-800`;
     toast.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i> ${message}`;
@@ -986,14 +1090,93 @@ function setActiveNav(navKey) {
     }, 3500);
   }
 
-  // Load toast notifications automatically on Django messages context events
-  {% if messages %}
-  document.addEventListener("DOMContentLoaded", function () {
+  // Safe listener registration wrapping
+  document.addEventListener('DOMContentLoaded', () => {
+
+    // Notification dropdown auto-close handling
+    document.addEventListener('click', function(e) {
+      const dropdown = document.getElementById('notification-dropdown');
+      if (dropdown && !dropdown.classList.contains('hidden')) {
+        dropdown.classList.add('hidden');
+      }
+    });
+
+    // Logging submit action integration
+    const leadLogForm = document.getElementById("lead-log-form");
+    if (leadLogForm) {
+      leadLogForm.addEventListener("submit", async function(e) {
+        e.preventDefault();
+        const messageInput = document.getElementById("lead-log-message");
+        if (!messageInput) return;
+        const message = messageInput.value;
+
+        const csrfTokenNode = document.querySelector("[name=csrfmiddlewaretoken]");
+        const csrf = csrfTokenNode ? csrfTokenNode.value : "";
+
+        try {
+          const response = await fetch(
+              `/crm/leads/${window.currentLeadId}/add-log/`,
+              {
+                  method: "POST",
+                  headers: {
+                      "X-CSRFToken": csrf,
+                  },
+                  body: new URLSearchParams({
+                      message: message
+                  })
+              }
+          );
+
+          if (response.ok) {
+              messageInput.value = "";
+              openSlideOver(window.currentLeadId);
+          }
+        } catch (err) {
+          console.error("Error adding log:", err);
+        }
+      });
+    }
+
+    // Connect form AJAX creation handlers to Save Property elements
+    const form = document.getElementById("property-create-form");
+    if (form) {
+      form.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const formData = new FormData(form);
+          const csrfTokenNode = document.querySelector("[name=csrfmiddlewaretoken]");
+          const csrf = csrfTokenNode ? csrfTokenNode.value : "";
+
+          try {
+            const response = await fetch(form.action, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": csrf
+                },
+                body: formData
+            });
+            const data = await response.json();
+            if (data.success) {
+                showToast(data.message);
+                form.reset();
+            } else {
+                showToast("Please correct the errors.");
+                console.log(data.errors);
+            }
+          } catch (err) {
+            console.error("AJAX error submitting property asset form:", err);
+            showToast("Failed to save property. Please try again.");
+          }
+      });
+    }
+
+    // Process initial Django alert messages list parameters
+    {% if messages %}
       {% for message in messages %}
           showToast("{{ message|escapejs }}");
       {% endfor %}
+    {% endif %}
+
   });
-  {% endif %}
 
   // Window load setup initializations
   window.onload = function() {
