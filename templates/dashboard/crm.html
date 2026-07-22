@@ -27,139 +27,76 @@
       {% include "components/followups.html" %}
       {% include "components/followups_drawer.html" %}
 
-      <!-- SEARCH FILTERS DECK -->
+      <!-- SEARCH FILTERS DECK FOR LEADS -->
       <div id="crm-search-filter-section" class="block">
         {% include "components/search_filter.html" %}
       </div>
 
-      <!-- DYNAMIC TABULAR VIEWPORT -->
+      <!-- DYNAMIC TABULAR VIEWPORT FOR LEADS -->
       {% include "components/tables/lead_table.html" %}
 
-      <!-- PROPERTY ASSET REGISTRATION VIEW -->
-      <div id="crm-property-view" class="hidden max-w-3xl mx-auto bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm animate-[fadeIn_0.4s_ease-out]">
-        <h3 class="font-accent font-extrabold text-2xl text-brand-dark mb-2">Register New Property Asset</h3>
-        <p class="text-sm text-brand-slate mb-6">CRM inventory panel to inject tested premium real-estate locations for public showcase.</p>
+      <!-- PROPERTY ASSET MANAGEMENT VIEW -->
+      <div id="crm-property-view" class="hidden max-w-7xl mx-auto space-y-6 animate-[fadeIn_0.4s_ease-out]">
         
-        <!-- Connected to Real Django Backend View Action -->
-        <form  id="property-create-form" method="POST" action="{% url 'landing:property_create' %}" enctype="multipart/form-data" class="space-y-5">
-          {% csrf_token %}
+        <!-- SECTION HEADER & ACTION CONTROL -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h3 class="font-accent font-extrabold text-2xl text-brand-dark">Property Inventory Directory</h3>
+            <p class="text-sm text-slate-500 mt-1">Manage, filter, and publish premium real-estate assets across public showcases.</p>
+          </div>
+          <button type="button" onclick="openPropertyModal('create')" class="inline-flex items-center gap-2 bg-brand-orange hover:bg-brand-orangeDark text-white px-5 py-3 rounded-xl font-bold text-sm shadow-md shadow-orange-500/10 transition-all cursor-pointer shrink-0">
+            <i class="fa-solid fa-plus text-xs"></i>
+            <span>Register New Property</span>
+          </button>
+        </div>
+
+        <!-- PROPERTY INVENTORY TABLE CARD -->
+        <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
           
-          {% if property_form.non_field_errors %}
-            <div class="p-4 bg-red-50 text-red-700 text-xs font-bold rounded-xl border border-red-100">
-              {{ property_form.non_field_errors }}
-            </div>
-          {% endif %}
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <!-- Title -->
-            <div class="col-span-1 sm:col-span-2">
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Property Title</label>
-              {{ property_form.title }}
-              {% if property_form.title.errors %}
-                <span class="text-xs text-red-500 font-semibold mt-1 block">{{ property_form.title.errors.0 }}</span>
-              {% endif %}
-            </div>
-
-            <!-- Property Type -->
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Property Type</label>
-              {{ property_form.property_type }}
-              {% if property_form.property_type.errors %}
-                <span class="text-xs text-red-500 font-semibold mt-1 block">{{ property_form.property_type.errors.0 }}</span>
-              {% endif %}
-            </div>
-
-            <!-- Price -->
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Price (INR)</label>
-              {{ property_form.price }}
-              {% if property_form.price.errors %}
-                <span class="text-xs text-red-500 font-semibold mt-1 block">{{ property_form.price.errors.0 }}</span>
-              {% endif %}
-            </div>
-
-            <!-- Locality -->
-            <div class="col-span-1 sm:col-span-2">
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Locality</label>
-              {{ property_form.location }}
-              {% if property_form.location.errors %}
-                <span class="text-xs text-red-500 font-semibold mt-1 block">{{ property_form.location.errors.0 }}</span>
-              {% endif %}
-            </div>
-
-            <!-- Area Square Feet -->
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Area (Sq.Ft.)</label>
-              {{ property_form.area_sqft }}
-              {% if property_form.area_sqft.errors %}
-                <span class="text-xs text-red-500 font-semibold mt-1 block">{{ property_form.area_sqft.errors.0 }}</span>
-              {% endif %}
-            </div>
-
-            <!-- BHK Configuration -->
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Bedrooms</label>
-                {{ property_form.bedrooms }}
-              </div>
-              <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Bathrooms</label>
-                {{ property_form.bathrooms }}
-              </div>
-            </div>
-
-            <!-- Description -->
-            <div class="col-span-1 sm:col-span-2">
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Property Description</label>
-              {{ property_form.description }}
-              {% if property_form.description.errors %}
-                <span class="text-xs text-red-500 font-semibold mt-1 block">{{ property_form.description.errors.0 }}</span>
-              {% endif %}
-            </div>
-
-            <!-- Cover Image File Upload -->
-            <div class="col-span-1 sm:col-span-2">
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Upload Property Image</label>
-              {{ property_form.image }}
-              {% if property_form.image.errors %}
-                <span class="text-xs text-red-500 font-semibold mt-1 block">{{ property_form.image.errors.0 }}</span>
-              {% endif %}
-            </div>
+          <!-- DESKTOP TABLE -->
+          <div class="hidden md:block overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-100 bg-slate-50/70 text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+                  <th class="py-4 px-6">Property Name & Location</th>
+                  <th class="py-4 px-6">Type</th>
+                  <th class="py-4 px-6">Price</th>
+                  <th class="py-4 px-6">Specs</th>
+                  <th class="py-4 px-6">Status</th>
+                  <th class="py-4 px-6 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="property-table-body" class="divide-y divide-slate-100 text-sm font-medium text-slate-700">
+                <!-- Dynamically populated via AJAX -->
+              </tbody>
+            </table>
           </div>
 
-          <!-- Extra Checklist Switches -->
-          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex flex-wrap items-center justify-between gap-4 mt-2">
-            <div class="flex items-center gap-3">
-              {{ property_form.is_rera_compliant }}
-              <div>
-                <label for="id_is_rera_compliant" class="block text-xs font-extrabold text-brand-dark uppercase tracking-wider cursor-pointer">RERA Compliant</label>
-                <span class="text-[10px] text-slate-400 block font-medium">Verified Registration status</span>
-              </div>
-            </div>
-
-            <div class="flex items-center gap-3">
-              {{ property_form.is_active }}
-              <div>
-                <label for="id_is_active" class="block text-xs font-extrabold text-brand-dark uppercase tracking-wider cursor-pointer">Active Listing</label>
-                <span class="text-[10px] text-slate-400 block font-medium">Visible to prospective buyers</span>
-              </div>
-            </div>
-
-            <div class="flex items-center gap-2">
-              <label class="text-xs font-extrabold text-brand-dark uppercase tracking-wider whitespace-nowrap">Order:</label>
-              <div class="w-16">
-                {{ property_form.display_order }}
-              </div>
-            </div>
+          <!-- MOBILE CARDS CONTAINER -->
+          <div id="property-mobile-cards" class="md:hidden divide-y divide-slate-100">
+            <!-- Dynamically populated via AJAX -->
           </div>
 
-          <!-- Submit Buttons -->
-          <div class="flex items-center justify-end gap-3 pt-2">
-            <button type="submit" class="bg-brand-orange hover:bg-brand-orangeDark text-white px-6 py-3 rounded-xl font-bold text-sm shadow-md shadow-orange-500/10 transition-colors">
-              Save Property Listing
+          <!-- EMPTY STATE PLACEHOLDER -->
+          <div id="property-empty-state" class="hidden p-12 text-center">
+            <div class="w-16 h-16 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-4">
+              <i class="fa-solid fa-building-circle-xmark text-2xl"></i>
+            </div>
+            <h4 class="font-bold text-slate-700 text-base">No Property Listings Found</h4>
+            <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">Get started by registering a new property asset in the inventory system.</p>
+            <button type="button" onclick="openPropertyModal('create')" class="mt-4 inline-flex items-center gap-2 bg-slate-900 text-white px-4 py-2.5 rounded-xl font-bold text-xs hover:bg-slate-800 transition-colors">
+              <i class="fa-solid fa-plus"></i> Add First Property
             </button>
           </div>
-        </form>
+
+          <!-- LOADING STATE SKELETON -->
+          <div id="property-loading-state" class="p-12 text-center">
+            <i class="fa-solid fa-circle-notch fa-spin text-brand-orange text-2xl mb-2"></i>
+            <p class="text-xs font-semibold text-slate-500">Loading property assets...</p>
+          </div>
+
+        </div>
+
       </div>
 
       <!-- MOCK MODULE: BRANCH PERFORMANCE STUB -->
@@ -191,6 +128,163 @@
 
 </div>
 
+<!-- PROPERTY FORM MODAL / DRAWER (COLLAPSED BY DEFAULT) -->
+<div id="property-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="property-modal-title" role="dialog" aria-modal="true">
+  <div class="flex min-h-screen items-center justify-center p-4 text-center sm:p-0">
+    <!-- Backdrop -->
+    <div onclick="closePropertyModal()" class="fixed inset-0 bg-brand-dark/40 backdrop-blur-sm transition-opacity animate-[fadeIn_0.2s_ease-out]"></div>
+
+    <!-- Modal Card Container -->
+    <div class="relative transform overflow-hidden rounded-3xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-2xl border border-slate-200/80 animate-[slideUp_0.3s_ease-out]">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-slate-100 px-6 py-5 bg-slate-50/50">
+        <div>
+          <h3 id="property-modal-title" class="font-accent font-extrabold text-xl text-brand-dark">Register New Property Asset</h3>
+          <p class="text-xs text-slate-400 mt-0.5">Inject tested premium real-estate locations into the portal showcase.</p>
+        </div>
+        <button type="button" onclick="closePropertyModal()" class="text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-200/50 transition-colors">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Property Form -->
+      <form id="property-form" method="POST" action="{% url 'landing:property_create' %}" enctype="multipart/form-data" class="p-6 space-y-5">
+        {% csrf_token %}
+        <input type="hidden" id="property-form-id" name="property_id" value="">
+        
+        <div id="property-form-errors" class="hidden p-4 bg-red-50 text-red-700 text-xs font-bold rounded-xl border border-red-100"></div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Title -->
+          <div class="col-span-1 sm:col-span-2">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Property Title</label>
+            <input type="text" id="id_title" name="title" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange transition-all" placeholder="e.g. Skyline Residency Apartments">
+          </div>
+
+          <!-- Property Type Dropdown (Matches Model Choice Keys Exactly) -->
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Property Type</label>
+            <select id="id_property_type" name="property_type" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange transition-all bg-white text-slate-700">
+              <option value="" disabled selected>Select Property Type</option>
+              <option value="APARTMENT">Apartment</option>
+              <option value="VILLA">Villa</option>
+              <option value="PENTHOUSE">Penthouse</option>
+              <option value="PLOT">Plot</option>
+              <option value="OFFICE">Office</option>
+              <option value="SHOP">Shop</option>
+            </select>
+          </div>
+
+          <!-- Price -->
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Price (INR)</label>
+            <input type="number" step="0.01" id="id_price" name="price" placeholder="e.g. 7500000" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange transition-all">
+          </div>
+
+          <!-- Locality -->
+          <div class="col-span-1 sm:col-span-2">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Locality</label>
+            <input type="text" id="id_location" name="location" placeholder="e.g. Bandra West, Mumbai" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange transition-all">
+          </div>
+
+          <!-- Area Square Feet -->
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Area (Sq.Ft.)</label>
+            <input type="number" id="id_area_sqft" name="area_sqft" required placeholder="e.g. 1250" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange transition-all">
+          </div>
+
+          <!-- BHK Configuration -->
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Bedrooms</label>
+              <input type="number" id="id_bedrooms" name="bedrooms" placeholder="2" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange transition-all">
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Bathrooms</label>
+              <input type="number" id="id_bathrooms" name="bathrooms" placeholder="2" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange transition-all">
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="col-span-1 sm:col-span-2">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Property Description</label>
+            <textarea id="id_description" name="description" rows="3" required placeholder="Brief details about amenities and surroundings..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange transition-all"></textarea>
+          </div>
+
+          <!-- Cover Image File Upload -->
+          <div class="col-span-1 sm:col-span-2">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Upload Property Image</label>
+            <input type="file" id="id_image" name="image" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-orange-50 file:text-brand-orange hover:file:bg-orange-100 transition-all cursor-pointer">
+          </div>
+        </div>
+
+        <!-- Extra Checklist Switches -->
+        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex flex-wrap items-center justify-between gap-4 mt-2">
+          <div class="flex items-center gap-3">
+            <input type="checkbox" id="id_is_rera_compliant" name="is_rera_compliant" checked class="w-4 h-4 text-brand-orange border-slate-300 rounded focus:ring-brand-orange">
+            <div>
+              <label for="id_is_rera_compliant" class="block text-xs font-extrabold text-brand-dark uppercase tracking-wider cursor-pointer">RERA Compliant</label>
+              <span class="text-[10px] text-slate-400 block font-medium">Verified Registration status</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <input type="checkbox" id="id_is_active" name="is_active" checked class="w-4 h-4 text-brand-orange border-slate-300 rounded focus:ring-brand-orange">
+            <div>
+              <label for="id_is_active" class="block text-xs font-extrabold text-brand-dark uppercase tracking-wider cursor-pointer">Active Listing</label>
+              <span class="text-[10px] text-slate-400 block font-medium">Visible to prospective buyers</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <label class="text-xs font-extrabold text-brand-dark uppercase tracking-wider whitespace-nowrap">Order:</label>
+            <div class="w-16">
+              <input type="number" id="id_display_order" name="display_order" value="1" class="w-full px-2 py-1 text-center text-xs font-bold rounded-lg border border-slate-200">
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Buttons -->
+        <div class="flex items-center justify-end gap-3 pt-2">
+          <button type="button" onclick="closePropertyModal()" class="px-5 py-2.5 rounded-xl font-bold text-xs text-slate-500 hover:bg-slate-100 transition-colors">
+            Cancel
+          </button>
+          <button type="submit" id="property-submit-btn" class="bg-brand-orange hover:bg-brand-orangeDark text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-md shadow-orange-500/10 transition-colors">
+            Save Property Listing
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- PROPERTY DELETE CONFIRMATION MODAL -->
+<div id="delete-property-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" role="dialog" aria-modal="true">
+  <div class="flex min-h-screen items-center justify-center p-4 text-center sm:p-0">
+    <div onclick="closeDeletePropertyModal()" class="fixed inset-0 bg-brand-dark/40 backdrop-blur-sm transition-opacity"></div>
+    <div class="relative transform overflow-hidden rounded-3xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-md border border-slate-200 p-6">
+      <div class="flex items-center gap-4 text-red-600 mb-4">
+        <div class="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+        </div>
+        <div>
+          <h3 class="font-bold text-slate-900 text-base">Delete Property</h3>
+          <p class="text-xs text-slate-500 mt-0.5">Are you sure you want to remove <span id="delete-property-name" class="font-semibold text-slate-800"></span>?</p>
+        </div>
+      </div>
+      <p class="text-xs text-slate-500 bg-slate-50 p-3 rounded-xl border border-slate-100 mb-6">
+        This action cannot be undone and will unpublish this asset from the showcase portal immediately.
+      </p>
+      <div class="flex items-center justify-end gap-3">
+        <button type="button" onclick="closeDeletePropertyModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100">Cancel</button>
+        <button type="button" id="confirm-delete-property-btn" class="px-5 py-2 rounded-xl text-xs font-bold text-white bg-red-600 hover:bg-red-700 shadow-sm transition-colors">Delete Asset</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- PORTAL DIALOG AND MODAL POPUPS -->
 {% include "components/modals/add_lead_modal.html" %}
 {% include "components/modals/lead_detail_modal.html" %}
@@ -200,6 +294,10 @@
 {% block extra_js %}
 <!-- PORTAL INTERACTIVE SYSTEM ENGINE -->
 <script>
+  // In-memory property inventory state
+  let propertyList = [];
+  let deletingPropertyId = null;
+
   // Dynamic follow-up logs database in-memory state
   let sessionLogs = {};
 
@@ -221,6 +319,36 @@
     } catch (e) {
       console.error("Error parsing notifications JSON data:", e);
     }
+  }
+
+  // ==========================================
+  // LEAD MODALS & HANDLERS (PRESERVED FIX)
+  // ==========================================
+
+  function openAddLeadModal() {
+    const modal = document.getElementById('add-lead-modal');
+    if (modal) modal.classList.remove('hidden');
+  }
+
+  function closeAddLeadModal() {
+    const modal = document.getElementById('add-lead-modal');
+    if (modal) modal.classList.add('hidden');
+  }
+
+  function openDeleteConfirmModal(leadId, leadName, deleteUrl) {
+    const placeholder = document.getElementById('delete-lead-name-placeholder');
+    if (placeholder) placeholder.innerText = leadName;
+    
+    const deleteForm = document.getElementById('delete-confirm-form');
+    if (deleteForm) deleteForm.action = deleteUrl || currentDeleteUrl;
+
+    const modal = document.getElementById('delete-confirm-modal');
+    if (modal) modal.classList.remove('hidden');
+  }
+
+  function closeDeleteConfirmModal() {
+    const modal = document.getElementById('delete-confirm-modal');
+    if (modal) modal.classList.add('hidden');
   }
 
   function toggleSidebarCollapse() {
@@ -253,6 +381,23 @@
       textItems.forEach(item => {
         item.classList.remove('hidden');
       });
+    }
+  }
+
+  function toggleSidebar() {
+    const sidebar = document.getElementById('dashboard-sidebar');
+    const backdrop = document.getElementById('sidebar-backdrop');
+
+    if (sidebar && backdrop) {
+      if (sidebar.classList.contains('hidden')) {
+        sidebar.classList.remove('hidden');
+        sidebar.classList.add('flex');
+        backdrop.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('hidden');
+        sidebar.classList.remove('flex');
+        backdrop.classList.add('hidden');
+      }
     }
   }
 
@@ -318,10 +463,6 @@
         return;
     }
 
-    // ===========================
-    // EXISTING CODE
-    // ===========================
-
     const views = {
         leads: document.getElementById('crm-leads-view'),
         property: document.getElementById('crm-property-view'),
@@ -361,8 +502,10 @@
         }
 
         if (navKey === 'property') {
-            if (titleNode) titleNode.innerText = 'Add Property';
-            if (crumbsNode) crumbsNode.innerText = 'Add Property';
+            if (titleNode) titleNode.innerText = 'Property Asset Manager';
+            if (crumbsNode) crumbsNode.innerText = 'Property Assets';
+            // Fetch live properties dynamically when tab opens
+            fetchPropertyList();
 
         } else if (navKey === 'performance') {
             if (titleNode) titleNode.innerText = 'Performance';
@@ -399,22 +542,223 @@
     });
   }
 
-  // Responsive mobile Drawer slider toggle
-  function toggleSidebar() {
-    const sidebar = document.getElementById('dashboard-sidebar');
-    const backdrop = document.getElementById('sidebar-backdrop');
+  // ==========================================
+  // PROPERTY MODULE AJAX ENGINE
+  // ==========================================
 
-    if (sidebar && backdrop) {
-      if (sidebar.classList.contains('hidden')) {
-        sidebar.classList.remove('hidden');
-        sidebar.classList.add('flex');
-        backdrop.classList.remove('hidden');
+  // Fetch properties asynchronously from backend
+  async function fetchPropertyList() {
+    const tableBody = document.getElementById('property-table-body');
+    const mobileCards = document.getElementById('property-mobile-cards');
+    const emptyState = document.getElementById('property-empty-state');
+    const loadingState = document.getElementById('property-loading-state');
+
+    if (loadingState) loadingState.classList.remove('hidden');
+    if (emptyState) emptyState.classList.add('hidden');
+
+    try {
+      const response = await fetch("{% url 'landing:property_list' %}");
+      const data = await response.json();
+
+      if (loadingState) loadingState.classList.add('hidden');
+
+      if (data.success && data.properties && data.properties.length > 0) {
+        propertyList = data.properties;
+        renderPropertyTable(propertyList);
       } else {
-        sidebar.classList.add('hidden');
-        sidebar.classList.remove('flex');
-        backdrop.classList.add('hidden');
+        propertyList = [];
+        if (tableBody) tableBody.innerHTML = '';
+        if (mobileCards) mobileCards.innerHTML = '';
+        if (emptyState) emptyState.classList.remove('hidden');
       }
+    } catch (error) {
+      console.error('Error fetching properties:', error);
+      if (loadingState) loadingState.classList.add('hidden');
+      showToast('Unable to load properties list.');
     }
+  }
+
+  // Render property rows & mobile card layouts
+  function renderPropertyTable(properties) {
+    const tableBody = document.getElementById('property-table-body');
+    const mobileCards = document.getElementById('property-mobile-cards');
+    const emptyState = document.getElementById('property-empty-state');
+
+    if (!tableBody || !mobileCards) return;
+
+    if (!properties || properties.length === 0) {
+      tableBody.innerHTML = '';
+      mobileCards.innerHTML = '';
+      if (emptyState) emptyState.classList.remove('hidden');
+      return;
+    }
+
+    if (emptyState) emptyState.classList.add('hidden');
+
+    let desktopHtml = '';
+    let mobileHtml = '';
+
+    const typeLabelMap = {
+      'APARTMENT': 'Apartment',
+      'VILLA': 'Villa',
+      'PENTHOUSE': 'Penthouse',
+      'PLOT': 'Plot',
+      'OFFICE': 'Office',
+      'SHOP': 'Shop'
+    };
+
+    properties.forEach(prop => {
+      const formattedPrice = prop.price ? `₹${Number(prop.price).toLocaleString('en-IN')}` : '₹-';
+      const statusBadge = prop.is_active 
+        ? `<span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase bg-emerald-50 text-emerald-700 border border-emerald-200/60">Active</span>`
+        : `<span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase bg-slate-100 text-slate-500 border border-slate-200/60">Inactive</span>`;
+
+      const displayType = typeLabelMap[prop.property_type] || prop.property_type || 'Residential';
+
+      // Desktop Row
+      desktopHtml += `
+        <tr class="hover:bg-slate-50/80 transition-colors">
+          <td class="py-4 px-6">
+            <strong class="text-slate-900 font-bold block">${prop.title}</strong>
+            <span class="text-xs text-slate-400 font-medium"><i class="fa-solid fa-location-dot text-[10px] mr-1"></i>${prop.location}</span>
+          </td>
+          <td class="py-4 px-6">
+            <span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 text-xs font-semibold">${displayType}</span>
+          </td>
+          <td class="py-4 px-6 font-extrabold text-brand-dark">
+            ${formattedPrice}
+          </td>
+          <td class="py-4 px-6 text-xs text-slate-500 font-medium">
+            ${prop.bedrooms || 0} Bed · ${prop.bathrooms || 0} Bath · ${prop.area_sqft || 0} Sq.Ft.
+          </td>
+          <td class="py-4 px-6">
+            ${statusBadge}
+          </td>
+          <td class="py-4 px-6 text-right">
+            <div class="inline-flex items-center gap-2">
+              <button onclick="editProperty(${prop.id})" class="p-2 text-slate-400 hover:text-brand-orange hover:bg-orange-50 rounded-lg transition-colors" title="Edit Property">
+                <i class="fa-solid fa-pen-to-square text-sm"></i>
+              </button>
+              <button onclick="openDeletePropertyModal(${prop.id}, '${prop.title.replace(/'/g, "\\'")}')" class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete Property">
+                <i class="fa-solid fa-trash-can text-sm"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+
+      // Mobile Card
+      mobileHtml += `
+        <div class="p-5 space-y-3 bg-white">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <strong class="text-slate-900 font-bold text-base block">${prop.title}</strong>
+              <p class="text-xs text-slate-400 mt-0.5"><i class="fa-solid fa-location-dot text-[10px] mr-1"></i>${prop.location}</p>
+            </div>
+            <div>${statusBadge}</div>
+          </div>
+          <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-100">
+            <div>
+              <span class="text-slate-400 block text-[10px] uppercase font-bold">Price</span>
+              <strong class="text-brand-dark font-extrabold text-sm">${formattedPrice}</strong>
+            </div>
+            <div class="text-right">
+              <span class="text-slate-400 block text-[10px] uppercase font-bold">Specs</span>
+              <span class="text-slate-700 font-semibold">${prop.bedrooms || 0} Bed · ${prop.bathrooms || 0} Bath</span>
+            </div>
+          </div>
+          <div class="flex items-center justify-end gap-2 pt-2">
+            <button onclick="editProperty(${prop.id})" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-bold hover:bg-slate-200 transition-colors">
+              <i class="fa-solid fa-pen-to-square mr-1"></i> Edit
+            </button>
+            <button onclick="openDeletePropertyModal(${prop.id}, '${prop.title.replace(/'/g, "\\'")}')" class="px-3 py-1.5 rounded-lg bg-red-50 text-red-600 text-xs font-bold hover:bg-red-100 transition-colors">
+              <i class="fa-solid fa-trash-can mr-1"></i> Delete
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    tableBody.innerHTML = desktopHtml;
+    mobileCards.innerHTML = mobileHtml;
+  }
+
+  // Open property modal (create or update mode)
+  function openPropertyModal(mode = 'create', data = null) {
+    const modal = document.getElementById('property-modal');
+    const form = document.getElementById('property-form');
+    const modalTitle = document.getElementById('property-modal-title');
+    const submitBtn = document.getElementById('property-submit-btn');
+    const errorContainer = document.getElementById('property-form-errors');
+
+    if (!modal || !form) return;
+
+    if (errorContainer) {
+      errorContainer.innerHTML = '';
+      errorContainer.classList.add('hidden');
+    }
+
+    form.reset();
+
+    if (mode === 'edit' && data) {
+      modalTitle.innerText = "Edit Property Listing";
+      submitBtn.innerText = "Update Property";
+      form.action = `/property/${data.id}/update/`;
+      document.getElementById('property-form-id').value = data.id;
+
+      if (document.getElementById('id_title')) document.getElementById('id_title').value = data.title || '';
+      if (document.getElementById('id_property_type')) document.getElementById('id_property_type').value = data.property_type || '';
+      if (document.getElementById('id_price')) document.getElementById('id_price').value = data.price || '';
+      if (document.getElementById('id_location')) document.getElementById('id_location').value = data.location || '';
+      if (document.getElementById('id_area_sqft')) document.getElementById('id_area_sqft').value = (data.area_sqft !== undefined && data.area_sqft !== null) ? data.area_sqft : '';
+      if (document.getElementById('id_bedrooms')) document.getElementById('id_bedrooms').value = (data.bedrooms !== undefined && data.bedrooms !== null) ? data.bedrooms : '';
+      if (document.getElementById('id_bathrooms')) document.getElementById('id_bathrooms').value = (data.bathrooms !== undefined && data.bathrooms !== null) ? data.bathrooms : '';
+      if (document.getElementById('id_description')) document.getElementById('id_description').value = data.description || '';
+      if (document.getElementById('id_is_rera_compliant')) document.getElementById('id_is_rera_compliant').checked = !!data.is_rera_compliant;
+      if (document.getElementById('id_is_active')) document.getElementById('id_is_active').checked = (data.is_active !== undefined) ? !!data.is_active : true;
+      if (document.getElementById('id_display_order')) document.getElementById('id_display_order').value = (data.display_order !== undefined) ? data.display_order : 1;
+    } else {
+      modalTitle.innerText = "Register New Property Asset";
+      submitBtn.innerText = "Save Property Listing";
+      form.action = "{% url 'landing:property_create' %}";
+      document.getElementById('property-form-id').value = '';
+      if (document.getElementById('id_is_rera_compliant')) document.getElementById('id_is_rera_compliant').checked = true;
+      if (document.getElementById('id_is_active')) document.getElementById('id_is_active').checked = true;
+      if (document.getElementById('id_display_order')) document.getElementById('id_display_order').value = 1;
+    }
+
+    modal.classList.remove('hidden');
+  }
+
+  function closePropertyModal() {
+    const modal = document.getElementById('property-modal');
+    if (modal) modal.classList.add('hidden');
+  }
+
+  // Populate form in Edit mode
+  function editProperty(id) {
+    let target = propertyList.find(p => p.id === id);
+    if (!target) {
+      showToast("Property record details not found.");
+      return;
+    }
+
+    openPropertyModal('edit', target);
+  }
+
+  // Delete Property Modal Controls
+  function openDeletePropertyModal(id, title) {
+    deletingPropertyId = id;
+    const nameEl = document.getElementById('delete-property-name');
+    if (nameEl) nameEl.innerText = title;
+    const modal = document.getElementById('delete-property-modal');
+    if (modal) modal.classList.remove('hidden');
+  }
+
+  function closeDeletePropertyModal() {
+    deletingPropertyId = null;
+    const modal = document.getElementById('delete-property-modal');
+    if (modal) modal.classList.add('hidden');
   }
 
   // Change slideover detail panel view tabs
@@ -450,7 +794,6 @@
     const searchInput = document.getElementById('lead-search');
     const filterSelect = document.getElementById('lead-filter-status');
     
-    // Guard against running on pages that do not render directory controls
     if (!searchInput || !filterSelect) return;
 
     const searchVal = searchInput.value.toLowerCase();
@@ -529,7 +872,6 @@
       if (matches[i]) matches[i].classList.remove('hidden');
     }
 
-    // Update entries count dynamic texts
     const infoText = `Showing ${startIndex + 1} to ${endIndex} of ${totalItems} entries`;
     if (paginationInfo) paginationInfo.innerText = infoText;
     if (mobilePaginationInfo) mobilePaginationInfo.innerText = infoText;
@@ -628,7 +970,6 @@
         .then(data => {
             if (data.success) {
                 showToast(data.message);
-                // Update dropdown color immediately
                 selectElement.classList.remove(
                     "bg-blue-50", "text-blue-700", "border-blue-200",
                     "bg-amber-50", "text-amber-700", "border-amber-200",
@@ -656,12 +997,8 @@
                 }
                 const row = document.querySelector(`tr[data-lead-id="${leadId}"]`);
                 const card = document.querySelector(`.mobile-lead-card[data-lead-id="${leadId}"]`);
-                if (row) {
-                    row.setAttribute("data-status", newStatus);
-                }
-                if (card) {
-                    card.setAttribute("data-status", newStatus);
-                }
+                if (row) row.setAttribute("data-status", newStatus);
+                if (card) card.setAttribute("data-status", newStatus);
                 filterLeads();
             } else {
                 showToast("Unable to update status.");
@@ -674,20 +1011,18 @@
         });
   }
 
-  // Asynchronous slideover detail drawer renderer connecting cleanly with Django database REST view
+  // Asynchronous slideover detail drawer renderer
   async function openSlideOver(id) {
     try {
       activeLeadId = id;
       currentDeleteUrl = `/crm/leads/${id}/delete/`;
       setSlideoverTab('overview');
 
-      // Fetch dynamic details directly from backend
       const response = await fetch(`/crm/leads/${id}/`);
       if (!response.ok) throw new Error("Could not retrieve lead records");
       const lead = await response.json();
       window.currentLeadId = lead.id;
 
-      // Desktop/Mobile Leaf overview population matching backend properties
       const nameEl = document.getElementById("slide-lead-name");
       const contactEl = document.getElementById("slide-lead-contact");
       const localityEl = document.getElementById("slide-lead-locality");
@@ -710,7 +1045,6 @@
       if (stepEl) stepEl.innerText = nextActionText;
       if (dateEl) dateEl.innerText = nextFollowUpText;
 
-      // Handle Priority temperature badge styling and values
       const priority = lead.priority || "COLD";
       const prioBadge = document.getElementById('slide-lead-priority-badge');
       if (prioBadge) {
@@ -721,7 +1055,6 @@
         prioBadge.className = `px-2.5 py-0.5 rounded-lg text-[9px] font-extrabold tracking-wider uppercase border ${badgeClass}`;
       }
 
-      // Populate Tab 2 input forms with backend response
       const editName = document.getElementById('edit-lead-name');
       const editContact = document.getElementById('edit-lead-contact');
       const editPriority = document.getElementById('edit-lead-priority');
@@ -766,7 +1099,6 @@
         }
       }
 
-      // Handle slideover deletion click event mapping
       const delBtn = document.getElementById('slide-lead-delete-btn');
       if (delBtn) {
         delBtn.onclick = function() {
@@ -774,7 +1106,6 @@
         };
       }
 
-      // Trigger identical smooth animations using pure design tokens
       const slideoverRoot = document.getElementById("lead-slideover");
       const slideoverPanel = document.getElementById("slideover-panel");
       const slideoverBackdrop = document.getElementById("slideover-backdrop");
@@ -805,7 +1136,6 @@
     if (root) root.classList.add('pointer-events-none');
   }
 
-  // Appends follow-up log text updates locally
   function handleAppendLog(event) {
     event.preventDefault();
     const input = document.getElementById('timeline-remark-input');
@@ -821,7 +1151,6 @@
         note: noteVal
       });
 
-      // Reload detail logs timelines asynchronously
       openSlideOver(activeLeadId);
 
       showToast("Timeline follow-up remark recorded.");
@@ -829,7 +1158,6 @@
     }
   }
 
-  // Handles edits profile updates submit
   function handleEditLeadSubmit(event) {
         event.preventDefault();
         if (!activeLeadId) return;
@@ -889,35 +1217,10 @@
         });
   }
 
-  // Setup Delete confirm modals URLs
-  function openDeleteConfirmModal(leadId, leadName, deleteUrl) {
-    const placeholder = document.getElementById('delete-lead-name-placeholder');
-    if (placeholder) placeholder.innerText = leadName;
-    
-    const deleteForm = document.getElementById('delete-confirm-form');
-    if (deleteForm) deleteForm.action = deleteUrl || currentDeleteUrl;
+  // ==========================================
+  // NOTIFICATION MANAGEMENT
+  // ==========================================
 
-    const modal = document.getElementById('delete-confirm-modal');
-    if (modal) modal.classList.remove('hidden');
-  }
-
-  function closeDeleteConfirmModal() {
-    const modal = document.getElementById('delete-confirm-modal');
-    if (modal) modal.classList.add('hidden');
-  }
-
-  // Add lead modal trigger helpers
-  function openAddLeadModal() {
-    const modal = document.getElementById('add-lead-modal');
-    if (modal) modal.classList.remove('hidden');
-  }
-
-  function closeAddLeadModal() {
-    const modal = document.getElementById('add-lead-modal');
-    if (modal) modal.classList.add('hidden');
-  }
-
-  // Read notification
   async function openNotification(notificationId, leadId) {
       const formData = new FormData();
       const response = await fetch(
@@ -945,7 +1248,6 @@
       openSlideOver(leadId);
   }
 
-  // Toggle notification bells dropdown menu list
   function toggleNotificationDropdown(event) {
     event.stopPropagation();
     const dropdown = document.getElementById('notification-dropdown');
@@ -955,7 +1257,6 @@
     renderNotifications();
   }
 
-  // Render dynamic alert listings under the bell
   function renderNotifications() {
     const container = document.getElementById('notification-items-list');
     const emptyState = document.getElementById('notifications-empty-state');
@@ -1137,17 +1438,18 @@
       });
     }
 
-    // Connect form AJAX creation handlers to Save Property elements
-    const form = document.getElementById("property-create-form");
-    if (form) {
-      form.addEventListener("submit", async function (e) {
+    // Connect property form AJAX creation/update handler
+    const propertyForm = document.getElementById("property-form");
+    if (propertyForm) {
+      propertyForm.addEventListener("submit", async function (e) {
           e.preventDefault();
-          const formData = new FormData(form);
+          const formData = new FormData(propertyForm);
           const csrfTokenNode = document.querySelector("[name=csrfmiddlewaretoken]");
           const csrf = csrfTokenNode ? csrfTokenNode.value : "";
+          const errorBox = document.getElementById("property-form-errors");
 
           try {
-            const response = await fetch(form.action, {
+            const response = await fetch(propertyForm.action, {
                 method: "POST",
                 headers: {
                     "X-CSRFToken": csrf
@@ -1155,17 +1457,57 @@
                 body: formData
             });
             const data = await response.json();
+
             if (data.success) {
                 showToast(data.message);
-                form.reset();
+                closePropertyModal();
+                fetchPropertyList();
             } else {
-                showToast("Please correct the errors.");
-                console.log(data.errors);
+                if (errorBox) {
+                  let errText = "Please correct errors: ";
+                  if (data.errors) {
+                    errText += Object.entries(data.errors).map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(', ') : v}`).join('; ');
+                  }
+                  errorBox.innerText = errText;
+                  errorBox.classList.remove("hidden");
+                }
+                showToast("Please correct the form errors.");
             }
           } catch (err) {
-            console.error("AJAX error submitting property asset form:", err);
+            console.error("AJAX error submitting property form:", err);
             showToast("Failed to save property. Please try again.");
           }
+      });
+    }
+
+    // Property confirm delete button click event
+    const confirmDeletePropBtn = document.getElementById('confirm-delete-property-btn');
+    if (confirmDeletePropBtn) {
+      confirmDeletePropBtn.addEventListener('click', async function() {
+        if (!deletingPropertyId) return;
+
+        const csrfTokenNode = document.querySelector("[name=csrfmiddlewaretoken]");
+        const csrf = csrfTokenNode ? csrfTokenNode.value : "";
+
+        try {
+          const response = await fetch(`/property/${deletingPropertyId}/delete/`, {
+            method: "POST",
+            headers: {
+              "X-CSRFToken": csrf
+            }
+          });
+          const data = await response.json();
+          if (data.success) {
+            showToast(data.message);
+            closeDeletePropertyModal();
+            fetchPropertyList();
+          } else {
+            showToast("Unable to delete property.");
+          }
+        } catch (err) {
+          console.error("Error deleting property:", err);
+          showToast("Failed to delete property asset.");
+        }
       });
     }
 

@@ -1,33 +1,27 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.views import View
-from django.views.generic import DetailView, ListView
 
 from .forms import PropertyForm
 from .models import Property
-
 
 
 def home(request):
     """
     Render landing page.
     """
-
     properties = (
         Property.objects
         .filter(is_active=True)
         .order_by("display_order", "-created_at")
     )
 
-    context = {
-        "properties": properties,
-    
-    }
-
     return render(
         request,
         "landing/index.html",
-        context,
+        {
+            "properties": properties,
+        },
     )
 
 
@@ -45,18 +39,21 @@ class PropertyListView(View):
 
         data = []
 
-        for property in properties:
+        for prop in properties:
             data.append({
-                "id": property.id,
-                "title": property.title,
-                "property_type": property.property_type,
-                "price": str(property.price),
-                "location": property.location,
-                "bedrooms": property.bedrooms,
-                "bathrooms": property.bathrooms,
-                "is_active": property.is_active,
-                "display_order": property.display_order,
-                "created_at": property.created_at.strftime("%d %b %Y"),
+                "id": prop.id,
+                "title": prop.title,
+                "property_type": prop.property_type,
+                "price": str(prop.price),
+                "location": prop.location,
+                "description": prop.description,
+                "bedrooms": prop.bedrooms,
+                "bathrooms": prop.bathrooms,
+                "area_sqft": prop.area_sqft,
+                "is_rera_compliant": prop.is_rera_compliant,
+                "is_active": prop.is_active,
+                "display_order": prop.display_order,
+                "created_at": prop.created_at.strftime("%d %b %Y"),
             })
 
         return JsonResponse({
@@ -64,14 +61,46 @@ class PropertyListView(View):
             "properties": data,
         })
 
-class PropertyDetailView(DetailView):
+
+class PropertyDetailView(View):
     """
     Display property details.
     """
 
-    model = Property
-    template_name = "landing/property_detail.html"
-    context_object_name = "property"
+    def get(self, request, pk):
+
+        prop = get_object_or_404(
+            Property,
+            pk=pk,
+        )
+
+        # AJAX / JSON request
+        if (
+            request.headers.get("X-Requested-With") == "XMLHttpRequest"
+            or "application/json" in request.headers.get("Accept", "")
+        ):
+            return JsonResponse({
+                "id": prop.id,
+                "title": prop.title,
+                "property_type": prop.property_type,
+                "price": str(prop.price),
+                "location": prop.location,
+                "description": prop.description,
+                "bedrooms": prop.bedrooms,
+                "bathrooms": prop.bathrooms,
+                "area_sqft": prop.area_sqft,
+                "is_rera_compliant": prop.is_rera_compliant,
+                "is_active": prop.is_active,
+                "display_order": prop.display_order,
+            })
+
+        return render(
+            request,
+            "landing/property_detail.html",
+            {
+                "property": prop,
+            },
+        )
 
 
 class PropertyCreateView(View):
@@ -88,15 +117,13 @@ class PropertyCreateView(View):
 
         if form.is_valid():
 
-            property = form.save()
+            prop = form.save()
 
-            return JsonResponse(
-                {
-                    "success": True,
-                    "message": "Property created successfully.",
-                    "property_id": property.id,
-                }
-            )
+            return JsonResponse({
+                "success": True,
+                "message": "Property created successfully.",
+                "property_id": prop.id,
+            })
 
         return JsonResponse(
             {
@@ -114,7 +141,7 @@ class PropertyUpdateView(View):
 
     def post(self, request, pk):
 
-        property = get_object_or_404(
+        prop = get_object_or_404(
             Property,
             pk=pk,
         )
@@ -122,20 +149,18 @@ class PropertyUpdateView(View):
         form = PropertyForm(
             request.POST,
             request.FILES,
-            instance=property,
+            instance=prop,
         )
 
         if form.is_valid():
 
-            property = form.save()
+            prop = form.save()
 
-            return JsonResponse(
-                {
-                    "success": True,
-                    "message": "Property updated successfully.",
-                    "property_id": property.id,
-                }
-            )
+            return JsonResponse({
+                "success": True,
+                "message": "Property updated successfully.",
+                "property_id": prop.id,
+            })
 
         return JsonResponse(
             {
@@ -153,16 +178,14 @@ class PropertyDeleteView(View):
 
     def post(self, request, pk):
 
-        property = get_object_or_404(
+        prop = get_object_or_404(
             Property,
             pk=pk,
         )
 
-        property.delete()
+        prop.delete()
 
-        return JsonResponse(
-            {
-                "success": True,
-                "message": "Property deleted successfully.",
-            }
-        )
+        return JsonResponse({
+            "success": True,
+            "message": "Property deleted successfully.",
+        })
